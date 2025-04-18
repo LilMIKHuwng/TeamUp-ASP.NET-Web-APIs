@@ -1,4 +1,9 @@
-﻿using TeamUp.Core.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TeamUp.Core.Base;
 
 namespace TeamUp.Contract.Repositories.Entity
 {

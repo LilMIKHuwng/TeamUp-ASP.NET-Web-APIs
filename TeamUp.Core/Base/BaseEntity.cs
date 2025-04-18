@@ -1,23 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TeamUp.Core.Utils;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamUp.Core.Base
 {
     public abstract class BaseEntity
     {
-        protected BaseEntity()
-        {
-            Id = Guid.NewGuid().ToString("N");
-            CreatedTime = LastUpdatedTime = CoreHelper.SystemTimeNow;
-        }
-
         [Key]
-        public string Id { get; set; }
-        public string? CreatedBy { get; set; }
-        public string? LastUpdatedBy { get; set; }
-        public string? DeletedBy { get; set; }
-        public DateTimeOffset CreatedTime { get; set; }
-        public DateTimeOffset LastUpdatedTime { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public int? CreatedBy { get; set; }
+        public int? LastUpdatedBy { get; set; }
+        public int? DeletedBy { get; set; }
+        public DateTimeOffset CreatedTime { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset LastUpdatedTime { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? DeletedTime { get; set; }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using TeamUp.Core.Base;
 using TeamUp.Core.Utils;
 
 namespace TeamUp.Contract.Repositories.Entity
 {
-    public class ApplicationRole : IdentityRole<Guid>
+    public class ApplicationRole : IdentityRole<int>
     {
-        public string? CreatedBy { get; set; }
-        public string? LastUpdatedBy { get; set; }
-        public string? DeletedBy { get; set; }
-        public DateTimeOffset CreatedTime { get; set; }
-        public DateTimeOffset LastUpdatedTime { get; set; }
+        public string? Description { get; set; }
+
+        public int? CreatedBy { get; set; }
+        public int? LastUpdatedBy { get; set; }
+        public int? DeletedBy { get; set; }
+        public DateTimeOffset CreatedTime { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset LastUpdatedTime { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? DeletedTime { get; set; }
-        public ApplicationRole()
-        {
-            CreatedTime = CoreHelper.SystemTimeNow;
-            LastUpdatedTime = CreatedTime;
-        }
+
+        public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace TeamUp.API
         {
             services.AddDbContext<DatabaseContext>(options =>
             {
-                options.UseLazyLoadingProxies().UseSqlServer(configuration.GetConnectionString("MyCnn"));
+                options.UseLazyLoadingProxies().UseSqlServer(configuration.GetConnectionString("TeamUpDB"));
             });
         }
 
