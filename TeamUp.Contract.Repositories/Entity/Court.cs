@@ -25,8 +25,9 @@ namespace TeamUp.Contract.Repositories.Entity
         public float Latitude { get; set; }
         public float Longitude { get; set; }
 
-        [MaxLength(300)]
-        public string? ImageUrl { get; set; }
+        public decimal PricePerHour { get; set; }
+
+        public List<string> ImageUrls { get; set; }
 
         public virtual ICollection<CourtBooking> CourtBookings { get; set; } 
         public virtual ICollection<CoachBooking> CoachBookings { get; set; } 

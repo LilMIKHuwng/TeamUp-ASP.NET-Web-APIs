@@ -17,6 +17,8 @@ namespace TeamUp.Repositories.Entity
         // Nếu là HLV
         public string? Specialty { get; set; }
         public string? Certificate { get; set; }
+        public string? WorkingAddress { get; set; }
+        public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
 
         public int? CreatedBy { get; set; }
