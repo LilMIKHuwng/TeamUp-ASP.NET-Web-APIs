@@ -21,6 +21,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public string Name { get; set; }
 
         public int MaxPlayers { get; set; }
+
+        public decimal RoomFee { get; set; }
         public string Status { get; set; }
         public DateTime ScheduledTime { get; set; }
 

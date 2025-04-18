@@ -19,6 +19,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
+        public decimal TotalPrice { get; set; }
+
         public string Status { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }

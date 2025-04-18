@@ -19,8 +19,9 @@ namespace TeamUp.Contract.Repositories.Entity
         public int CourtId { get; set; }
         public virtual Court Court { get; set; }
 
-        public DateTime SessionTime { get; set; }
-        public int DurationInMinutes { get; set; }
+        public List<DateTime> SelectedDates { get; set; }
+
+        public decimal TotalPrice { get; set; }
 
         public string Status { get; set; }
         public string PaymentStatus { get; set; }

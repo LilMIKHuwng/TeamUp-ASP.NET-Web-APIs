@@ -48,6 +48,8 @@ namespace TeamUp.Repositories.Migrations
                     AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specialty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Certificate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WorkingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WorkingDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PricePerSession = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
@@ -193,7 +195,8 @@ namespace TeamUp.Repositories.Migrations
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Latitude = table.Column<float>(type: "real", nullable: false),
                     Longitude = table.Column<float>(type: "real", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    PricePerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
                     DeletedBy = table.Column<int>(type: "int", nullable: true),
@@ -287,8 +290,8 @@ namespace TeamUp.Repositories.Migrations
                     CoachId = table.Column<int>(type: "int", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     CourtId = table.Column<int>(type: "int", nullable: false),
-                    SessionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DurationInMinutes = table.Column<int>(type: "int", nullable: false),
+                    SelectedDates = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
@@ -331,6 +334,7 @@ namespace TeamUp.Repositories.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -368,6 +372,7 @@ namespace TeamUp.Repositories.Migrations
                     CourtId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     MaxPlayers = table.Column<int>(type: "int", nullable: false),
+                    RoomFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ScheduledTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
@@ -543,10 +548,10 @@ namespace TeamUp.Repositories.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Description", "LastUpdatedBy", "LastUpdatedTime", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1827), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1831), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
-                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1835), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1835), new TimeSpan(0, 0, 0, 0, 0)), "Người Chơi", "NGUOICHOI" },
-                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1836), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1836), new TimeSpan(0, 0, 0, 0, 0)), "Chủ Sân", "CHUSAN" },
-                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1837), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 4, 18, 13, 31, 45, 739, DateTimeKind.Unspecified).AddTicks(1838), new TimeSpan(0, 0, 0, 0, 0)), "Huấn Luyện Viên", "HUANLUYENVIEN" }
+                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8835), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8838), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
+                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8843), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8843), new TimeSpan(0, 0, 0, 0, 0)), "Người Chơi", "NGUOICHOI" },
+                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8844), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8845), new TimeSpan(0, 0, 0, 0, 0)), "Chủ Sân", "CHUSAN" },
+                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8846), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8846), new TimeSpan(0, 0, 0, 0, 0)), "Huấn Luyện Viên", "HUANLUYENVIEN" }
                 });
 
             migrationBuilder.CreateIndex(
