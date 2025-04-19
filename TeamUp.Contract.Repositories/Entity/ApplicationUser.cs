@@ -39,9 +39,8 @@ namespace TeamUp.Repositories.Entity
         public virtual ICollection<Rating> RatingsGiven { get; set; } 
         public virtual ICollection<Rating> RatingsReceived { get; set; } 
         public virtual ICollection<Payment> Payments { get; set; } 
-        public virtual ICollection<UserChat> UserChats1 { get; set; } 
-        public virtual ICollection<UserChat> UserChats2 { get; set; } 
-        public virtual ICollection<UserMessage> SentMessages { get; set; } 
+        public virtual ICollection<UserMessage> SentMessages { get; set; }
+        public virtual ICollection<UserMessage> ReceivedMessages { get; set; }
     }
 
 }

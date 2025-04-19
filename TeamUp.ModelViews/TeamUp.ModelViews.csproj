@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TeamUp.Contract.Repositories\TeamUp.Contract.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>
