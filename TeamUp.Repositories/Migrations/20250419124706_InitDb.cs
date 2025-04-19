@@ -250,13 +250,16 @@ namespace TeamUp.Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserChats",
+                name: "UserMessages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    User1Id = table.Column<int>(type: "int", nullable: false),
-                    User2Id = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    RecipientId = table.Column<int>(type: "int", nullable: false),
+                    SendAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MessageContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChannelName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
                     DeletedBy = table.Column<int>(type: "int", nullable: true),
@@ -266,16 +269,16 @@ namespace TeamUp.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserChats", x => x.Id);
+                    table.PrimaryKey("PK_UserMessages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserChats_AspNetUsers_User1Id",
-                        column: x => x.User1Id,
+                        name: "FK_UserMessages_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserChats_AspNetUsers_User2Id",
-                        column: x => x.User2Id,
+                        name: "FK_UserMessages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -400,40 +403,6 @@ namespace TeamUp.Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserMessages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChatId = table.Column<int>(type: "int", nullable: false),
-                    SenderId = table.Column<int>(type: "int", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    DeletedBy = table.Column<int>(type: "int", nullable: true),
-                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserMessages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserMessages_AspNetUsers_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserMessages_UserChats_ChatId",
-                        column: x => x.ChatId,
-                        principalTable: "UserChats",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
@@ -548,10 +517,32 @@ namespace TeamUp.Repositories.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Description", "LastUpdatedBy", "LastUpdatedTime", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8835), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8838), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
-                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8843), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8843), new TimeSpan(0, 0, 0, 0, 0)), "Người Chơi", "NGUOICHOI" },
-                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8844), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8845), new TimeSpan(0, 0, 0, 0, 0)), "Chủ Sân", "CHUSAN" },
-                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8846), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 4, 18, 14, 11, 43, 573, DateTimeKind.Unspecified).AddTicks(8846), new TimeSpan(0, 0, 0, 0, 0)), "Huấn Luyện Viên", "HUANLUYENVIEN" }
+                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6537), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6540), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
+                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6544), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6544), new TimeSpan(0, 0, 0, 0, 0)), "Người Chơi", "NGUOICHOI" },
+                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6546), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6546), new TimeSpan(0, 0, 0, 0, 0)), "Chủ Sân", "CHUSAN" },
+                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6547), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6547), new TimeSpan(0, 0, 0, 0, 0)), "Huấn Luyện Viên", "HUANLUYENVIEN" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Age", "AvatarUrl", "Certificate", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Email", "EmailConfirmed", "FullName", "Height", "LastUpdatedBy", "LastUpdatedTime", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PricePerSession", "SecurityStamp", "Specialty", "TwoFactorEnabled", "UserName", "Weight", "WorkingAddress", "WorkingDate" },
+                values: new object[,]
+                {
+                    { 1, 0, null, null, null, "ea687d05-40be-40a2-bdac-0e169df28d11", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6825), new TimeSpan(0, 0, 0, 0, 0)), null, null, "admin@teamup.com", true, "System Admin", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6825), new TimeSpan(0, 0, 0, 0, 0)), false, null, "ADMIN@TEAMUP.COM", "ADMIN", "AQAAAAIAAYagAAAAEEUa945M+RufIFMH7WFh6h+Gft+Ln4S1vX3AVCkC5tz76ws8PO6YFEF7tyA2fhGVPw==", null, false, null, "f9f104c1-a26f-42d7-b3f5-c63e213dee18", null, false, "admin", null, null, null },
+                    { 2, 0, null, null, null, "8d1863d5-6963-464a-822c-d7321561d52c", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 102, DateTimeKind.Unspecified).AddTicks(9388), new TimeSpan(0, 0, 0, 0, 0)), null, null, "player@teamup.com", true, "Người Chơi A", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 102, DateTimeKind.Unspecified).AddTicks(9632), new TimeSpan(0, 0, 0, 0, 0)), false, null, "PLAYER@TEAMUP.COM", "PLAYER", "AQAAAAIAAYagAAAAEI02foY6MawHjf1a7xRCdG1Fks4CqCRx6TA8ZEY26JvIOZ/wJI0dMKfYrdXkSSUl3w==", null, false, null, "689df5ed-da87-4894-8638-52da822fceae", null, false, "player", null, null, null },
+                    { 3, 0, null, null, null, "2ef41f3b-2c1b-4704-b2cd-2e093df5a2f6", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 169, DateTimeKind.Unspecified).AddTicks(1475), new TimeSpan(0, 0, 0, 0, 0)), null, null, "chusan@teamup.com", true, "Chủ Sân A", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 169, DateTimeKind.Unspecified).AddTicks(1482), new TimeSpan(0, 0, 0, 0, 0)), false, null, "CHUSAN@TEAMUP.COM", "CHUSAN", "AQAAAAIAAYagAAAAECbLqrD8k6kbeOwaprz7W6QgYIWHyqfkk3GPcWPOVVpzr8g4TVG/5ViVAm4Tg4G4Ig==", null, false, null, "97548f30-9a65-4750-9a82-431a64c11326", null, false, "chusan", null, null, null },
+                    { 4, 0, null, null, "Chứng chỉ A", "c9cbb9c6-24df-453d-9b8c-1aa5aa54a984", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 235, DateTimeKind.Unspecified).AddTicks(1093), new TimeSpan(0, 0, 0, 0, 0)), null, null, "coach@teamup.com", true, "HLV B", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 235, DateTimeKind.Unspecified).AddTicks(1100), new TimeSpan(0, 0, 0, 0, 0)), false, null, "COACH@TEAMUP.COM", "COACH", "AQAAAAIAAYagAAAAECscxN3BVXvNrmUAhj/UNAJv23YU7F9fgka06RIHEjKY7JQ9I6L5ver4YVLKAskrhQ==", null, false, 200000m, "b728593a-01c6-4f65-8502-863b4f279a67", "Bóng đá", false, "coach", null, "Sân ABC, Quận 1", "Thứ 2, 4, 6" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 3, 3 },
+                    { 4, 4 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -679,19 +670,9 @@ namespace TeamUp.Repositories.Migrations
                 column: "HostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserChats_User1Id",
-                table: "UserChats",
-                column: "User1Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserChats_User2Id",
-                table: "UserChats",
-                column: "User2Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserMessages_ChatId",
+                name: "IX_UserMessages_RecipientId",
                 table: "UserMessages",
-                column: "ChatId");
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserMessages_SenderId",
@@ -743,9 +724,6 @@ namespace TeamUp.Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rooms");
-
-            migrationBuilder.DropTable(
-                name: "UserChats");
 
             migrationBuilder.DropTable(
                 name: "Courts");

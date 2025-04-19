@@ -27,7 +27,6 @@ namespace TeamUp.Repositories.Context
         public virtual DbSet<RoomJoinRequest> RoomJoinRequests { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
-        public virtual DbSet<UserChat> UserChats { get; set; }
         public virtual DbSet<UserMessage> UserMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -99,17 +98,17 @@ namespace TeamUp.Repositories.Context
                 .HasForeignKey(r => r.RevieweeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<UserChat>(builder =>
+            builder.Entity<UserMessage>(builder =>
             {
-                builder.HasOne(x => x.User1)
-                    .WithMany(x => x.UserChats1)
-                    .HasForeignKey(x => x.User1Id)
-                    .OnDelete(DeleteBehavior.Restrict); // Tránh vòng lặp
+                builder.HasOne(x => x.Sender)
+                    .WithMany(x => x.SentMessages)
+                    .HasForeignKey(x => x.SenderId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-                builder.HasOne(x => x.User2)
-                    .WithMany(x => x.UserChats2)
-                    .HasForeignKey(x => x.User2Id)
-                    .OnDelete(DeleteBehavior.Restrict); // Tránh vòng lặp
+                builder.HasOne(x => x.Recipient)
+                    .WithMany(x => x.ReceivedMessages)
+                    .HasForeignKey(x => x.RecipientId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Seed roles
@@ -118,6 +117,74 @@ namespace TeamUp.Repositories.Context
                 new ApplicationRole { Id = 2, Name = "Người Chơi", NormalizedName = "NGUOICHOI", Description = "Người dùng thông thường" },
                 new ApplicationRole { Id = 3, Name = "Chủ Sân", NormalizedName = "CHUSAN", Description = "Chủ sân thể thao" },
                 new ApplicationRole { Id = 4, Name = "Huấn Luyện Viên", NormalizedName = "HUANLUYENVIEN", Description = "Coach / Trainer" }
+            );
+
+            var hasher = new PasswordHasher<ApplicationUser>();
+
+            var adminUser = new ApplicationUser
+            {
+                Id = 1,
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
+                Email = "admin@teamup.com",
+                NormalizedEmail = "ADMIN@TEAMUP.COM",
+                EmailConfirmed = true,
+                FullName = "System Admin",
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
+
+            var playerUser = new ApplicationUser
+            {
+                Id = 2,
+                UserName = "player",
+                NormalizedUserName = "PLAYER",
+                Email = "player@teamup.com",
+                NormalizedEmail = "PLAYER@TEAMUP.COM",
+                EmailConfirmed = true,
+                FullName = "Người Chơi A",
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            playerUser.PasswordHash = hasher.HashPassword(playerUser, "Player@123");
+
+            var courtOwnerUser = new ApplicationUser
+            {
+                Id = 3,
+                UserName = "chusan",
+                NormalizedUserName = "CHUSAN",
+                Email = "chusan@teamup.com",
+                NormalizedEmail = "CHUSAN@TEAMUP.COM",
+                EmailConfirmed = true,
+                FullName = "Chủ Sân A",
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            courtOwnerUser.PasswordHash = hasher.HashPassword(courtOwnerUser, "Chusan@123");
+
+            var coachUser = new ApplicationUser
+            {
+                Id = 4,
+                UserName = "coach",
+                NormalizedUserName = "COACH",
+                Email = "coach@teamup.com",
+                NormalizedEmail = "COACH@TEAMUP.COM",
+                EmailConfirmed = true,
+                FullName = "HLV B",
+                Specialty = "Bóng đá",
+                Certificate = "Chứng chỉ A",
+                PricePerSession = 200000,
+                WorkingAddress = "Sân ABC, Quận 1",
+                WorkingDate = "Thứ 2, 4, 6",
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+            coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
+
+            builder.Entity<ApplicationUser>().HasData(adminUser, playerUser, courtOwnerUser, coachUser);
+
+            builder.Entity<ApplicationUserRole>().HasData(
+                new ApplicationUserRole { UserId = 1, RoleId = 1 }, // Admin
+                new ApplicationUserRole { UserId = 2, RoleId = 2 }, // Người Chơi
+                new ApplicationUserRole { UserId = 3, RoleId = 3 }, // Chủ Sân
+                new ApplicationUserRole { UserId = 4, RoleId = 4 }  // Huấn Luyện Viên
             );
         }
 
