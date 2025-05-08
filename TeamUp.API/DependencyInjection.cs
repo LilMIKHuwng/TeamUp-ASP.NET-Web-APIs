@@ -12,6 +12,7 @@ using TeamUp.Repositories.Entity;
 using TeamUp.Repositories.Mapper;
 using TeamUp.Services;
 using TeamUp.Services.Service;
+using VNPAY.NET;
 
 namespace TeamUp.API
 {
@@ -55,6 +56,11 @@ namespace TeamUp.API
             services
                 .AddScoped<IRoleService, RoleService>()
                 .AddScoped<IRealTimeService, RealTimeService>()
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IAIWebsiteService, AIWebsiteService>()
+                .AddScoped<ISportsComplexService, SportsComplexService>()
+                .AddScoped<ICourtService, CourtService>()
+                .AddScoped<IVnpay, Vnpay>()
                 .AddHttpContextAccessor();
         }
 

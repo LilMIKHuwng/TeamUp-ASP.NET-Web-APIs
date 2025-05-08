@@ -51,12 +51,15 @@ namespace TeamUp.Repositories.Migrations
                     WorkingAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WorkingDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PricePerSession = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: true),
                     CreatedBy = table.Column<int>(type: "int", nullable: true),
                     LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
                     DeletedBy = table.Column<int>(type: "int", nullable: true),
                     CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -184,38 +187,6 @@ namespace TeamUp.Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Courts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Latitude = table.Column<float>(type: "real", nullable: false),
-                    Longitude = table.Column<float>(type: "real", nullable: false),
-                    PricePerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedBy = table.Column<int>(type: "int", nullable: true),
-                    LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
-                    DeletedBy = table.Column<int>(type: "int", nullable: true),
-                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Courts_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Ratings",
                 columns: table => new
                 {
@@ -247,6 +218,34 @@ namespace TeamUp.Repositories.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SportsComplexes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    DeletedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SportsComplexes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SportsComplexes_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -282,6 +281,35 @@ namespace TeamUp.Repositories.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SportsComplexId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PricePerHour = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImageUrls = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<int>(type: "int", nullable: true),
+                    LastUpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    DeletedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastUpdatedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DeletedTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courts_SportsComplexes_SportsComplexId",
+                        column: x => x.SportsComplexId,
+                        principalTable: "SportsComplexes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -517,21 +545,21 @@ namespace TeamUp.Repositories.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Description", "LastUpdatedBy", "LastUpdatedTime", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6537), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6540), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
-                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6544), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6544), new TimeSpan(0, 0, 0, 0, 0)), "Người Chơi", "NGUOICHOI" },
-                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6546), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6546), new TimeSpan(0, 0, 0, 0, 0)), "Chủ Sân", "CHUSAN" },
-                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6547), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6547), new TimeSpan(0, 0, 0, 0, 0)), "Huấn Luyện Viên", "HUANLUYENVIEN" }
+                    { 1, null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3623), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Quản trị viên", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3627), new TimeSpan(0, 0, 0, 0, 0)), "Admin", "ADMIN" },
+                    { 2, null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3632), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Người dùng thông thường", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3632), new TimeSpan(0, 0, 0, 0, 0)), "User", "USER" },
+                    { 3, null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3633), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Chủ sân thể thao", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3634), new TimeSpan(0, 0, 0, 0, 0)), "Owner", "OWNER" },
+                    { 4, null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3635), new TimeSpan(0, 0, 0, 0, 0)), null, null, "Coach / Trainer", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(3635), new TimeSpan(0, 0, 0, 0, 0)), "Coach", "COACH" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Age", "AvatarUrl", "Certificate", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Email", "EmailConfirmed", "FullName", "Height", "LastUpdatedBy", "LastUpdatedTime", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PricePerSession", "SecurityStamp", "Specialty", "TwoFactorEnabled", "UserName", "Weight", "WorkingAddress", "WorkingDate" },
+                columns: new[] { "Id", "AccessFailedCount", "Age", "AvatarUrl", "Certificate", "ConcurrencyStamp", "CreatedBy", "CreatedTime", "DeletedBy", "DeletedTime", "Email", "EmailConfirmed", "FullName", "Height", "LastUpdatedBy", "LastUpdatedTime", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "PricePerSession", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "Specialty", "Status", "TwoFactorEnabled", "UserName", "Weight", "WorkingAddress", "WorkingDate" },
                 values: new object[,]
                 {
-                    { 1, 0, null, null, null, "ea687d05-40be-40a2-bdac-0e169df28d11", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6825), new TimeSpan(0, 0, 0, 0, 0)), null, null, "admin@teamup.com", true, "System Admin", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 26, DateTimeKind.Unspecified).AddTicks(6825), new TimeSpan(0, 0, 0, 0, 0)), false, null, "ADMIN@TEAMUP.COM", "ADMIN", "AQAAAAIAAYagAAAAEEUa945M+RufIFMH7WFh6h+Gft+Ln4S1vX3AVCkC5tz76ws8PO6YFEF7tyA2fhGVPw==", null, false, null, "f9f104c1-a26f-42d7-b3f5-c63e213dee18", null, false, "admin", null, null, null },
-                    { 2, 0, null, null, null, "8d1863d5-6963-464a-822c-d7321561d52c", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 102, DateTimeKind.Unspecified).AddTicks(9388), new TimeSpan(0, 0, 0, 0, 0)), null, null, "player@teamup.com", true, "Người Chơi A", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 102, DateTimeKind.Unspecified).AddTicks(9632), new TimeSpan(0, 0, 0, 0, 0)), false, null, "PLAYER@TEAMUP.COM", "PLAYER", "AQAAAAIAAYagAAAAEI02foY6MawHjf1a7xRCdG1Fks4CqCRx6TA8ZEY26JvIOZ/wJI0dMKfYrdXkSSUl3w==", null, false, null, "689df5ed-da87-4894-8638-52da822fceae", null, false, "player", null, null, null },
-                    { 3, 0, null, null, null, "2ef41f3b-2c1b-4704-b2cd-2e093df5a2f6", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 169, DateTimeKind.Unspecified).AddTicks(1475), new TimeSpan(0, 0, 0, 0, 0)), null, null, "chusan@teamup.com", true, "Chủ Sân A", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 169, DateTimeKind.Unspecified).AddTicks(1482), new TimeSpan(0, 0, 0, 0, 0)), false, null, "CHUSAN@TEAMUP.COM", "CHUSAN", "AQAAAAIAAYagAAAAECbLqrD8k6kbeOwaprz7W6QgYIWHyqfkk3GPcWPOVVpzr8g4TVG/5ViVAm4Tg4G4Ig==", null, false, null, "97548f30-9a65-4750-9a82-431a64c11326", null, false, "chusan", null, null, null },
-                    { 4, 0, null, null, "Chứng chỉ A", "c9cbb9c6-24df-453d-9b8c-1aa5aa54a984", null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 235, DateTimeKind.Unspecified).AddTicks(1093), new TimeSpan(0, 0, 0, 0, 0)), null, null, "coach@teamup.com", true, "HLV B", null, null, new DateTimeOffset(new DateTime(2025, 4, 19, 12, 47, 5, 235, DateTimeKind.Unspecified).AddTicks(1100), new TimeSpan(0, 0, 0, 0, 0)), false, null, "COACH@TEAMUP.COM", "COACH", "AQAAAAIAAYagAAAAECscxN3BVXvNrmUAhj/UNAJv23YU7F9fgka06RIHEjKY7JQ9I6L5ver4YVLKAskrhQ==", null, false, 200000m, "b728593a-01c6-4f65-8502-863b4f279a67", "Bóng đá", false, "coach", null, "Sân ABC, Quận 1", "Thứ 2, 4, 6" }
+                    { 1, 0, null, null, null, "a33312b2-ed07-4884-92c1-80d5cfd8bec3", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(4024), new TimeSpan(0, 0, 0, 0, 0)), null, null, "admin@teamup.com", true, "System Admin", null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 36, 942, DateTimeKind.Unspecified).AddTicks(4024), new TimeSpan(0, 0, 0, 0, 0)), false, null, "ADMIN@TEAMUP.COM", "ADMIN", "AQAAAAIAAYagAAAAEL397a+N+g2ZiIKZ3bUxfHSv7Sq/MC8npfMiZvxPetC3gwP/9xqUsjEXEDuOwSlwwg==", null, false, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "baff4507-f2cc-4782-9cd0-6c17859da5b2", null, 1, false, "admin", null, null, null },
+                    { 2, 0, null, null, null, "351bebcf-3dae-4187-b714-90eeae58a916", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 49, DateTimeKind.Unspecified).AddTicks(8959), new TimeSpan(0, 0, 0, 0, 0)), null, null, "player@teamup.com", true, "Người Chơi A", null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 49, DateTimeKind.Unspecified).AddTicks(8972), new TimeSpan(0, 0, 0, 0, 0)), false, null, "PLAYER@TEAMUP.COM", "PLAYER", "AQAAAAIAAYagAAAAEEOkCpyHYgSP6iYha9VjTLVQlt1yDaa80b0aOwIyRix973iotmiEu5zQqtsMKuxabg==", null, false, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "c545f5d8-7883-4be1-a409-973d7eb7e383", null, 1, false, "player", null, null, null },
+                    { 3, 0, null, null, null, "7f93e520-4944-4279-8262-c915d86f7a30", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 197, DateTimeKind.Unspecified).AddTicks(2910), new TimeSpan(0, 0, 0, 0, 0)), null, null, "chusan@teamup.com", true, "Chủ Sân A", null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 197, DateTimeKind.Unspecified).AddTicks(2921), new TimeSpan(0, 0, 0, 0, 0)), false, null, "CHUSAN@TEAMUP.COM", "CHUSAN", "AQAAAAIAAYagAAAAEOX5MtJ00ugrF9BYVo0kslTToIKUaUa6N29qbHUNVWAg4O4Dxsjr8qdx6SxoX40FSg==", null, false, null, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "049a2c79-6373-40b6-994a-5dc732b478f3", null, 1, false, "chusan", null, null, null },
+                    { 4, 0, null, null, "Chứng chỉ A", "036799a5-fecc-40d3-94bc-3e27edc4954a", null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 302, DateTimeKind.Unspecified).AddTicks(8015), new TimeSpan(0, 0, 0, 0, 0)), null, null, "coach@teamup.com", true, "HLV B", null, null, new DateTimeOffset(new DateTime(2025, 5, 8, 8, 57, 37, 302, DateTimeKind.Unspecified).AddTicks(8022), new TimeSpan(0, 0, 0, 0, 0)), false, null, "COACH@TEAMUP.COM", "COACH", "AQAAAAIAAYagAAAAEMtBRL6AE4BWrF24GHPl6xrqmap15XP8MaVgRqLJmpVJjEv/LgARLKG4wDT3SE9AqQ==", null, false, 200000m, null, new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)), "65aae3f8-d032-4fb7-9a1a-4eae8e3b3f05", "Bóng đá", 1, false, "coach", null, "Sân ABC, Quận 1", "Thứ 2, 4, 6" }
                 });
 
             migrationBuilder.InsertData(
@@ -610,9 +638,9 @@ namespace TeamUp.Repositories.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Courts_OwnerId",
+                name: "IX_Courts_SportsComplexId",
                 table: "Courts",
-                column: "OwnerId");
+                column: "SportsComplexId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_CoachBookingId",
@@ -668,6 +696,11 @@ namespace TeamUp.Repositories.Migrations
                 name: "IX_Rooms_HostId",
                 table: "Rooms",
                 column: "HostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SportsComplexes_OwnerId",
+                table: "SportsComplexes",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserMessages_RecipientId",
@@ -727,6 +760,9 @@ namespace TeamUp.Repositories.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courts");
+
+            migrationBuilder.DropTable(
+                name: "SportsComplexes");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
