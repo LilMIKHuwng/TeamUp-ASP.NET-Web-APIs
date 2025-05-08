@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TeamUp.API.Controllers
 {
-    //[Authorize(Roles = SystemConstant.Role.ADMIN)]
     [Route("api/[controller]")]
     [ApiController]
     public class RoleController : ControllerBase

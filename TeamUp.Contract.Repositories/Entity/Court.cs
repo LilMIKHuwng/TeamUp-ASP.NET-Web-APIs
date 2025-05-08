@@ -11,19 +11,12 @@ namespace TeamUp.Contract.Repositories.Entity
 {
     public class Court : BaseEntity
     {
-        public int OwnerId { get; set; }
-        public virtual ApplicationUser Owner { get; set; }
+        public int SportsComplexId { get; set; }
+        public virtual SportsComplex SportsComplex { get; set; }
 
-        [MaxLength(100)]
         public string Name { get; set; }
 
         public string? Description { get; set; }
-
-        [MaxLength(200)]
-        public string Address { get; set; }
-
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
 
         public decimal PricePerHour { get; set; }
 

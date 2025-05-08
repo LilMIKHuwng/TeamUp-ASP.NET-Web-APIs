@@ -21,6 +21,8 @@ namespace TeamUp.Repositories.Entity
         public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
 
+        public int? Status { get; set; }
+
         public int? CreatedBy { get; set; }
         public int? LastUpdatedBy { get; set; }
         public int? DeletedBy { get; set; }
@@ -28,8 +30,12 @@ namespace TeamUp.Repositories.Entity
         public DateTimeOffset LastUpdatedTime { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? DeletedTime { get; set; }
 
+        public string? RefreshToken { get; set; }
+        public DateTimeOffset RefreshTokenExpiryTime { get; set; }
+
+
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } 
-        public virtual ICollection<Court> OwnedCourts { get; set; } 
+        public virtual ICollection<SportsComplex> SportsComplexs { get; set; } 
         public virtual ICollection<CourtBooking> CourtBookings { get; set; } 
         public virtual ICollection<CoachBooking> CoachBookingsAsCoach { get; set; } 
         public virtual ICollection<CoachBooking> CoachBookingsAsPlayer { get; set; } 

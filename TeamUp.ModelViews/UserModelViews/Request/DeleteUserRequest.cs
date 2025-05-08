@@ -3,6 +3,6 @@ namespace TeamUp.ModelViews.UserModelViews.Request
 {
     public class DeleteUserRequest
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace TeamUp.Repositories.Context
         public virtual DbSet<ApplicationUserRole> ApplicationUserRoles => Set<ApplicationUserRole>();
 
 
+        public virtual DbSet<SportsComplex> SportsComplexes { get; set; }
         public virtual DbSet<Court> Courts { get; set; }
         public virtual DbSet<CourtBooking> CourtBookings { get; set; }
         public virtual DbSet<CoachBooking> CoachBookings { get; set; }
@@ -114,9 +115,9 @@ namespace TeamUp.Repositories.Context
             // Seed roles
             builder.Entity<ApplicationRole>().HasData(
                 new ApplicationRole { Id = 1, Name = "Admin", NormalizedName = "ADMIN", Description = "Quản trị viên" },
-                new ApplicationRole { Id = 2, Name = "Người Chơi", NormalizedName = "NGUOICHOI", Description = "Người dùng thông thường" },
-                new ApplicationRole { Id = 3, Name = "Chủ Sân", NormalizedName = "CHUSAN", Description = "Chủ sân thể thao" },
-                new ApplicationRole { Id = 4, Name = "Huấn Luyện Viên", NormalizedName = "HUANLUYENVIEN", Description = "Coach / Trainer" }
+                new ApplicationRole { Id = 2, Name = "User", NormalizedName = "USER", Description = "Người dùng thông thường" },
+                new ApplicationRole { Id = 3, Name = "Owner", NormalizedName = "OWNER", Description = "Chủ sân thể thao" },
+                new ApplicationRole { Id = 4, Name = "Coach", NormalizedName = "COACH", Description = "Coach / Trainer" }
             );
 
             var hasher = new PasswordHasher<ApplicationUser>();
@@ -130,7 +131,8 @@ namespace TeamUp.Repositories.Context
                 NormalizedEmail = "ADMIN@TEAMUP.COM",
                 EmailConfirmed = true,
                 FullName = "System Admin",
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                Status = 1,
             };
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
 
@@ -143,7 +145,8 @@ namespace TeamUp.Repositories.Context
                 NormalizedEmail = "PLAYER@TEAMUP.COM",
                 EmailConfirmed = true,
                 FullName = "Người Chơi A",
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                Status = 1,
             };
             playerUser.PasswordHash = hasher.HashPassword(playerUser, "Player@123");
 
@@ -156,7 +159,8 @@ namespace TeamUp.Repositories.Context
                 NormalizedEmail = "CHUSAN@TEAMUP.COM",
                 EmailConfirmed = true,
                 FullName = "Chủ Sân A",
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                Status = 1,
             };
             courtOwnerUser.PasswordHash = hasher.HashPassword(courtOwnerUser, "Chusan@123");
 
@@ -174,7 +178,8 @@ namespace TeamUp.Repositories.Context
                 PricePerSession = 200000,
                 WorkingAddress = "Sân ABC, Quận 1",
                 WorkingDate = "Thứ 2, 4, 6",
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                Status = 1,
             };
             coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
 

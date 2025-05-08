@@ -5,70 +5,87 @@ using Microsoft.Extensions.Configuration;
 
 namespace TeamUp.Core.Utils.Firebase
 {
-	public class ImageHelper
-	{
-		private readonly IConfiguration _configuration;
+    public class ImageHelper
+    {
+        private static readonly string _firebaseAuthApiKey;
+        private static readonly string _firebaseEmail;
+        private static readonly string _firebasePassword;
+        private static readonly string _firebaseBucket;
+        static ImageHelper()
+        {
+            // Calculate the correct relative path to the configuration file
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+            var relativePath = @"appsettings.json";
+            var configPath = Path.GetFullPath(Path.Combine(basePath, relativePath));
 
-		public ImageHelper(IConfiguration configuration)
-		{
-			_configuration = configuration;
-		}
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException($"Configuration file not found: {configPath}");
+            }
 
-		public async Task<string> Upload(IFormFile file)
-		{
-			if (file != null && file.Length > 0)
-			{
-				string firebaseUrl = "";
-				// Use a MemoryStream to avoid saving the file locally
-				using (var memoryStream = new MemoryStream())
-				{
-					await file.CopyToAsync(memoryStream);
-					memoryStream.Position = 0; // Reset the stream position to the beginning
+            // Load the configuration
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile(configPath, optional: false, reloadOnChange: true);
 
-					firebaseUrl = await UploadToFirebase(memoryStream, file.FileName); // Get the download URL
-				}
-				return firebaseUrl;
-			}
-			return "";
-		}
+            var config = builder.Build();
 
 
-		public async Task<string> UploadToFirebase(Stream stream, string fileName)
-		{
-			// Access Firebase configuration from appsettings.json
-			var apiKey = _configuration["Firebase:ApiKey"];
-			var authEmail = _configuration["Firebase:AuthEmail"];
-			var authPassword = _configuration["Firebase:AuthPassword"];
-			var bucket = _configuration["Firebase:Bucket"];
+            _firebaseAuthApiKey = config["Firebase:ApiKey"];
+            _firebaseEmail = config["Firebase:AuthEmail"];
+            _firebasePassword = config["Firebase:AuthPassword"];
+            _firebaseBucket = config["Firebase:Bucket"];
+        }
 
-			// Authenticate using FirebaseAuthProvider with credentials from configuration
-			var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-			var signIn = await auth.SignInWithEmailAndPasswordAsync(authEmail, authPassword);
-			var cancellation = new CancellationTokenSource();
 
-			var task = new FirebaseStorage(
-				bucket,
-				new FirebaseStorageOptions
-				{
-					AuthTokenAsyncFactory = () => Task.FromResult(signIn.FirebaseToken),
-					ThrowOnCancel = true // when you cancel the upload, exception is thrown. By default no exception is thrown
-				})
-				.Child("images")
-				.Child(fileName)
-				.PutAsync(stream, cancellation.Token);
+        public static async Task<string> Upload(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                string firebaseUrl = "";
+                // Use a MemoryStream to avoid saving the file locally
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0; // Reset the stream position to the beginning
 
-			task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+                    firebaseUrl = await UploadToFirebase(memoryStream, file.FileName); // Get the download URL
+                }
+                return firebaseUrl;
 
-			try
-			{
-				string link = await task;
-				return link;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Exception was thrown: {ex.Message}");
-				return null;
-			}
-		}
-	}
+            }
+            return "";
+        }
+
+
+        private static async Task<string> UploadToFirebase(Stream stream, string fileName)
+        {
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(_firebaseAuthApiKey));
+            var a = await auth.SignInWithEmailAndPasswordAsync(_firebaseEmail, _firebasePassword);
+            var cancellation = new CancellationTokenSource();
+
+            var task = new FirebaseStorage(
+                _firebaseBucket,
+                new FirebaseStorageOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                    ThrowOnCancel = true // when you cancel the upload, exception is thrown. By default no exception is thrown
+                })
+                .Child("images")
+                .Child(fileName)
+                .PutAsync(stream, cancellation.Token);
+
+            task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
+
+            try
+            {
+                string link = await task;
+                return link;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception was thrown: {0}", ex);
+                return null;
+            }
+        }
+    }
 }

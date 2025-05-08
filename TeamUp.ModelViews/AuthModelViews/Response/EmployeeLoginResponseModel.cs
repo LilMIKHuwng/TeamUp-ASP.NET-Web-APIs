@@ -1,10 +1,10 @@
-﻿using TeamUp.ModelViews.RoleModelViews;
-
-namespace TeamUp.ModelViews.UserModelViews.Response
+﻿
+namespace TeamUp.ModelViews.AuthModelViews.Response
 {
-    public class EmployeeResponseModel
+    public class EmployeeLoginResponseModel
     {
         public int Id { get; set; }
+        public string UserName { get; set; }
         public string Email { get; set; }
         public string? FullName { get; set; }
         public int? Age { get; set; }
@@ -19,11 +19,10 @@ namespace TeamUp.ModelViews.UserModelViews.Response
         public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
 
-        public int? CreatedBy { get; set; }
-        public int? LastUpdatedBy { get; set; }
-
-        public string? Status { get; set; }
-
-        public RoleModelView Role { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTimeOffset RefreshTokenExpiryTime { get; set; }
+        public string AccessToken { get; set; }
+        public DateTimeOffset AccessTokenExpiredTime { get; set; }
+        public List<string> Roles { get; set; }
     }
 }
