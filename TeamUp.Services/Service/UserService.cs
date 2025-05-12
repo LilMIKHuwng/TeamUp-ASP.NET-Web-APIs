@@ -571,6 +571,7 @@ namespace TeamUp.Services.Service
 
             // Lọc danh sách user theo UserId từ bảng User
             var users = _userManager.Users
+                .OrderByDescending(r => r.LastUpdatedTime)
                 .Where(u => doctorUserIds.Contains(u.Id) && u.DeletedBy == null);
             // filter by search 
             if (!string.IsNullOrEmpty(request.SearchValue))
@@ -1096,6 +1097,7 @@ namespace TeamUp.Services.Service
                 .ToListAsync();
 
             var usersQuery = _userManager.Users
+                .OrderByDescending(r => r.LastUpdatedTime)
                 .Where(u => ownerUserIds.Contains(u.Id) && u.DeletedBy == null);
 
             // Apply search
@@ -1214,6 +1216,7 @@ namespace TeamUp.Services.Service
                 .ToListAsync();
 
             var usersQuery = _userManager.Users
+                .OrderByDescending(r => r.LastUpdatedTime)
                 .Where(u => coachUserIds.Contains(u.Id) && u.DeletedBy == null);
 
             // Apply search

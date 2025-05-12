@@ -16,6 +16,7 @@ using TeamUp.ModelViews.UserModelViews.Response;
 using TeamUp.Repositories.Entity;
 using Microsoft.EntityFrameworkCore;
 using static BabyCare.Core.Utils.SystemConstant;
+using TeamUp.ModelViews.SportsComplexModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -60,6 +61,7 @@ namespace TeamUp.Services.Service
                 result[i].Player = _mapper.Map<UserResponseModel>(bookings[i].Player);
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
                 result[i].Coach = _mapper.Map<EmployeeResponseModel>(bookings[i].Coach);
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<BasePaginatedList<CoachBookingModelView>>(new BasePaginatedList<CoachBookingModelView>(result, totalCount, pageNumber, pageSize));
@@ -71,6 +73,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Coach)
                 .Include(cb => cb.Player)
                 .Include(cb => cb.Court)
+                .OrderByDescending(cb => cb.CreatedTime)
                 .Where(cb => !cb.DeletedTime.HasValue)
                 .ToListAsync();
 
@@ -81,6 +84,7 @@ namespace TeamUp.Services.Service
                 result[i].Player = _mapper.Map<UserResponseModel>(bookings[i].Player);
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
                 result[i].Coach = _mapper.Map<EmployeeResponseModel>(bookings[i].Coach);
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<List<CoachBookingModelView>>(result);
@@ -100,6 +104,7 @@ namespace TeamUp.Services.Service
             result.Player = _mapper.Map<UserResponseModel>(booking.Player);
             result.Court = _mapper.Map<CourtModelView>(booking.Court);
             result.Coach = _mapper.Map<EmployeeResponseModel>(booking.Coach);
+            result.Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
 
             return new ApiSuccessResult<CoachBookingModelView>(result);
         }
@@ -153,7 +158,7 @@ namespace TeamUp.Services.Service
             }
 
             var booking = _mapper.Map<CoachBooking>(model);
-            booking.CreatedTime = DateTimeOffset.UtcNow;
+            booking.CreatedTime = DateTime.Now;
             booking.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             // ❗ Tính tổng tiền
@@ -251,7 +256,7 @@ namespace TeamUp.Services.Service
             if (!string.IsNullOrEmpty(model.PaymentMethod))
                 booking.PaymentMethod = model.PaymentMethod;
 
-            booking.LastUpdatedTime = DateTimeOffset.UtcNow;
+            booking.LastUpdatedTime = DateTime.Now;
             booking.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             // ✅ Tính lại TotalPrice
@@ -280,7 +285,7 @@ namespace TeamUp.Services.Service
             if (booking == null)
                 return new ApiErrorResult<object>("Không tìm thấy lịch huấn luyện.");
 
-            booking.DeletedTime = DateTimeOffset.UtcNow;
+            booking.DeletedTime = DateTime.Now;
             booking.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await repo.UpdateAsync(booking);
@@ -325,7 +330,7 @@ namespace TeamUp.Services.Service
                 booking.PaymentStatus = paymentStatus;
             }
 
-            booking.LastUpdatedTime = DateTimeOffset.UtcNow;
+            booking.LastUpdatedTime = DateTime.Now;
             booking.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await _unitOfWork.GetRepository<CoachBooking>().UpdateAsync(booking);

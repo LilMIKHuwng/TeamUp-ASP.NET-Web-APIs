@@ -80,7 +80,7 @@ namespace TeamUp.Services.Service
 
             var newComplex = _mapper.Map<SportsComplex>(model);
             newComplex.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
-            newComplex.CreatedTime = DateTimeOffset.UtcNow;
+            newComplex.CreatedTime = DateTime.Now;
 
             newComplex.ImageUrls = new List<string>();
             foreach (var img in model.ImageUrls)
@@ -124,7 +124,7 @@ namespace TeamUp.Services.Service
             }
 
             complex.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
-            complex.LastUpdatedTime = DateTimeOffset.UtcNow;
+            complex.LastUpdatedTime = DateTime.Now;
 
             await repo.UpdateAsync(complex);
             await _unitOfWork.SaveAsync();
@@ -140,7 +140,7 @@ namespace TeamUp.Services.Service
             if (complex == null)
                 return new ApiErrorResult<object>("Không tìm thấy khu thể thao.");
 
-            complex.DeletedTime = DateTimeOffset.UtcNow;
+            complex.DeletedTime = DateTime.Now;
             complex.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await repo.UpdateAsync(complex);
@@ -154,7 +154,7 @@ namespace TeamUp.Services.Service
             var repo = _unitOfWork.GetRepository<SportsComplex>();
             var complex = await repo.Entities
                 .Include(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue);
+                 .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue);
 
             if (complex == null)
                 return new ApiErrorResult<SportsComplexModelView>("Không tìm thấy khu thể thao.");
@@ -173,6 +173,7 @@ namespace TeamUp.Services.Service
         {
             var complexes = await _unitOfWork.GetRepository<SportsComplex>().Entities
                 .Include(x => x.Owner)
+                .OrderByDescending(r => r.CreatedTime)
                 .Where(x => !x.DeletedTime.HasValue)
                 .ToListAsync();
 

@@ -17,7 +17,7 @@ namespace TeamUp.Contract.Repositories.Entity
         public virtual ApplicationUser Requester { get; set; }
 
         public string Status { get; set; }
-        public DateTime RequestedAt { get; set; } = DateTime.UtcNow;
+        public DateTime RequestedAt { get; set; } = DateTime.Now;
         public DateTime? RespondedAt { get; set; }
     }
 
