@@ -8,6 +8,10 @@ using TeamUp.ModelViews.AuthModelViews.Response;
 using TeamUp.ModelViews.UserModelViews.Request;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using TeamUp.ModelViews.CourtModelViews;
+using TeamUp.ModelViews.RoomModelViews;
+using TeamUp.ModelViews.RoomJoinRequestModelViews;
+using TeamUp.ModelViews.CourtBookingModelViews;
+using TeamUp.ModelViews.CoachBookingModelViews;
 
 
 namespace TeamUp.Repositories.Mapper
@@ -48,6 +52,26 @@ namespace TeamUp.Repositories.Mapper
             CreateMap<Court, CourtModelView>().ReverseMap();
             CreateMap<Court, CreateCourtModelView>().ReverseMap();
             CreateMap<Court, UpdateCourtModelView>().ReverseMap();
+
+            //Room
+            CreateMap<Room, RoomModelView>().ReverseMap();
+            CreateMap<Room, CreateRoomModelView>().ReverseMap();
+            CreateMap<Room, UpdateRoomModelView>().ReverseMap();
+
+            //RoomJoinRequest
+            CreateMap<RoomJoinRequest, RoomJoinRequestModelView>().ReverseMap();
+            CreateMap<RoomJoinRequest, CreateRoomJoinRequestModelView>().ReverseMap();
+            CreateMap<RoomJoinRequest, UpdateRoomJoinRequestModelView>().ReverseMap();
+
+            //CourtBooking
+            CreateMap<CourtBooking, CourtBookingModelView>().ReverseMap();
+            CreateMap<CourtBooking, CreateCourtBookingModelView>().ReverseMap();
+            CreateMap<CourtBooking, UpdateCourtBookingModelView>().ReverseMap();
+
+            //CoachBooking
+            CreateMap<CoachBooking, CoachBookingModelView>().ReverseMap();
+            CreateMap<CoachBooking, CreateCoachBookingModelView>().ReverseMap();
+            CreateMap<CoachBooking, UpdateCoachBookingModelView>().ReverseMap();
         }
     }
 }
