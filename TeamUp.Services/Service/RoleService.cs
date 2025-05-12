@@ -27,7 +27,8 @@ namespace TeamUp.Services.Service
 		{
 			IQueryable<ApplicationRole> roleQuery = _unitOfWork.GetRepository<ApplicationRole>().Entities
 				.AsNoTracking()
-				.Where(p => !p.DeletedTime.HasValue);
+                .OrderByDescending(cb => cb.CreatedTime)
+                .Where(p => !p.DeletedTime.HasValue);
 
 			if (id != null)
 				roleQuery = roleQuery.Where(p => p.Id == id);
@@ -64,7 +65,7 @@ namespace TeamUp.Services.Service
 			ApplicationRole newRole = _mapper.Map<ApplicationRole>(model);
 
 			newRole.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0"); ;
-			newRole.CreatedTime = DateTimeOffset.UtcNow;
+			newRole.CreatedTime = DateTime.Now;
 
 			await _unitOfWork.GetRepository<ApplicationRole>().InsertAsync(newRole);
 
@@ -110,7 +111,7 @@ namespace TeamUp.Services.Service
 			if (isUpdated)
 			{
 				existingRole.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0"); ;
-				existingRole.LastUpdatedTime = DateTimeOffset.UtcNow;
+				existingRole.LastUpdatedTime = DateTime.Now;
 
 				await _unitOfWork.GetRepository<ApplicationRole>().UpdateAsync(existingRole);
 				await _unitOfWork.SaveAsync();
@@ -136,7 +137,7 @@ namespace TeamUp.Services.Service
 
 			}
 
-			existingRole.DeletedTime = DateTimeOffset.UtcNow;
+			existingRole.DeletedTime = DateTime.Now;
 			existingRole.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0"); ;
 
 			await _unitOfWork.GetRepository<ApplicationRole>().UpdateAsync(existingRole);

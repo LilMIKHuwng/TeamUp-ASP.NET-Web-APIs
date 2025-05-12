@@ -64,6 +64,8 @@ namespace TeamUp.Services.Service
                 result[i].Host  = _mapper.Map<UserResponseModel>(paginatedRooms[i].Host);
 
                 result[i].Court = _mapper.Map<CourtModelView>(paginatedRooms[i].Court);
+
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(paginatedRooms[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<BasePaginatedList<RoomModelView>>(new BasePaginatedList<RoomModelView>(result, totalCount, pageNumber, pageSize));
@@ -82,7 +84,7 @@ namespace TeamUp.Services.Service
             var newRoom = _mapper.Map<Room>(model);
             newRoom.Status = RoomStatus.Waiting;
             newRoom.CreatedBy = model.HostId;
-            newRoom.CreatedTime = DateTimeOffset.UtcNow;
+            newRoom.CreatedTime = DateTime.Now;
 
             await _unitOfWork.GetRepository<Room>().InsertAsync(newRoom);
             await _unitOfWork.SaveAsync();
@@ -128,7 +130,7 @@ namespace TeamUp.Services.Service
                 room.Status = model.Status;
 
             room.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
-            room.LastUpdatedTime = DateTimeOffset.UtcNow;
+            room.LastUpdatedTime = DateTime.Now;
 
             await roomRepo.UpdateAsync(room);
             await _unitOfWork.SaveAsync();
@@ -144,7 +146,7 @@ namespace TeamUp.Services.Service
             if (room == null)
                 return new ApiErrorResult<object>("Không tìm thấy phòng.");
 
-            room.DeletedTime = DateTimeOffset.UtcNow;
+            room.DeletedTime = DateTime.Now;
             room.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await repo.UpdateAsync(room);
@@ -169,6 +171,8 @@ namespace TeamUp.Services.Service
 
             result.Court = _mapper.Map<CourtModelView>(room.Court);
 
+            result.Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(room.Court.SportsComplex);
+
             return new ApiSuccessResult<RoomModelView>(result);
         }
 
@@ -177,6 +181,7 @@ namespace TeamUp.Services.Service
             var rooms = await _unitOfWork.GetRepository<Room>().Entities
                 .Include(r => r.Court)
                 .Include(r => r.Host)
+                .OrderByDescending(r => r.CreatedTime)
                 .Where(r => !r.DeletedTime.HasValue)
                 .ToListAsync();
 
@@ -187,6 +192,8 @@ namespace TeamUp.Services.Service
                 result[i].Host = _mapper.Map<UserResponseModel>(rooms[i].Host);
 
                 result[i].Court = _mapper.Map<CourtModelView>(rooms[i].Court);
+
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(rooms[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<List<RoomModelView>>(result);
@@ -199,18 +206,19 @@ namespace TeamUp.Services.Service
                 return new ApiErrorResult<object>("Không tìm thấy phòng.");
 
             var validStatuses = new[] {
-            RoomStatus.Waiting,
-            RoomStatus.Full,
-            RoomStatus.InProgress,
-            RoomStatus.Completed,
-            RoomStatus.Cancelled
-        };
+                    RoomStatus.Waiting,
+                    RoomStatus.Full,
+                    RoomStatus.InProgress,
+                    RoomStatus.Completed,
+                    RoomStatus.Cancelled
+                };
 
             if (!validStatuses.Contains(status))
                 return new ApiErrorResult<object>("Trạng thái không hợp lệ.");
 
             room.Status = status;
-            room.LastUpdatedTime = DateTimeOffset.UtcNow;
+            room.LastUpdatedTime = DateTime.Now;
+            room.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await _unitOfWork.GetRepository<Room>().UpdateAsync(room);
             await _unitOfWork.SaveAsync();

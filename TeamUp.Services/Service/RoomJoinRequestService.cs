@@ -83,7 +83,7 @@ namespace TeamUp.Services.Service
 
             var newRequest = _mapper.Map<RoomJoinRequest>(model);
             newRequest.Status = RoomJoinRequestStatus.Pending;
-            newRequest.RequestedAt = DateTime.UtcNow;
+            newRequest.RequestedAt = DateTime.Now;
 
             await _unitOfWork.GetRepository<RoomJoinRequest>().InsertAsync(newRequest);
             await _unitOfWork.SaveAsync();
@@ -177,6 +177,7 @@ namespace TeamUp.Services.Service
             var requests = await _unitOfWork.GetRepository<RoomJoinRequest>().Entities
                 .Include(r => r.Room)
                 .Include(r => r.Requester)
+                .OrderByDescending(cb => cb.RequestedAt)
                 .Where(r => !r.DeletedTime.HasValue)
                 .ToListAsync();
 

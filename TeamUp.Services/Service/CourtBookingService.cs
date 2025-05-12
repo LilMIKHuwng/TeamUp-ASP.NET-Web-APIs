@@ -18,6 +18,7 @@ using TeamUp.ModelViews.RoomModelViews;
 using TeamUp.ModelViews.UserModelViews.Response;
 using TeamUp.ModelViews.CourtModelViews;
 using static BabyCare.Core.Utils.SystemConstant;
+using TeamUp.ModelViews.SportsComplexModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -88,6 +89,8 @@ namespace TeamUp.Services.Service
                 result[i].User = _mapper.Map<UserResponseModel>(bookings[i].User);
 
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
+
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<BasePaginatedList<CourtBookingModelView>>(
@@ -99,6 +102,7 @@ namespace TeamUp.Services.Service
             var bookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Include(cb => cb.Court)
                 .Include(cb => cb.User)
+                .OrderByDescending(cb => cb.CreatedTime)
                 .Where(cb => !cb.DeletedTime.HasValue)
                 .ToListAsync();
 
@@ -109,6 +113,8 @@ namespace TeamUp.Services.Service
                 result[i].User = _mapper.Map<UserResponseModel>(bookings[i].User);
 
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
+
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
             }
 
             return new ApiSuccessResult<List<CourtBookingModelView>>(result);
@@ -129,6 +135,8 @@ namespace TeamUp.Services.Service
             result.User = _mapper.Map<UserResponseModel>(booking.User);
 
             result.Court = _mapper.Map<CourtModelView>(booking.Court);
+
+            result.Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
 
             return new ApiSuccessResult<CourtBookingModelView>(result);
         }
@@ -178,7 +186,7 @@ namespace TeamUp.Services.Service
 
             // 3. Tạo booking
             var booking = _mapper.Map<CourtBooking>(model);
-            booking.CreatedTime = DateTimeOffset.UtcNow;
+            booking.CreatedTime = DateTime.Now;
             booking.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             booking.TotalPrice = (decimal)(model.EndTime - model.StartTime).TotalHours * court.PricePerHour;
             booking.Status = SystemConstant.BookingStatus.Pending;
@@ -255,10 +263,10 @@ namespace TeamUp.Services.Service
             {
                 var allowedStatuses = new[]
                 {
-            BookingStatus.Pending, BookingStatus.Confirmed, BookingStatus.InProgress,
-            BookingStatus.Completed, BookingStatus.CancelledByUser, BookingStatus.CancelledByOwner,
-            BookingStatus.NoShow, BookingStatus.Failed, BookingStatus.CancelledByCoach
-        };
+                    BookingStatus.Pending, BookingStatus.Confirmed, BookingStatus.InProgress,
+                    BookingStatus.Completed, BookingStatus.CancelledByUser, BookingStatus.CancelledByOwner,
+                    BookingStatus.NoShow, BookingStatus.Failed, BookingStatus.CancelledByCoach
+                };
 
                 if (!allowedStatuses.Contains(model.Status))
                     return new ApiErrorResult<object>("Trạng thái không hợp lệ.");
@@ -269,7 +277,7 @@ namespace TeamUp.Services.Service
             if (!string.IsNullOrEmpty(model.PaymentMethod))
                 booking.PaymentMethod = model.PaymentMethod;
 
-            booking.LastUpdatedTime = DateTimeOffset.UtcNow;
+            booking.LastUpdatedTime = DateTime.Now;
             booking.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             // Tính lại giá nếu có thời gian hợp lệ
@@ -292,7 +300,7 @@ namespace TeamUp.Services.Service
             if (booking == null)
                 return new ApiErrorResult<object>("Không tìm thấy lịch đặt sân.");
 
-            booking.DeletedTime = DateTimeOffset.UtcNow;
+            booking.DeletedTime = DateTime.Now;
             booking.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await repo.UpdateAsync(booking);

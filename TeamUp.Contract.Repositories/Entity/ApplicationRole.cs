@@ -12,8 +12,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public int? CreatedBy { get; set; }
         public int? LastUpdatedBy { get; set; }
         public int? DeletedBy { get; set; }
-        public DateTimeOffset CreatedTime { get; set; } = DateTimeOffset.UtcNow;
-        public DateTimeOffset LastUpdatedTime { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset CreatedTime { get; set; } = DateTime.Now;
+        public DateTimeOffset LastUpdatedTime { get; set; } = DateTime.Now;
         public DateTimeOffset? DeletedTime { get; set; }
 
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }

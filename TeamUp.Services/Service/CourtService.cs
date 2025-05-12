@@ -69,7 +69,7 @@ namespace TeamUp.Services.Service
 
             var newCourt = _mapper.Map<Court>(model);
             newCourt.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
-            newCourt.CreatedTime = DateTimeOffset.UtcNow;
+            newCourt.CreatedTime = DateTime.Now;
 
             newCourt.ImageUrls = new List<string>();
             foreach (var img in model.ImageUrls)
@@ -120,7 +120,7 @@ namespace TeamUp.Services.Service
             }
 
             court.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
-            court.LastUpdatedTime = DateTimeOffset.UtcNow;
+            court.LastUpdatedTime = DateTime.Now;
 
             await courtRepo.UpdateAsync(court);
             await _unitOfWork.SaveAsync();
@@ -136,7 +136,7 @@ namespace TeamUp.Services.Service
             if (court == null)
                 return new ApiErrorResult<object>("Không tìm thấy sân.");
 
-            court.DeletedTime = DateTimeOffset.UtcNow;
+            court.DeletedTime = DateTime.Now;
             court.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
             await repo.UpdateAsync(court);
@@ -164,6 +164,7 @@ namespace TeamUp.Services.Service
         {
             var courts = await _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
+                .OrderByDescending(cb => cb.CreatedTime)
                 .Where(c => !c.DeletedTime.HasValue)
                 .ToListAsync();
 
