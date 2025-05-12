@@ -3,34 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TeamUp.Core.Base;
+using TeamUp.Contract.Repositories.Entity;
+using TeamUp.ModelViews.CourtModelViews;
+using TeamUp.ModelViews.UserModelViews.Response;
 using TeamUp.Repositories.Entity;
 
-namespace TeamUp.Contract.Repositories.Entity
+namespace TeamUp.ModelViews.CoachBookingModelViews
 {
-    public class CoachBooking : BaseEntity
+    public class CoachBookingModelView
     {
-        public int CoachId { get; set; }
-        public virtual ApplicationUser Coach { get; set; }
-
-        public int PlayerId { get; set; }
-        public virtual ApplicationUser Player { get; set; }
-
-        public int CourtId { get; set; }
-        public virtual Court Court { get; set; }
-
+        public EmployeeResponseModel Coach { get; set; }
+        public UserResponseModel Player { get; set; }
+        public CourtModelView Court { get; set; }
         public List<DateTime> SelectedDates { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-
         public decimal TotalPrice { get; set; }
-
         public string Status { get; set; }
-
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
-
-        public virtual ICollection<Payment> Payments { get; set; }
     }
-
 }

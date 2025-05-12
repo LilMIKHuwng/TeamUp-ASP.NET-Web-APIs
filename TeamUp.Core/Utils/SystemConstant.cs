@@ -53,5 +53,31 @@ namespace BabyCare.Core.Utils
             Active = 1,
             InActive = 0
         }
+
+        public class RoomStatus
+        {
+            public static string Waiting = "Waiting"; 
+            public static string Full = "Full";       
+            public static string InProgress = "InProgress"; 
+            public static string Completed = "Completed";   
+            public static string Cancelled = "Cancelled";   
+        }
+
+        public static class RoomJoinRequestStatus
+        {
+            public const string Pending = "Pending";       
+            public const string Accepted = "Accepted";    
+            public const string Rejected = "Rejected";     
+            public const string Cancelled = "Cancelled";   
+        }
+
+        public static class PaymentStatus
+        {
+            public const string Pending = "Pending";         
+            public const string Paid = "Paid";               
+            public const string Failed = "Failed";          
+            public const string Refunded = "Refunded";      
+            public const string Cancelled = "Cancelled";     
+        }
     }
 }
