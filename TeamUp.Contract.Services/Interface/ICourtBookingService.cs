@@ -19,5 +19,7 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<CourtBookingModelView>> GetCourtBookingByIdAsync(int id);
         Task<ApiResult<List<CourtBookingModelView>>> GetAllCourtBooking();
         Task<ApiResult<object>> UpdateCourtBookingStatusAsync(int id, string? status, string? paymentStatus);
+        Task<ApiResult<object>> GetTotalPriceInMonthForOwnerAndAdmin(int courtId, string paymentMetod, int month, int year);
+        Task<ApiResult<List<object>>> GetHourFreeInCourt(int courtId);
     }
 }

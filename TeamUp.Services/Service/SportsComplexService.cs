@@ -15,6 +15,7 @@ using TeamUp.Core;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using Microsoft.EntityFrameworkCore;
 using TeamUp.ModelViews.UserModelViews.Response;
+using BabyCare.Core.Utils;
 
 namespace TeamUp.Services.Service
 {
@@ -82,6 +83,16 @@ namespace TeamUp.Services.Service
             newComplex.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             newComplex.CreatedTime = DateTime.Now;
 
+            var validTypes = new[]
+            {
+                SystemConstant.Type.Soccer,
+                SystemConstant.Type.Badminton,
+                SystemConstant.Type.PickleBall
+            };
+
+            if (!validTypes.Contains(model.Type))
+                return new ApiErrorResult<object>("Loại thể thao không hợp lệ.");
+
             newComplex.ImageUrls = new List<string>();
             foreach (var img in model.ImageUrls)
             {
@@ -112,6 +123,21 @@ namespace TeamUp.Services.Service
 
             if (model.OwnerId.HasValue)
                 complex.OwnerId = model.OwnerId.Value;
+
+            if (!string.IsNullOrWhiteSpace(model.Type))
+            {
+                var validTypes = new[]
+                {
+                    SystemConstant.Type.Soccer,
+                    SystemConstant.Type.Badminton,
+                    SystemConstant.Type.PickleBall
+                };
+
+                if (!validTypes.Contains(model.Type))
+                    return new ApiErrorResult<object>("Loại thể thao không hợp lệ.");
+
+                complex.Type = model.Type;
+            }
 
             if (model.ImageUrls != null && model.ImageUrls.Any())
             {

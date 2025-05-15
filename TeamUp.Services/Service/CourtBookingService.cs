@@ -189,6 +189,7 @@ namespace TeamUp.Services.Service
             booking.CreatedTime = DateTime.Now;
             booking.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             booking.TotalPrice = (decimal)(model.EndTime - model.StartTime).TotalHours * court.PricePerHour;
+
             booking.Status = SystemConstant.BookingStatus.Pending;
             booking.PaymentStatus = SystemConstant.PaymentStatus.Pending;
 
@@ -303,6 +304,8 @@ namespace TeamUp.Services.Service
             booking.DeletedTime = DateTime.Now;
             booking.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
+            booking.Status = BookingStatus.Failed;
+
             await repo.UpdateAsync(booking);
             await _unitOfWork.SaveAsync();
 
@@ -353,6 +356,85 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
         }
+
+        public async Task<ApiResult<object>> GetTotalPriceInMonthForOwnerAndAdmin(int courtId, string paymentMethod, int month, int year)
+        {
+            var bookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Include(b => b.Court)
+                .Where(b =>
+                    b.CourtId == courtId &&
+                    !b.DeletedTime.HasValue &&
+                    b.Status == BookingStatus.Completed &&
+                    b.StartTime.Month == month &&
+                    b.StartTime.Year == year && 
+                    b.PaymentMethod == paymentMethod)
+                .ToListAsync();
+
+            var totalPrice = bookings.Sum(b => b.TotalPrice);
+
+            return new ApiSuccessResult<object>(new
+            {
+                TotalPrice = totalPrice
+            });
+        }
+
+        public async Task<ApiResult<List<object>>> GetHourFreeInCourt(int courtId)
+        {
+            var now = DateTime.Now;
+            var startDate = now.Date;
+            var endDate = startDate.AddDays(7);
+            var openTime = TimeSpan.FromHours(5);    // 5:00 AM
+            var closeTime = TimeSpan.FromHours(23);  // 11:00 PM
+
+            // Lấy danh sách các booking của sân
+            var courtBookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Where(b =>
+                    b.CourtId == courtId &&
+                    !b.DeletedTime.HasValue &&
+                    b.StartTime >= startDate &&
+                    b.EndTime <= endDate)
+                .ToListAsync();
+
+            // Lấy danh sách các booking của huấn luyện viên có sử dụng sân
+            var coachBookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb =>
+                    cb.CourtId == courtId &&
+                    !cb.DeletedTime.HasValue)
+                .ToListAsync();
+
+            var freeSlots = new List<object>();
+
+            for (var date = startDate; date < endDate; date = date.AddDays(1))
+            {
+                for (var hour = openTime; hour < closeTime; hour = hour.Add(TimeSpan.FromHours(1)))
+                {
+                    var slotStart = date.Add(hour);
+                    var slotEnd = slotStart.AddHours(1);
+
+                    // Check conflict with CourtBooking
+                    var hasCourtBookingConflict = courtBookings.Any(b =>
+                        (slotStart < b.EndTime && slotEnd > b.StartTime));
+
+                    // Check conflict with CoachBooking
+                    var hasCoachBookingConflict = coachBookings.Any(cb =>
+                        cb.SelectedDates.Contains(date) &&
+                        (hour < cb.EndTime && hour.Add(TimeSpan.FromHours(1)) > cb.StartTime));
+
+                    if (!hasCourtBookingConflict && !hasCoachBookingConflict)
+                    {
+                        freeSlots.Add(new
+                        {
+                            Date = date.ToString("yyyy-MM-dd"),
+                            StartTime = slotStart.ToString("HH:mm"),
+                            EndTime = slotEnd.ToString("HH:mm")
+                        });
+                    }
+                }
+            }
+
+            return new ApiSuccessResult<List<object>>(freeSlots);
+        }
+
 
     }
 }

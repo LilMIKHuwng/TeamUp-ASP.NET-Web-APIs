@@ -12,6 +12,9 @@ using TeamUp.ModelViews.RoomModelViews;
 using TeamUp.ModelViews.RoomJoinRequestModelViews;
 using TeamUp.ModelViews.CourtBookingModelViews;
 using TeamUp.ModelViews.CoachBookingModelViews;
+using TeamUp.ModelViews.RoomPlayerModelViews;
+using TeamUp.ModelViews.RatingModelViews;
+using TeamUp.ModelViews.PaymentModelViews;
 
 
 namespace TeamUp.Repositories.Mapper
@@ -72,6 +75,20 @@ namespace TeamUp.Repositories.Mapper
             CreateMap<CoachBooking, CoachBookingModelView>().ReverseMap();
             CreateMap<CoachBooking, CreateCoachBookingModelView>().ReverseMap();
             CreateMap<CoachBooking, UpdateCoachBookingModelView>().ReverseMap();
+
+            //RoomPlayer
+            CreateMap<RoomPlayer, RoomPlayerModelView>().ReverseMap();
+            CreateMap<RoomPlayer, CreateRoomPlayerModelView>().ReverseMap();
+            CreateMap<RoomPlayer, UpdateRoomPlayerModelView>().ReverseMap();
+
+            //Rating
+            CreateMap<Rating, RatingModelView>().ReverseMap();
+            CreateMap<Rating, CreateRatingModelView>().ReverseMap();
+            CreateMap<Rating, UpdateRatingModelView>().ReverseMap();
+
+            //Payment
+            CreateMap<Payment, PaymentModelView>().ReverseMap();
+            CreateMap<Payment, CreatePaymentModelView>().ReverseMap();
         }
     }
 }

@@ -2,6 +2,7 @@
 using TeamUp.Contract.Services.Interface;
 using TeamUp.Core.APIResponse;
 using TeamUp.ModelViews.CoachBookingModelViews;
+using TeamUp.Services.Service;
 
 namespace TeamUp.API.Controllers
 {
@@ -135,6 +136,27 @@ namespace TeamUp.API.Controllers
             try
             {
                 var result = await _coachBookingService.GetAllCoachBooking();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get total price for a coach in a specific month and year (for owner and admin)
+        /// </summary>
+        [HttpGet("total-price/coach")]
+        public async Task<ActionResult<ApiResult<object>>> GetTotalPriceInMonth(
+            [FromQuery] int coachId,
+            [FromQuery] string paymentMethod,
+            [FromQuery] int month,
+            [FromQuery] int year)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetTotalPriceInMonthForCoachAndAdmin(coachId, paymentMethod, month, year);
                 return Ok(result);
             }
             catch (Exception ex)

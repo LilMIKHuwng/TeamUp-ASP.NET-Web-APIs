@@ -268,6 +268,7 @@ namespace TeamUp.Services.Service
                 decimal courtFee = (decimal)(booking.EndTime - booking.StartTime).TotalHours * court.PricePerHour * booking.SelectedDates.Count;
                 decimal coachFee = booking.SelectedDates.Count * (coach.PricePerSession ?? 0);
                 booking.TotalPrice = courtFee + coachFee;
+
             }
 
             await repo.UpdateAsync(booking);
@@ -287,6 +288,7 @@ namespace TeamUp.Services.Service
 
             booking.DeletedTime = DateTime.Now;
             booking.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
+            booking.Status = BookingStatus.Failed;
 
             await repo.UpdateAsync(booking);
             await _unitOfWork.SaveAsync();
@@ -337,6 +339,26 @@ namespace TeamUp.Services.Service
             await _unitOfWork.SaveAsync();
 
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
+        }
+
+        public async Task<ApiResult<object>> GetTotalPriceInMonthForCoachAndAdmin(int coachId, string paymentMethod, int month, int year)
+        {
+            var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Include(b => b.Coach)
+                .Where(b =>
+                    b.CoachId == coachId &&
+                    !b.DeletedTime.HasValue &&
+                    b.Status == BookingStatus.Completed &&
+                    b.PaymentMethod == paymentMethod &&
+                    b.SelectedDates.Any(date => date.Month == month && date.Year == year))
+                .ToListAsync();
+
+            var totalPrice = bookings.Sum(b => b.TotalPrice);
+
+            return new ApiSuccessResult<object>(new
+            {
+                TotalPrice = totalPrice
+            });
         }
     }
 }

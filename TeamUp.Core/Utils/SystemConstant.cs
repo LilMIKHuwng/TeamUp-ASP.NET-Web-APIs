@@ -22,6 +22,13 @@ namespace BabyCare.Core.Utils
             public static string USER = "User";
             public static string COACH = "Coach";
         }
+
+        public class Type
+        {
+            public static string Soccer = "Bóng Đá";
+            public static string Badminton = "Cầu Lông";
+            public static string PickleBall = "Pickle Ball";
+        }
         public enum Gender
         {
             Female = 0,
@@ -78,6 +85,14 @@ namespace BabyCare.Core.Utils
             public const string Failed = "Failed";          
             public const string Refunded = "Refunded";      
             public const string Cancelled = "Cancelled";     
+        }
+
+        public class RoomPlayerStatus
+        {
+            public static string Accepted = "Accepted";
+            public static string InProgress = "InProgress";
+            public static string Completed = "Completed";
+            public static string Cancelled = "Cancelled";
         }
     }
 }

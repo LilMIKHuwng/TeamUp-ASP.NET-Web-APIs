@@ -10,6 +10,9 @@ namespace TeamUp.ModelViews.SportsComplexModelViews
 {
     public class CreateSportsComplexModelView
     {
+        [Required(ErrorMessage = "Loại khu thể thao không được để trống.")]
+        public string Type { get; set; }
+
         [Required(ErrorMessage = "Tên khu thể thao không được để trống.")]
         public string Name { get; set; }
 

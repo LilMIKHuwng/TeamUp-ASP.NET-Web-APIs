@@ -20,13 +20,12 @@ namespace TeamUp.Contract.Repositories.Entity
         public int? CoachBookingId { get; set; }
         public virtual CoachBooking? CoachBooking { get; set; }
 
+        public DateTime PaymentDate { get; set; }
         public decimal Amount { get; set; }
 
         public string Method { get; set; }
         public string Status { get; set; }
 
-        [MaxLength(100)]
-        public string? VNPayTransactionId { get; set; }
     }
 
 }

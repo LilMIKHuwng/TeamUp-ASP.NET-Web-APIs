@@ -141,5 +141,43 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Get total price for a court in a specific month and year (for owner and admin)
+        /// </summary>
+        [HttpGet("total-price/owner")]
+        public async Task<ActionResult<ApiResult<object>>> GetTotalPriceInMonth(
+            [FromQuery] int courtId,
+            [FromQuery] string paymentMethod,
+            [FromQuery] int month,
+            [FromQuery] int year)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetTotalPriceInMonthForOwnerAndAdmin(courtId, paymentMethod, month, year);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get list of available (free) hours for a specific court
+        /// </summary>
+        [HttpGet("free-hours")]
+        public async Task<ActionResult<ApiResult<List<object>>>> GetFreeHours([FromQuery] int courtId)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetHourFreeInCourt(courtId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
     }
 }
