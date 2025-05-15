@@ -108,14 +108,14 @@ namespace TeamUp.Services.Service
             {
                 new Claim("userId", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("UserName", user.UserName),
+                new Claim("Email", user.Email),
             };
 
             var userRoles = await _userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
-                authClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+                authClaims.Add(new Claim("Role", role.ToString()));
             }
 
             var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
@@ -855,13 +855,7 @@ namespace TeamUp.Services.Service
                 return new ApiErrorResult<UserLoginResponseModel>("Email hoặc mật khẩu không đúng.");
             }
             var roles = await _userManager.GetRolesAsync(existingUser);
-            foreach (var role in roles)
-            {
-                if (role != SystemConstant.Role.USER)
-                {
-                    return new ApiErrorResult<UserLoginResponseModel>("Email hoặc mật khẩu không đúng.");
-                }
-            }
+            
             var isConfirmed = await _userManager.IsEmailConfirmedAsync(existingUser);
             if (!isConfirmed)
             {
@@ -881,6 +875,12 @@ namespace TeamUp.Services.Service
 
             await _userManager.UpdateAsync(existingUser);
             var response = _mapper.Map<UserLoginResponseModel>(existingUser);
+
+            foreach (var role in roles)
+            {
+                response.Role = role;
+            }
+
             response.AccessToken = accessTokenData.Item1;
             response.AccessTokenExpiredTime = accessTokenData.Item2;
             response.RefreshToken = refreshTokenData.Item1;
