@@ -11,6 +11,9 @@ namespace TeamUp.ModelViews.AuthModelViews.Response
         public float? Weight { get; set; }
         public string? AvatarUrl { get; set; }
         public string? PhoneNumber { get; set; }
+
+        public string? Role { get; set; }
+
         public string? RefreshToken { get; set; }
         public DateTimeOffset RefreshTokenExpiryTime { get; set; }
         public string AccessToken { get; set; }
