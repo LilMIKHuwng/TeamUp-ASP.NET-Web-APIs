@@ -1,35 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TeamUp.Contract.Services.Interface;
 using TeamUp.Core.APIResponse;
-using TeamUp.ModelViews.RoomJoinRequestModelViews;
+using TeamUp.ModelViews.RoomPlayerModelViews;
 
 namespace TeamUp.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoomJoinRequestController : ControllerBase
+    public class RoomPlayerController : ControllerBase
     {
-        private readonly IRoomJoinRequestService _roomJoinRequestService;
+        private readonly IRoomPlayerService _roomPlayerService;
 
-        public RoomJoinRequestController(IRoomJoinRequestService roomJoinRequestService)
+        public RoomPlayerController(IRoomPlayerService roomPlayerService)
         {
-            _roomJoinRequestService = roomJoinRequestService;
+            _roomPlayerService = roomPlayerService;
         }
 
         /// <summary>
-        /// Get all room join requests with pagination and optional filters
+        /// Get all room players with optional filters and pagination
         /// </summary>
         [HttpGet("all")]
         public async Task<ActionResult<ApiResult<object>>> GetAll(
             [FromQuery] int? roomId,
-            [FromQuery] int? requesterId,
+            [FromQuery] int? playerId,
             [FromQuery] string? status,
+            [FromQuery] DateTime? joinAt,
             int pageNumber = 1,
             int pageSize = 10)
         {
             try
             {
-                var result = await _roomJoinRequestService.GetAllRoomJoinRequestAsync(pageNumber, pageSize, roomId, requesterId, status);
+                var result = await _roomPlayerService.GetAllRoomPlayerAsync(pageNumber, pageSize, roomId, playerId, joinAt, status);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -39,14 +40,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Get a room join request by ID
+        /// Get a room player by ID
         /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResult<object>>> GetById(int id)
         {
             try
             {
-                var result = await _roomJoinRequestService.GetRoomJoinRequestByIdAsync(id);
+                var result = await _roomPlayerService.GetRoomPlayerByIdAsync(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -56,14 +57,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Create a new room join request
+        /// Create a new room player (requires accepted join request)
         /// </summary>
         [HttpPost("create")]
-        public async Task<ActionResult<ApiResult<object>>> Create([FromBody] CreateRoomJoinRequestModelView model)
+        public async Task<ActionResult<ApiResult<object>>> Create([FromBody] CreateRoomPlayerModelView model)
         {
             try
             {
-                var result = await _roomJoinRequestService.AddRoomJoinRequestAsync(model);
+                var result = await _roomPlayerService.AddRoomPlayerAsync(model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -73,14 +74,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Update an existing room join request
+        /// Update an existing room player (requires accepted join request)
         /// </summary>
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<ApiResult<object>>> Update(int id, [FromBody] UpdateRoomJoinRequestModelView model)
+        public async Task<ActionResult<ApiResult<object>>> Update(int id, [FromBody] UpdateRoomPlayerModelView model)
         {
             try
             {
-                var result = await _roomJoinRequestService.UpdateRoomJoinRequestAsync(id, model);
+                var result = await _roomPlayerService.UpdateRoomPlayerAsync(id, model);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -90,14 +91,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Delete a room join request by ID
+        /// Delete a room player by ID
         /// </summary>
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<ApiResult<object>>> Delete(int id)
         {
             try
             {
-                var result = await _roomJoinRequestService.DeleteRoomJoinRequestAsync(id);
+                var result = await _roomPlayerService.DeleteRoomPlayerAsync(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -107,14 +108,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Get all room join requests (no pagination)
+        /// Get all room players without pagination
         /// </summary>
         [HttpGet("all/no-pagination")]
-        public async Task<ActionResult<ApiResult<List<RoomJoinRequestModelView>>>> GetAllNoPagination()
+        public async Task<ActionResult<ApiResult<List<RoomPlayerModelView>>>> GetAllNoPagination()
         {
             try
             {
-                var result = await _roomJoinRequestService.GetAllRoomJoinRequest();
+                var result = await _roomPlayerService.GetAllRoomPlayer();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -124,14 +125,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Update the status of a room join request
+        /// Update the status of a room player
         /// </summary>
         [HttpPatch("status/{id}")]
         public async Task<ActionResult<ApiResult<object>>> UpdateStatus(int id, [FromQuery] string status)
         {
             try
             {
-                var result = await _roomJoinRequestService.UpdateRoomJoinRequestStatusAsync(id, status);
+                var result = await _roomPlayerService.UpdateRoomPlayergStatusAsync(id, status);
                 return Ok(result);
             }
             catch (Exception ex)

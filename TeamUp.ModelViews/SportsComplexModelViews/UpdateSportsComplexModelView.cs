@@ -9,6 +9,7 @@ namespace TeamUp.ModelViews.SportsComplexModelViews
 {
     public class UpdateSportsComplexModelView
     {
+        public string? Type { get; set; }
         public string? Name { get; set; }
         public string? Address { get; set; }
         public List<IFormFile>? ImageUrls { get; set; }

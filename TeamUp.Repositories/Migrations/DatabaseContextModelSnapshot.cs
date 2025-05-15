@@ -167,36 +167,36 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(459), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(4986), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Quản trị viên",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(463), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5029), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(468), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5034), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Người dùng thông thường",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(468), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5035), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(470), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5036), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Chủ sân thể thao",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(470), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5037), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(472), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5038), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Coach / Trainer",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(472), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5038), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });
@@ -461,16 +461,15 @@ namespace TeamUp.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("VNPayTransactionId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -732,6 +731,10 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
@@ -921,19 +924,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b735059b-3aa7-4571-910a-4aa41caccfaf",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(866), new TimeSpan(0, 0, 0, 0, 0)),
+                            ConcurrencyStamp = "fd9fba73-3b51-45a2-9dc8-9c7b9a869c59",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5243), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "admin@teamup.com",
                             EmailConfirmed = true,
                             FullName = "System Admin",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 680, DateTimeKind.Unspecified).AddTicks(867), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5244), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@TEAMUP.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDra0vHlOduoj5oRSt59at0LQbNJ/QBCoG5cOIizboOlevTwLZ6l6MUUdukmnp0QDA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPOhLY/OmUrrerpDe4piQ6i6xmZtcdzWLjQGQ/0uV8M6S0LmufVwB8m68ywodcoWMA==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "689c25c7-95ff-45c1-bbf9-469648ee5cd6",
+                            SecurityStamp = "f782a5e2-2eeb-4ec9-b370-efc569c414b4",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -942,19 +945,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d468bdf-411e-42f1-be23-edd3e2e0b900",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 752, DateTimeKind.Unspecified).AddTicks(3564), new TimeSpan(0, 0, 0, 0, 0)),
+                            ConcurrencyStamp = "c47e4d48-bdfd-45cb-9e7a-45673f8c60de",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 946, DateTimeKind.Unspecified).AddTicks(5964), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "player@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Người Chơi A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 752, DateTimeKind.Unspecified).AddTicks(3573), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 946, DateTimeKind.Unspecified).AddTicks(6017), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEAMUP.COM",
                             NormalizedUserName = "PLAYER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDr3umHWPu8dtIKNIK+2TbirE0x7sH7hjGfdMDQ+nax5m9xxOiVkLQLfeGXp9TL24Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJpXeu1jKzoBsFHUKveJA1qLsThuR0w72b4gBLnfkUW9tqRseJ6MB6zwQpTsjcC+OQ==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "0d380c59-7fe5-4dc0-8e24-783f0a3a7993",
+                            SecurityStamp = "dd346479-cfab-4cf6-8d3a-1f356662cb2e",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "player"
@@ -963,19 +966,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e93e1c2b-0c97-4af2-90b1-225f4b7bbdd7",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 827, DateTimeKind.Unspecified).AddTicks(7904), new TimeSpan(0, 0, 0, 0, 0)),
+                            ConcurrencyStamp = "d204a739-38ee-4f87-b364-55cdaaf6ac3c",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 3, DateTimeKind.Unspecified).AddTicks(9411), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "chusan@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Chủ Sân A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 827, DateTimeKind.Unspecified).AddTicks(7912), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 3, DateTimeKind.Unspecified).AddTicks(9456), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "CHUSAN@TEAMUP.COM",
                             NormalizedUserName = "CHUSAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFDF8p/rX6g1kRYFk8t2UAkZ3kAcfv2zOkSdv8GcIfGc6sncIL5RmD4hQendb3KvJg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDZ+WYn0A5LsHQGF8G4hgHkyAyL7Exu5//WvgY+uFWsuhOMnpRX/XZ9V8tNgBDzyHg==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "d048f7f9-5b8c-42c6-a965-effdcd3fd4be",
+                            SecurityStamp = "06b54e58-1a88-47b8-8c13-7ed9f53eb3aa",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "chusan"
@@ -985,20 +988,20 @@ namespace TeamUp.Repositories.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Certificate = "Chứng chỉ A",
-                            ConcurrencyStamp = "bdb73130-ebf9-41aa-8dd8-b75ef50013f4",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 921, DateTimeKind.Unspecified).AddTicks(4157), new TimeSpan(0, 0, 0, 0, 0)),
+                            ConcurrencyStamp = "8e34d420-6c83-4acd-833f-4305d8c71944",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 62, DateTimeKind.Unspecified).AddTicks(1602), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "coach@teamup.com",
                             EmailConfirmed = true,
                             FullName = "HLV B",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 11, 7, 54, 49, 921, DateTimeKind.Unspecified).AddTicks(4165), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 62, DateTimeKind.Unspecified).AddTicks(1648), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "COACH@TEAMUP.COM",
                             NormalizedUserName = "COACH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIsBuQNybwLeU5dRP33GbaaQHlho6GryKV+tQsCeKHX7KPRIJvHa2ukpox+g/7hS1w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBw5T2e4N4wBl2YBLQWCaVr9z0bSOlXHrPq62N4OrG+zOSuxFujNIQSrKA/Ys7Po6w==",
                             PhoneNumberConfirmed = false,
                             PricePerSession = 200000m,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "e428178d-377d-4646-ad67-1da849938763",
+                            SecurityStamp = "1705eed9-6223-4099-9297-7cd622b06e2b",
                             Specialty = "Bóng đá",
                             Status = 1,
                             TwoFactorEnabled = false,

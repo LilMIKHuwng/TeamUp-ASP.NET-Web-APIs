@@ -11,6 +11,7 @@ namespace TeamUp.Contract.Repositories.Entity
 {
     public class SportsComplex : BaseEntity
     {
+        public string Type { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public List<string> ImageUrls { get; set; }

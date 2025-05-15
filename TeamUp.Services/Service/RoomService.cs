@@ -149,6 +149,8 @@ namespace TeamUp.Services.Service
             room.DeletedTime = DateTime.Now;
             room.DeletedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
+            room.Status = RoomStatus.Cancelled;
+
             await repo.UpdateAsync(room);
             await _unitOfWork.SaveAsync();
 

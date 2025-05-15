@@ -18,5 +18,6 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<object>> DeleteRoomJoinRequestAsync(int id);
         Task<ApiResult<RoomJoinRequestModelView>> GetRoomJoinRequestByIdAsync(int id);
         Task<ApiResult<List<RoomJoinRequestModelView>>> GetAllRoomJoinRequest();
+        Task<ApiResult<object>> UpdateRoomJoinRequestStatusAsync(int id, string status);
     }
 }

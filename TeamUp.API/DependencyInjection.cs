@@ -64,6 +64,9 @@ namespace TeamUp.API
                 .AddScoped<IRoomJoinRequestService, RoomJoinRequestService>()
                 .AddScoped<ICourtBookingService, CourtBookingService>()
                 .AddScoped<ICoachBookingService, CoachBookingService>()
+                .AddScoped<IRoomPlayerService, RoomPlayerService>()
+                .AddScoped<IRatingService, RatingService>()
+                .AddScoped<IPaymentService, PaymentService>()
                 .AddScoped<IVnpay, Vnpay>()
                 .AddHttpContextAccessor();
         }

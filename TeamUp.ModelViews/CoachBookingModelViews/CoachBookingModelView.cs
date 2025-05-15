@@ -12,6 +12,7 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
 {
     public class CoachBookingModelView
     {
+        int Id { get; set; }
         public EmployeeResponseModel Coach { get; set; }
         public UserResponseModel Player { get; set; }
         public CourtModelView Court { get; set; }
