@@ -1017,8 +1017,9 @@ namespace TeamUp.Services.Service
             {
                 Email = request.Email,
                 UserName = await _generateUsernameOfGuestAsync(),
-                FullName = request.Email,
+                FullName = request.FullName,
                 Status = (int)UserStatus.InActive,
+                PhoneNumber = request.PhoneNumber, 
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);

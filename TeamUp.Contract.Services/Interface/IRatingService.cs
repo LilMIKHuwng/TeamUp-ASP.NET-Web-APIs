@@ -23,6 +23,8 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<Dictionary<int, int>>> GetRatingStatsForUserAsync(int userId);
         Task<ApiResult<bool>> CheckIfUserAlreadyRatedAsync(int reviewerId, int revieweeId);
         Task<ApiResult<List<RatingModelView>>> GetLatestRatingsForUserAsync(int revieweeId, int take = 5);
+        Task<ApiResult<int>> GetTotalReviewerCountForUserAsync(int revieweeId);
+
 
     }
 }

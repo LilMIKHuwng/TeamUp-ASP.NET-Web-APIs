@@ -195,5 +195,22 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<List<RatingModelView>>(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Lấy tổng số người đã đánh giá cho một người dùng
+        /// </summary>
+        [HttpGet("reviewers/count/{revieweeId}")]
+        public async Task<IActionResult> GetReviewerCount(int revieweeId)
+        {
+            try
+            {
+                var result = await _ratingService.GetTotalReviewerCountForUserAsync(revieweeId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<List<RatingModelView>>(ex.Message));
+            }
+        }
     }
 }

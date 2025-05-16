@@ -243,5 +243,17 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<List<RatingModelView>>(result);
         }
+
+        public async Task<ApiResult<int>> GetTotalReviewerCountForUserAsync(int revieweeId)
+        {
+            var count = await _unitOfWork.GetRepository<Rating>()
+                .Entities
+                .Where(r => r.RevieweeId == revieweeId)
+                .Select(r => r.ReviewerId)
+                .Distinct()
+                .CountAsync();
+
+            return new ApiSuccessResult<int>(count);
+        }
     }
 }
