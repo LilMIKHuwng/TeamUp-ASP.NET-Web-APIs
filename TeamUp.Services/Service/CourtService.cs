@@ -14,6 +14,8 @@ using TeamUp.Core;
 using TeamUp.ModelViews.CourtModelViews;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using Microsoft.EntityFrameworkCore;
+using TeamUp.Repositories.Entity;
+using static BabyCare.Core.Utils.SystemConstant;
 
 namespace TeamUp.Services.Service
 {
@@ -34,7 +36,7 @@ namespace TeamUp.Services.Service
         {
             var query = _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
-                .Where(c => !c.DeletedTime.HasValue);
+                .Where(c => !c.DeletedTime.HasValue && c.Status == PackageStatus.Active);
 
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(c => c.Name.Contains(name));
@@ -78,6 +80,16 @@ namespace TeamUp.Services.Service
                 newCourt.ImageUrls.Add(imgUrl);
             }
 
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(sportsComplex.OwnerId);
+            if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
+            {
+                newCourt.Status = PackageStatus.InActive;
+            } 
+            else
+            {
+                newCourt.Status = PackageStatus.Active;
+            }
+
             await _unitOfWork.GetRepository<Court>().InsertAsync(newCourt);
             await _unitOfWork.SaveAsync();
 
@@ -119,6 +131,16 @@ namespace TeamUp.Services.Service
                 }
             }
 
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(court.SportsComplex.OwnerId);
+            if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
+            {
+                court.Status = PackageStatus.InActive;
+            }
+            else
+            {
+                court.Status = PackageStatus.Active;
+            }
+
             court.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             court.LastUpdatedTime = DateTime.Now;
 
@@ -149,7 +171,7 @@ namespace TeamUp.Services.Service
         {
             var court = await _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
-                .FirstOrDefaultAsync(c => c.Id == id && !c.DeletedTime.HasValue);
+                .FirstOrDefaultAsync(c => c.Id == id && !c.DeletedTime.HasValue && c.Status == PackageStatus.Active);
 
             if (court == null)
                 return new ApiErrorResult<CourtModelView>("Không tìm thấy sân.");
@@ -165,7 +187,7 @@ namespace TeamUp.Services.Service
             var courts = await _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
                 .OrderByDescending(cb => cb.CreatedTime)
-                .Where(c => !c.DeletedTime.HasValue)
+                .Where(c => !c.DeletedTime.HasValue && c.Status == PackageStatus.Active)
                 .ToListAsync();
 
             var result = _mapper.Map<List<CourtModelView>>(courts);

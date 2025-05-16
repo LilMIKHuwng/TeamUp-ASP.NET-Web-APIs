@@ -94,5 +94,11 @@ namespace BabyCare.Core.Utils
             public static string Completed = "Completed";
             public static string Cancelled = "Cancelled";
         }
+
+        public class PackageStatus
+        {
+            public static string Active = "Active";
+            public static string InActive = "InActive";
+        }
     }
 }

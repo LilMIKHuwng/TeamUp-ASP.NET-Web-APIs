@@ -19,8 +19,7 @@ namespace TeamUp.ModelViews.UserModelViews.Response
         public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
 
-        public int? CreatedBy { get; set; }
-        public int? LastUpdatedBy { get; set; }
+        public string? StatusForCoach { get; set; }
 
         public string? Status { get; set; }
 

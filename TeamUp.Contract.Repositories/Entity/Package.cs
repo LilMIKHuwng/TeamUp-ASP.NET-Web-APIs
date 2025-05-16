@@ -8,15 +8,15 @@ using TeamUp.Repositories.Entity;
 
 namespace TeamUp.Contract.Repositories.Entity
 {
-    /*public class Package : BaseEntity
+    public class Package : BaseEntity
     {
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string? Description { get; set; }
-
-
+        public string Name { get; set; }        
+        public decimal Price { get; set; }       
+        public string? Description { get; set; }  
+        public int DurationDays { get; set; }  
+        public string Type { get; set; }         
 
         public virtual ICollection<ApplicationUser> Users { get; set; }
         public virtual ICollection<Payment> Payments { get; set; } // NEW
-    }*/
+    }
 }

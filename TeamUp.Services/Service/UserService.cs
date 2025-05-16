@@ -410,8 +410,7 @@ namespace TeamUp.Services.Service
                 WorkingAddress = user.WorkingAddress,
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
-                CreatedBy = user.CreatedBy,
-                LastUpdatedBy = user.LastUpdatedBy,
+                StatusForCoach = user.StatusForCoach,
 
                 // Lấy role phù hợp của user
                 Role = new ModelViews.RoleModelViews.RoleModelView()
@@ -465,8 +464,7 @@ namespace TeamUp.Services.Service
                 AvatarUrl = x.AvatarUrl,
                 PhoneNumber = x.PhoneNumber,
                 Status = ((EmployeeStatus)x.Status).ToString(),
-                CreatedBy = x.CreatedBy,
-                LastUpdatedBy = x.LastUpdatedBy
+
             }).ToList();
 
             // return to client
@@ -477,7 +475,7 @@ namespace TeamUp.Services.Service
         public async Task<ApiResult<EmployeeResponseModel>> GetEmployeeById(int Id)
         {
             // Check existed user
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == Id);
+            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == Id && x.StatusForCoach == PackageStatus.Active);
             if (existingUser == null)
             {
                 return new ApiErrorResult<EmployeeResponseModel>("User is not existed.", System.Net.HttpStatusCode.NotFound);
@@ -596,8 +594,7 @@ namespace TeamUp.Services.Service
                 AvatarUrl = x.AvatarUrl,
                 PhoneNumber = x.PhoneNumber,
                 Status = ((EmployeeStatus)x.Status).ToString(),
-                CreatedBy = x.CreatedBy,
-                LastUpdatedBy = x.LastUpdatedBy
+
             }).ToList();
 
             var response = new BasePaginatedList<UserResponseModel>(items, total, currentPage, pageSize);
@@ -1135,8 +1132,8 @@ namespace TeamUp.Services.Service
                 WorkingAddress = user.WorkingAddress,
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
-                CreatedBy = user.CreatedBy,
-                LastUpdatedBy = user.LastUpdatedBy,
+                StatusForCoach = user.StatusForCoach,
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",
@@ -1187,8 +1184,8 @@ namespace TeamUp.Services.Service
                 WorkingAddress = user.WorkingAddress,
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
-                CreatedBy = user.CreatedBy,
-                LastUpdatedBy = user.LastUpdatedBy,
+                StatusForCoach = user.StatusForCoach,
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",
@@ -1218,7 +1215,7 @@ namespace TeamUp.Services.Service
 
             var usersQuery = _userManager.Users
                 .OrderByDescending(r => r.LastUpdatedTime)
-                .Where(u => coachUserIds.Contains(u.Id) && u.DeletedBy == null);
+                .Where(u => coachUserIds.Contains(u.Id) && u.DeletedBy == null && u.StatusForCoach == PackageStatus.Active);
 
             // Apply search
             if (!string.IsNullOrWhiteSpace(request.SearchValue))
@@ -1254,8 +1251,8 @@ namespace TeamUp.Services.Service
                 WorkingAddress = user.WorkingAddress,
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
-                CreatedBy = user.CreatedBy,
-                LastUpdatedBy = user.LastUpdatedBy,
+                StatusForCoach = user.StatusForCoach,
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",
@@ -1285,7 +1282,7 @@ namespace TeamUp.Services.Service
 
             // Lọc danh sách user theo UserId từ bảng User
             var users = await _userManager.Users
-                .Where(u => doctorUserIds.Contains(u.Id) && u.DeletedBy == null)
+                .Where(u => doctorUserIds.Contains(u.Id) && u.DeletedBy == null && u.StatusForCoach == PackageStatus.Active)
                 .OrderByDescending(x => x.LastUpdatedTime)
                 .ToListAsync();
 
@@ -1306,8 +1303,8 @@ namespace TeamUp.Services.Service
                 WorkingAddress = user.WorkingAddress,
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
-                CreatedBy = user.CreatedBy,
-                LastUpdatedBy = user.LastUpdatedBy,
+                StatusForCoach = user.StatusForCoach,
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",

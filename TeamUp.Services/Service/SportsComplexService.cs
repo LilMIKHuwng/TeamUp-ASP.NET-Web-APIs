@@ -16,6 +16,8 @@ using TeamUp.ModelViews.SportsComplexModelViews;
 using Microsoft.EntityFrameworkCore;
 using TeamUp.ModelViews.UserModelViews.Response;
 using BabyCare.Core.Utils;
+using static BabyCare.Core.Utils.SystemConstant;
+using TeamUp.Repositories.Entity;
 
 namespace TeamUp.Services.Service
 {
@@ -36,7 +38,7 @@ namespace TeamUp.Services.Service
         {
             IQueryable<SportsComplex> query = _unitOfWork.GetRepository<SportsComplex>().Entities
                 .Include(sc => sc.Owner)
-                .Where(sc => !sc.DeletedTime.HasValue);
+                .Where(sc => !sc.DeletedTime.HasValue && sc.Status == PackageStatus.Active);
 
             if (!string.IsNullOrWhiteSpace(name))
             {
@@ -100,6 +102,16 @@ namespace TeamUp.Services.Service
                 newComplex.ImageUrls.Add(imgUrl);
             }
 
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(model.OwnerId);
+            if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
+            {
+                newComplex.Status = PackageStatus.InActive;
+            }
+            else
+            {
+                newComplex.Status = PackageStatus.Active;
+            }
+
             await repo.InsertAsync(newComplex);
             await _unitOfWork.SaveAsync();
 
@@ -149,6 +161,16 @@ namespace TeamUp.Services.Service
                 }
             }
 
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(complex.OwnerId);
+            if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
+            {
+                complex.Status = PackageStatus.InActive;
+            }
+            else
+            {
+                complex.Status = PackageStatus.Active;
+            }
+
             complex.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             complex.LastUpdatedTime = DateTime.Now;
 
@@ -180,7 +202,7 @@ namespace TeamUp.Services.Service
             var repo = _unitOfWork.GetRepository<SportsComplex>();
             var complex = await repo.Entities
                 .Include(x => x.Owner)
-                 .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue);
+                 .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue && x.Status == PackageStatus.Active);
 
             if (complex == null)
                 return new ApiErrorResult<SportsComplexModelView>("Không tìm thấy khu thể thao.");
@@ -200,7 +222,7 @@ namespace TeamUp.Services.Service
             var complexes = await _unitOfWork.GetRepository<SportsComplex>().Entities
                 .Include(x => x.Owner)
                 .OrderByDescending(r => r.CreatedTime)
-                .Where(x => !x.DeletedTime.HasValue)
+                .Where(x => !x.DeletedTime.HasValue && x.Status == PackageStatus.Active)
                 .ToListAsync();
 
             var result = _mapper.Map<List<SportsComplexModelView>>(complexes);

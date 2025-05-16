@@ -20,6 +20,9 @@ namespace TeamUp.Contract.Repositories.Entity
         public int? CoachBookingId { get; set; }
         public virtual CoachBooking? CoachBooking { get; set; }
 
+        public int? PackageId { get; set; }
+        public virtual Package? Package { get; set; }
+
         public DateTime PaymentDate { get; set; }
         public decimal Amount { get; set; }
 

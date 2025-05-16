@@ -11,5 +11,6 @@ namespace TeamUp.ModelViews.PaymentModelViews
         public int UserId { get; set; }
         public int? CourtBookingId { get; set; }
         public int? CoachBookingId { get; set; }
+        public int? PackageId { get; set; }
     }
 }

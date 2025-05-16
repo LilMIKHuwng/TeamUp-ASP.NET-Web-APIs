@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamUp.ModelViews.CoachBookingModelViews;
 using TeamUp.ModelViews.CourtBookingModelViews;
+using TeamUp.ModelViews.PackageModelViews;
 using TeamUp.ModelViews.UserModelViews.Response;
 
 namespace TeamUp.ModelViews.PaymentModelViews
@@ -15,6 +16,8 @@ namespace TeamUp.ModelViews.PaymentModelViews
         public UserResponseModel User { get; set; }
         public CourtBookingModelView? CourtBooking { get; set; }
         public CoachBookingModelView? CoachBooking { get; set; }
+        public PackageModelView? Package { get; set; }
+
         public DateTime PaymentDate { get; set; }
         public decimal Amount { get; set; }
         public string Method { get; set; }

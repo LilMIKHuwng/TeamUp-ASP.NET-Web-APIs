@@ -167,36 +167,36 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(4986), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9086), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Quản trị viên",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5029), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9119), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5034), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9125), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Người dùng thông thường",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5035), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9126), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5036), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9128), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Chủ sân thể thao",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5037), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9128), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5038), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9129), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Coach / Trainer",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5038), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9130), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });
@@ -353,11 +353,65 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<int>("SportsComplexId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SportsComplexId");
 
                     b.ToTable("Courts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3114), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Sân cỏ nhân tạo tiêu chuẩn",
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3116), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Sân 5 người A",
+                            PricePerHour = 200000m,
+                            SportsComplexId = 1,
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3119), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Sân chất lượng cao, đèn chiếu sáng ban đêm",
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3119), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Sân 7 người B",
+                            PricePerHour = 350000m,
+                            SportsComplexId = 1,
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3122), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Sân trong nhà, chuẩn thi đấu",
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3123), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Sân cầu lông A",
+                            PricePerHour = 150000m,
+                            SportsComplexId = 2,
+                            Status = "Active"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3125), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Sân chuẩn phong trào",
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3126), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Sân cầu lông B",
+                            PricePerHour = 100000m,
+                            SportsComplexId = 2,
+                            Status = "Active"
+                        });
                 });
 
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.CourtBooking", b =>
@@ -422,6 +476,89 @@ namespace TeamUp.Repositories.Migrations
                     b.ToTable("CourtBookings");
                 });
 
+            modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.Package", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("DeletedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DeletedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DurationDays")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LastUpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("LastUpdatedTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Packages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2788), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Gói dịch vụ 365 ngày",
+                            DurationDays = 30,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2846), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Basic",
+                            Price = 399000m,
+                            Type = "PackageHLV"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2857), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Gói cao cấp 1095 ngày",
+                            DurationDays = 90,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2858), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Premium",
+                            Price = 599000m,
+                            Type = "PackageHLV"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2860), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Gói cao cấp 1095 ngày",
+                            DurationDays = 30,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2861), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Basic",
+                            Price = 199000m,
+                            Type = "PackageHLV"
+                        });
+                });
+
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -461,6 +598,9 @@ namespace TeamUp.Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
@@ -476,6 +616,8 @@ namespace TeamUp.Repositories.Migrations
                     b.HasIndex("CoachBookingId");
 
                     b.HasIndex("CourtBookingId");
+
+                    b.HasIndex("PackageId");
 
                     b.HasIndex("UserId");
 
@@ -527,6 +669,28 @@ namespace TeamUp.Repositories.Migrations
                     b.HasIndex("ReviewerId");
 
                     b.ToTable("Ratings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comment = "HLV rất chuyên nghiệp, hướng dẫn tận tình.",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3178), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3179), new TimeSpan(0, 7, 0, 0, 0)),
+                            RatingValue = 5,
+                            RevieweeId = 4,
+                            ReviewerId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comment = "Chủ sân thân thiện, sân sạch đẹp.",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3184), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3185), new TimeSpan(0, 7, 0, 0, 0)),
+                            RatingValue = 4,
+                            RevieweeId = 3,
+                            ReviewerId = 2
+                        });
                 });
 
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.Room", b =>
@@ -589,6 +753,50 @@ namespace TeamUp.Repositories.Migrations
                     b.HasIndex("HostId");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CourtId = 1,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3245), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Tập hợp anh em giao lưu bóng đá sáng thứ 7.",
+                            HostId = 2,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3246), new TimeSpan(0, 7, 0, 0, 0)),
+                            MaxPlayers = 10,
+                            Name = "Team Sáng Thứ 7",
+                            RoomFee = 30000m,
+                            ScheduledTime = new DateTime(2025, 5, 17, 7, 0, 0, 0, DateTimeKind.Local),
+                            Status = "Waiting"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CourtId = 2,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3282), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Tìm đối đá giao hữu 7v7 buổi tối.",
+                            HostId = 3,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3307), new TimeSpan(0, 7, 0, 0, 0)),
+                            MaxPlayers = 14,
+                            Name = "Giao lưu buổi tối",
+                            RoomFee = 50000m,
+                            ScheduledTime = new DateTime(2025, 5, 18, 20, 0, 0, 0, DateTimeKind.Local),
+                            Status = "Completed"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CourtId = 3,
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3345), new TimeSpan(0, 7, 0, 0, 0)),
+                            Description = "Đánh cầu cuối tuần, vui vẻ là chính.",
+                            HostId = 2,
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(3346), new TimeSpan(0, 7, 0, 0, 0)),
+                            MaxPlayers = 4,
+                            Name = "Badminton Team CN",
+                            RoomFee = 20000m,
+                            ScheduledTime = new DateTime(2025, 5, 19, 9, 0, 0, 0, DateTimeKind.Local),
+                            Status = "Full"
+                        });
                 });
 
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.RoomJoinRequest", b =>
@@ -731,6 +939,10 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -740,6 +952,32 @@ namespace TeamUp.Repositories.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("SportsComplexes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "123 Đường A, Quận 1, TP.HCM",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2923), new TimeSpan(0, 7, 0, 0, 0)),
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2924), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Khu Thể Thao ABC",
+                            OwnerId = 3,
+                            Status = "Active",
+                            Type = "Bóng đá"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "456 Đường B, Quận 5, TP.HCM",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2943), new TimeSpan(0, 7, 0, 0, 0)),
+                            ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\"]",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 57, 57, DateTimeKind.Unspecified).AddTicks(2944), new TimeSpan(0, 7, 0, 0, 0)),
+                            Name = "Khu Thể Thao DEF",
+                            OwnerId = 3,
+                            Status = "Active",
+                            Type = "Cầu lông"
+                        });
                 });
 
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.UserMessage", b =>
@@ -837,6 +1075,9 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("ExpireDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -864,6 +1105,9 @@ namespace TeamUp.Repositories.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -888,8 +1132,14 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<string>("Specialty")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("StatusForCoach")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -917,6 +1167,8 @@ namespace TeamUp.Repositories.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PackageId");
+
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -924,19 +1176,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fd9fba73-3b51-45a2-9dc8-9c7b9a869c59",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5243), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "e6e65dbf-b956-465b-9b59-727de8f8854e",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9474), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "admin@teamup.com",
                             EmailConfirmed = true,
                             FullName = "System Admin",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 888, DateTimeKind.Unspecified).AddTicks(5244), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 730, DateTimeKind.Unspecified).AddTicks(9475), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@TEAMUP.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPOhLY/OmUrrerpDe4piQ6i6xmZtcdzWLjQGQ/0uV8M6S0LmufVwB8m68ywodcoWMA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKv4j0lNI2bFqOCgbLBdHBTR52/7kpYo7WfcG6nxzQhoKlsOfi+yhj7Z1fjAEU0z2Q==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "f782a5e2-2eeb-4ec9-b370-efc569c414b4",
+                            SecurityStamp = "4f7369ef-5bf1-416a-82d1-b97253d5d75b",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -945,19 +1197,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c47e4d48-bdfd-45cb-9e7a-45673f8c60de",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 946, DateTimeKind.Unspecified).AddTicks(5964), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "bdd78af7-8bfb-4883-8bcc-0d9fa7506885",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 798, DateTimeKind.Unspecified).AddTicks(7110), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "player@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Người Chơi A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 24, 946, DateTimeKind.Unspecified).AddTicks(6017), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 798, DateTimeKind.Unspecified).AddTicks(7176), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEAMUP.COM",
                             NormalizedUserName = "PLAYER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJpXeu1jKzoBsFHUKveJA1qLsThuR0w72b4gBLnfkUW9tqRseJ6MB6zwQpTsjcC+OQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPnTvhtnF8mmqxj0LEtBV4DQ1UhK7xZ62FJ+2e9nsP2m+0QzL1dJTNpBqPh8uC5vaw==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "dd346479-cfab-4cf6-8d3a-1f356662cb2e",
+                            SecurityStamp = "a526934d-371a-488e-a70c-2da62c313d1e",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "player"
@@ -966,19 +1218,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d204a739-38ee-4f87-b364-55cdaaf6ac3c",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 3, DateTimeKind.Unspecified).AddTicks(9411), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "46b7e408-8fcf-4144-b3df-e4d223ed5716",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 875, DateTimeKind.Unspecified).AddTicks(1537), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "chusan@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Chủ Sân A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 3, DateTimeKind.Unspecified).AddTicks(9456), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 875, DateTimeKind.Unspecified).AddTicks(1592), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "CHUSAN@TEAMUP.COM",
                             NormalizedUserName = "CHUSAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDZ+WYn0A5LsHQGF8G4hgHkyAyL7Exu5//WvgY+uFWsuhOMnpRX/XZ9V8tNgBDzyHg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMZQNxcLWaOqDDzIdmzDp6X6/QKokcga506GkT27zzgNy1lvQhu/o3zoiC9ZVHiA/w==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "06b54e58-1a88-47b8-8c13-7ed9f53eb3aa",
+                            SecurityStamp = "d2a30b00-269d-42d9-8cc1-54b0163d23e4",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "chusan"
@@ -988,20 +1240,20 @@ namespace TeamUp.Repositories.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Certificate = "Chứng chỉ A",
-                            ConcurrencyStamp = "8e34d420-6c83-4acd-833f-4305d8c71944",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 62, DateTimeKind.Unspecified).AddTicks(1602), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "c025a56e-62aa-43ad-835e-829662e75595",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 965, DateTimeKind.Unspecified).AddTicks(6077), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "coach@teamup.com",
                             EmailConfirmed = true,
                             FullName = "HLV B",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 15, 13, 34, 25, 62, DateTimeKind.Unspecified).AddTicks(1648), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 16, 16, 36, 56, 965, DateTimeKind.Unspecified).AddTicks(6148), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "COACH@TEAMUP.COM",
                             NormalizedUserName = "COACH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBw5T2e4N4wBl2YBLQWCaVr9z0bSOlXHrPq62N4OrG+zOSuxFujNIQSrKA/Ys7Po6w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHP1FaDg1zDzy/vfcIAmRtHpnorVnSrMRC9doL1AtUZS2DsRQ4mvJ6YDVe6Jk66DSQ==",
                             PhoneNumberConfirmed = false,
                             PricePerSession = 200000m,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "1705eed9-6223-4099-9297-7cd622b06e2b",
+                            SecurityStamp = "a474806f-5792-4756-a859-011acc1eb89a",
                             Specialty = "Bóng đá",
                             Status = 1,
                             TwoFactorEnabled = false,
@@ -1133,6 +1385,10 @@ namespace TeamUp.Repositories.Migrations
                         .WithMany("Payments")
                         .HasForeignKey("CourtBookingId");
 
+                    b.HasOne("TeamUp.Contract.Repositories.Entity.Package", "Package")
+                        .WithMany("Payments")
+                        .HasForeignKey("PackageId");
+
                     b.HasOne("TeamUp.Repositories.Entity.ApplicationUser", "User")
                         .WithMany("Payments")
                         .HasForeignKey("UserId")
@@ -1142,6 +1398,8 @@ namespace TeamUp.Repositories.Migrations
                     b.Navigation("CoachBooking");
 
                     b.Navigation("CourtBooking");
+
+                    b.Navigation("Package");
 
                     b.Navigation("User");
                 });
@@ -1252,6 +1510,15 @@ namespace TeamUp.Repositories.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("TeamUp.Repositories.Entity.ApplicationUser", b =>
+                {
+                    b.HasOne("TeamUp.Contract.Repositories.Entity.Package", "Package")
+                        .WithMany("Users")
+                        .HasForeignKey("PackageId");
+
+                    b.Navigation("Package");
+                });
+
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.ApplicationRole", b =>
                 {
                     b.Navigation("UserRoles");
@@ -1274,6 +1541,13 @@ namespace TeamUp.Repositories.Migrations
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.CourtBooking", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.Package", b =>
+                {
+                    b.Navigation("Payments");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TeamUp.Contract.Repositories.Entity.Room", b =>
