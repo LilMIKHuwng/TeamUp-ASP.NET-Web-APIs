@@ -23,6 +23,8 @@ using VNPAY.NET;
 using VNPAY.NET.Enums;
 using VNPAY.NET.Models;
 using BabyCare.Core.Utils;
+using TeamUp.Repositories.Entity;
+using static BabyCare.Core.Utils.SystemConstant;
 
 namespace TeamUp.Services.Service
 {
@@ -58,7 +60,7 @@ namespace TeamUp.Services.Service
         public async Task<ApiResult<string>> CreateVNPayPaymentUrlAsync(CreatePaymentModelView model, string ipAddress)
         {
             // Kiểm tra dữ liệu
-            if (model.CourtBookingId == null && model.CoachBookingId == null)
+            if (model.CourtBookingId == null && model.CoachBookingId == null && model.PackageId == null)
                 return new ApiErrorResult<string>("Invalid payment information");
 
             decimal amount = 0;
@@ -85,6 +87,17 @@ namespace TeamUp.Services.Service
 
                 amount = booking.TotalPrice;
                 description = $"{model.UserId}|Coach|{booking.Id}";
+            }
+            else if (model.PackageId.HasValue)
+            {
+                var package = await _unitOfWork.GetRepository<Package>()
+                    .Entities.FirstOrDefaultAsync(x => x.Id == model.PackageId && !x.DeletedTime.HasValue);
+
+                if (package == null)
+                    return new ApiErrorResult<string>("Không tìm thấy gói bạn cần.");
+
+                amount = package.Price;
+                description = $"{model.UserId}|{package.Type}|{package.Id}";
             }
             else
             {
@@ -177,6 +190,77 @@ namespace TeamUp.Services.Service
                     payment.CoachBookingId = bookingId;
 
                 }
+                else
+                {
+                    var user = await _unitOfWork.GetRepository<ApplicationUser>()
+                        .GetByIdAsync(userId);
+                    if (user == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin người chơi.");
+
+                    var package = await _unitOfWork.GetRepository<Package>()
+                        .GetByIdAsync(bookingId);
+                    if (package == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin gói.");
+
+                    user.StartDate = DateTime.Now;
+
+                    user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
+
+                    _unitOfWork.GetRepository<ApplicationUser>().Update(user);
+
+                    var userRoleRepo = _unitOfWork.GetRepository<ApplicationUserRole>();
+                    var roleRepo = _unitOfWork.GetRepository<ApplicationRole>();
+
+                    var userRole = await userRoleRepo.Entities
+                        .Where(ur => ur.UserId == user.Id)
+                        .Select(ur => ur.RoleId)
+                        .FirstOrDefaultAsync();
+
+                    var role = await roleRepo.Entities
+                        .Where(r => r.Id == userRole)
+                        .Select(r => r.Name)
+                        .FirstOrDefaultAsync();
+
+                    if (string.IsNullOrEmpty(role))
+                        return new ApiErrorResult<object>("Không xác định được vai trò của người dùng.");
+
+                    if (role == "Owner")
+                    {
+                        var sportsComplexRepo = _unitOfWork.GetRepository<SportsComplex>();
+                        var courtRepo = _unitOfWork.GetRepository<Court>();
+
+                        // Lấy danh sách khu thể thao của user
+                        var complexes = await sportsComplexRepo.Entities
+                            .Where(x => x.OwnerId == user.Id && !x.DeletedTime.HasValue)
+                            .ToListAsync();
+
+                        foreach (var complex in complexes)
+                        {
+                            complex.Status = PackageStatus.Active;
+                            sportsComplexRepo.Update(complex);
+
+                            // Lấy và cập nhật sân trong khu thể thao
+                            var courts = await courtRepo.Entities
+                                .Where(c => c.SportsComplexId == complex.Id && !c.DeletedTime.HasValue)
+                                .ToListAsync();
+
+                            foreach (var court in courts)
+                            {
+                                court.Status = PackageStatus.Active; 
+                                courtRepo.Update(court);
+                            }
+                        }
+                    } 
+                    else if (role == "Coach")
+                    {
+                        user.StatusForCoach = PackageStatus.Active;
+
+                        _unitOfWork.GetRepository<ApplicationUser>().Update(user);
+                    }
+
+                    payment.Amount = package.Price;
+                    payment.PackageId = bookingId;
+                }
 
                 await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
                 await _unitOfWork.SaveAsync();
@@ -190,6 +274,8 @@ namespace TeamUp.Services.Service
                 return new ApiErrorResult<object>($"Lỗi xử lý thanh toán: {ex.Message}");
             }
         }
+
+
 
         public async Task<ApiResult<PaymentModelView>> GetPaymentByIdAsync(int id)
         {

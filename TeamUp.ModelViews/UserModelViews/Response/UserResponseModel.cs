@@ -14,8 +14,5 @@ namespace TeamUp.ModelViews.UserModelViews.Response
 
         public string? Status { get; set; }
 
-        public int? CreatedBy { get; set; }
-        public int? LastUpdatedBy { get; set; }
-
     }
 }

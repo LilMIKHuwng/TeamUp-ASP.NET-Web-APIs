@@ -22,6 +22,8 @@ namespace TeamUp.Contract.Repositories.Entity
 
         public List<string> ImageUrls { get; set; }
 
+        public string Status { get; set; }
+
         public virtual ICollection<CourtBooking> CourtBookings { get; set; } 
         public virtual ICollection<CoachBooking> CoachBookings { get; set; } 
         public virtual ICollection<Room> Rooms { get; set; } 

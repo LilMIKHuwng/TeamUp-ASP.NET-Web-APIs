@@ -20,6 +20,7 @@ namespace TeamUp.Repositories.Entity
         public string? WorkingAddress { get; set; }
         public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
+        public string? StatusForCoach { get; set; }
 
         public int? Status { get; set; }
 
@@ -32,6 +33,12 @@ namespace TeamUp.Repositories.Entity
 
         public string? RefreshToken { get; set; }
         public DateTimeOffset RefreshTokenExpiryTime { get; set; }
+
+        public int? PackageId { get; set; }        
+        public virtual Package? Package { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public DateTime? ExpireDate { get; set; } 
 
 
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; } 

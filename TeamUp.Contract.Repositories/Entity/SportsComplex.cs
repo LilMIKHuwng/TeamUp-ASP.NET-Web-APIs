@@ -19,6 +19,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public int OwnerId { get; set; }
         public virtual ApplicationUser Owner { get; set; }
 
+        public string Status { get; set; }
+
         public virtual ICollection<Court> Courts { get; set; }
     }
 }
