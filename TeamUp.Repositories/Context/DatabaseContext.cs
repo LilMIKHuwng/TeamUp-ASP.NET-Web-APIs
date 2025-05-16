@@ -133,7 +133,7 @@ namespace TeamUp.Repositories.Context
                 EmailConfirmed = true,
                 FullName = "System Admin",
                 SecurityStamp = Guid.NewGuid().ToString("D"),
-                Status = 1,
+                Status = 1
             };
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
 
@@ -181,6 +181,7 @@ namespace TeamUp.Repositories.Context
                 WorkingDate = "Thứ 2, 4, 6",
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 Status = 1,
+                StatusForCoach = "Active"
             };
             coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
 
