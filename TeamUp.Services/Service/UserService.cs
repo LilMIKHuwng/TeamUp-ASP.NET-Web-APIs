@@ -475,7 +475,7 @@ namespace TeamUp.Services.Service
         public async Task<ApiResult<EmployeeResponseModel>> GetEmployeeById(int Id)
         {
             // Check existed user
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == Id && x.StatusForCoach == PackageStatus.Active);
+            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == Id );
             if (existingUser == null)
             {
                 return new ApiErrorResult<EmployeeResponseModel>("User is not existed.", System.Net.HttpStatusCode.NotFound);
@@ -490,6 +490,14 @@ namespace TeamUp.Services.Service
             if (!userRoles.Contains("Owner") && !userRoles.Contains("Admin") && !userRoles.Contains("Coach"))
             {
                 return new ApiErrorResult<EmployeeResponseModel>("User is not valid.", System.Net.HttpStatusCode.NotFound);
+            }
+
+            if (userRoles.Contains("Coach"))
+            {
+                if (existingUser.StatusForCoach == PackageStatus.InActive)
+                {
+                    return new ApiErrorResult<EmployeeResponseModel>("User is not valid.", System.Net.HttpStatusCode.NotFound);
+                }
             }
 
             // Response to client
