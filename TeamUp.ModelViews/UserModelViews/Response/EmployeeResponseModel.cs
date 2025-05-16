@@ -1,4 +1,6 @@
-﻿using TeamUp.ModelViews.RoleModelViews;
+﻿using TeamUp.Contract.Repositories.Entity;
+using TeamUp.ModelViews.PackageModelViews;
+using TeamUp.ModelViews.RoleModelViews;
 
 namespace TeamUp.ModelViews.UserModelViews.Response
 {
@@ -22,6 +24,11 @@ namespace TeamUp.ModelViews.UserModelViews.Response
         public string? StatusForCoach { get; set; }
 
         public string? Status { get; set; }
+
+        public virtual PackageModelView? Package { get; set; }
+
+        public DateTime? StartDate { get; set; }
+        public DateTime? ExpireDate { get; set; }
 
         public RoleModelView Role { get; set; }
     }

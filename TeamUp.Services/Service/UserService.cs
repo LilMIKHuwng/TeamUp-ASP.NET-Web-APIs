@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using BabyCare.Core.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,8 @@ using TeamUp.Core.Utils;
 using TeamUp.Core.Utils.Firebase;
 using TeamUp.ModelViews.AuthModelViews.Request;
 using TeamUp.ModelViews.AuthModelViews.Response;
+using TeamUp.ModelViews.CourtModelViews;
+using TeamUp.ModelViews.PackageModelViews;
 using TeamUp.ModelViews.RoleModelViews;
 using TeamUp.ModelViews.UserModelViews.Request;
 using TeamUp.ModelViews.UserModelViews.Response;
@@ -411,6 +414,10 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                StartDate = user.StartDate,
+                ExpireDate = user.ExpireDate,
+
+                Package = _mapper.Map<PackageModelView>(user.Package),
 
                 // Lấy role phù hợp của user
                 Role = new ModelViews.RoleModelViews.RoleModelView()
@@ -510,6 +517,9 @@ namespace TeamUp.Services.Service
             {
                 response.Status = "Unknown";
             }
+
+            response.Package= _mapper.Map<PackageModelView>(existingUser.Package);
+
             return new ApiSuccessResult<EmployeeResponseModel>(response);
         }
 
@@ -1142,6 +1152,11 @@ namespace TeamUp.Services.Service
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
 
+                StartDate = user.StartDate,
+                ExpireDate = user.ExpireDate,
+
+                Package = _mapper.Map<PackageModelView>(user.Package),
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",
@@ -1193,6 +1208,11 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+
+                StartDate = user.StartDate,
+                ExpireDate = user.ExpireDate,
+
+                Package = _mapper.Map<PackageModelView>(user.Package),
 
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
@@ -1261,6 +1281,11 @@ namespace TeamUp.Services.Service
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
 
+                StartDate = user.StartDate,
+                ExpireDate = user.ExpireDate,
+
+                Package = _mapper.Map<PackageModelView>(user.Package),
+
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
                     : "Unknown",
@@ -1312,6 +1337,11 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+
+                StartDate = user.StartDate,
+                ExpireDate = user.ExpireDate,
+
+                Package = _mapper.Map<PackageModelView>(user.Package),
 
                 Status = Enum.IsDefined(typeof(EmployeeStatus), user.Status)
                     ? ((EmployeeStatus)user.Status).ToString()
