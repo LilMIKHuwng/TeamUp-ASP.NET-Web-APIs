@@ -206,6 +206,8 @@ namespace TeamUp.Services.Service
 
                     user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
 
+                    user.PackageId = package.Id;
+
                     _unitOfWork.GetRepository<ApplicationUser>().Update(user);
 
                     var userRoleRepo = _unitOfWork.GetRepository<ApplicationUserRole>();
