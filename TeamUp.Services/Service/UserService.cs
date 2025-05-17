@@ -1116,6 +1116,43 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>("Please check your email to confirm.");
         }
 
+        public async Task<ApiResult<object>> ResendOtpAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new ApiErrorResult<object>("Không tìm thấy người dùng với email này.");
+            }
+
+            if (user.Status == (int)UserStatus.Active)
+            {
+                return new ApiErrorResult<object>("Tài khoản đã được xác nhận, không cần gửi lại OTP.");
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "Welcome.html");
+            path = Path.GetFullPath(path);
+            if (!File.Exists(path))
+            {
+                return new ApiErrorResult<object>("Không tìm thấy file gửi mail");
+            }
+
+            var content = File.ReadAllText(path);
+            content = content.Replace("{{OTP}}", Uri.EscapeDataString(token));
+            content = content.Replace("{{Name}}", user.Email);
+
+            string roleMessage = "Vui lòng xác nhận lại email để hoàn tất quá trình đăng ký tài khoản TeamUp.";
+            content = content.Replace("{{RoleMessage}}", roleMessage);
+
+            var sendResult = DoingMail.SendMail("TeamUp", "Xác nhận lại Email", content, user.Email);
+            if (!sendResult)
+            {
+                return new ApiErrorResult<object>("Không thể gửi email xác nhận đến " + email);
+            }
+
+            return new ApiSuccessResult<object>("OTP đã được gửi lại thành công. Vui lòng kiểm tra email.");
+        }
 
         private async Task<string> _generateUsernameOfGuestAsync()
         {
