@@ -1022,36 +1022,68 @@ namespace TeamUp.Services.Service
 
         public async Task<ApiResult<object>> RegisterWithRole(UserRegisterRequestModel request, string roleId)
         {
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email && x.Status == (int)UserStatus.Active);
             if (existingUser != null)
             {
                 return new ApiErrorResult<object>("Email is existed.", System.Net.HttpStatusCode.BadRequest);
             }
 
-            var user = new ApplicationUser
-            {
-                Email = request.Email,
-                UserName = await _generateUsernameOfGuestAsync(),
-                FullName = request.FullName,
-                Status = (int)UserStatus.InActive,
-                PhoneNumber = request.PhoneNumber, 
-            };
+            var existingUser2 = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email && x.Status == (int)UserStatus.InActive);
+            ApplicationUser user;
 
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
+            if (existingUser2 != null)
             {
-                return new ApiErrorResult<object>("Register unsuccessfully.", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                // Update user cũ thay vì xóa
+                existingUser2.FullName = request.FullName;
+                existingUser2.UserName = await _generateUsernameOfGuestAsync();
+                existingUser2.PhoneNumber = request.PhoneNumber;
+                existingUser2.Status = (int)UserStatus.InActive;
+
+                var resetPassToken = await _userManager.GeneratePasswordResetTokenAsync(existingUser2);
+                var resetResult = await _userManager.ResetPasswordAsync(existingUser2, resetPassToken, request.Password);
+                if (!resetResult.Succeeded)
+                {
+                    return new ApiErrorResult<object>("Reset mật khẩu không thành công.", resetResult.Errors.Select(x => x.Description).ToList());
+                }
+
+                // Xóa roles cũ (nếu có) và gán role mới
+                var existingRoles = await _userManager.GetRolesAsync(existingUser2);
+                if (existingRoles.Count > 0)
+                {
+                    await _userManager.RemoveFromRolesAsync(existingUser2, existingRoles);
+                }
+
+                user = existingUser2;
+            }
+            else
+            {
+                user = new ApplicationUser
+                {
+                    Email = request.Email,
+                    UserName = await _generateUsernameOfGuestAsync(),
+                    FullName = request.FullName,
+                    Status = (int)UserStatus.InActive,
+                    PhoneNumber = request.PhoneNumber
+                };
+
+                var createResult = await _userManager.CreateAsync(user, request.Password);
+                if (!createResult.Succeeded)
+                {
+                    return new ApiErrorResult<object>("Register unsuccessfully.", createResult.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                }
             }
 
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
             {
-                await _userManager.DeleteAsync(user); // cleanup
                 return new ApiErrorResult<object>("Không tìm thấy vai trò.");
             }
 
-            // Gán role bằng UserManager
             var addRoleResult = await _userManager.AddToRoleAsync(user, role.Name);
+            if (!addRoleResult.Succeeded)
+            {
+                return new ApiErrorResult<object>("Không thể gán vai trò.", addRoleResult.Errors.Select(x => x.Description).ToList());
+            }
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -1083,6 +1115,7 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<object>("Please check your email to confirm.");
         }
+
 
         private async Task<string> _generateUsernameOfGuestAsync()
         {
