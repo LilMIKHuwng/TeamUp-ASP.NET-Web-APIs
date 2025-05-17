@@ -19,6 +19,7 @@ using TeamUp.ModelViews.UserModelViews.Response;
 using TeamUp.ModelViews.CourtModelViews;
 using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.ModelViews.SportsComplexModelViews;
+using System.Globalization;
 
 namespace TeamUp.Services.Service
 {
@@ -378,62 +379,74 @@ namespace TeamUp.Services.Service
             });
         }
 
-        public async Task<ApiResult<List<object>>> GetHourFreeInCourt(int courtId)
+        public async Task<ApiResult<List<object>>> GetHourFreeInCourt(int courtId, DateTime startDate)
         {
             var now = DateTime.Now;
-            var startDate = now.Date;
-            var endDate = startDate.AddDays(7);
+            if (startDate.Date < now.Date)
+            {
+                return new ApiErrorResult<List<object>>("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
+            }
+
+            var endDate = startDate.Date.AddDays(7);
             var openTime = TimeSpan.FromHours(5);    // 5:00 AM
             var closeTime = TimeSpan.FromHours(23);  // 11:00 PM
 
-            // Lấy danh sách các booking của sân
+            // Lấy booking của sân trong khoảng ngày
             var courtBookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Where(b =>
                     b.CourtId == courtId &&
                     !b.DeletedTime.HasValue &&
-                    b.StartTime >= startDate &&
-                    b.EndTime <= endDate)
+                    b.StartTime < endDate &&
+                    b.EndTime > startDate)
                 .ToListAsync();
 
-            // Lấy danh sách các booking của huấn luyện viên có sử dụng sân
+            // Lấy coach bookings có courtId tương ứng
             var coachBookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Where(cb =>
                     cb.CourtId == courtId &&
                     !cb.DeletedTime.HasValue)
                 .ToListAsync();
 
-            var freeSlots = new List<object>();
+            var result = new List<object>();
 
-            for (var date = startDate; date < endDate; date = date.AddDays(1))
+            for (var date = startDate.Date; date < endDate; date = date.AddDays(1))
             {
+                var dailyFreeSlots = new List<object>();
+
                 for (var hour = openTime; hour < closeTime; hour = hour.Add(TimeSpan.FromHours(1)))
                 {
                     var slotStart = date.Add(hour);
                     var slotEnd = slotStart.AddHours(1);
 
-                    // Check conflict with CourtBooking
-                    var hasCourtBookingConflict = courtBookings.Any(b =>
-                        (slotStart < b.EndTime && slotEnd > b.StartTime));
+                    bool hasCourtBookingConflict = courtBookings.Any(b =>
+                        slotStart < b.EndTime && slotEnd > b.StartTime);
 
-                    // Check conflict with CoachBooking
-                    var hasCoachBookingConflict = coachBookings.Any(cb =>
+                    bool hasCoachBookingConflict = coachBookings.Any(cb =>
                         cb.SelectedDates.Contains(date) &&
-                        (hour < cb.EndTime && hour.Add(TimeSpan.FromHours(1)) > cb.StartTime));
+                        hour < cb.EndTime && hour.Add(TimeSpan.FromHours(1)) > cb.StartTime);
 
                     if (!hasCourtBookingConflict && !hasCoachBookingConflict)
                     {
-                        freeSlots.Add(new
+                        dailyFreeSlots.Add(new
                         {
-                            Date = date.ToString("yyyy-MM-dd"),
                             StartTime = slotStart.ToString("HH:mm"),
                             EndTime = slotEnd.ToString("HH:mm")
                         });
                     }
                 }
+
+                result.Add(new
+                {
+                    CourtId = courtId,
+                    WeekDay = date.ToString("dddd", new CultureInfo("vi-VN")),
+                    Date = date.ToString("yyyy-MM-dd"),
+                    FreeSlots = dailyFreeSlots
+                });
             }
 
-            return new ApiSuccessResult<List<object>>(freeSlots);
+            return new ApiSuccessResult<List<object>>(result);
         }
+
 
 
     }
