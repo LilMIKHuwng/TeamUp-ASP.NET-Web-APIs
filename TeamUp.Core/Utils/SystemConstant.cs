@@ -27,7 +27,7 @@ namespace BabyCare.Core.Utils
         {
             public static string Soccer = "Bóng Đá";
             public static string Badminton = "Cầu Lông";
-            public static string PickleBall = "Pickle Ball";
+            public static string PickleBall = "Pickleball";
         }
         public enum Gender
         {

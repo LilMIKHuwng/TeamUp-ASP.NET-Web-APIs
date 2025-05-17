@@ -167,11 +167,11 @@ namespace TeamUp.API.Controllers
         /// Get list of available (free) hours for a specific court
         /// </summary>
         [HttpGet("free-hours")]
-        public async Task<ActionResult<ApiResult<List<object>>>> GetFreeHours([FromQuery] int courtId)
+        public async Task<ActionResult<ApiResult<List<object>>>> GetFreeHours([FromQuery] int courtId, [FromQuery] DateTime startDate)
         {
             try
             {
-                var result = await _courtBookingService.GetHourFreeInCourt(courtId);
+                var result = await _courtBookingService.GetHourFreeInCourt(courtId, startDate);
                 return Ok(result);
             }
             catch (Exception ex)

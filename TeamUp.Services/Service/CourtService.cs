@@ -35,7 +35,7 @@ namespace TeamUp.Services.Service
             _ratingService = ratingService;
         }
 
-        public async Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour, int? sportId)
+        public async Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour, string? address, int? sportId, string? type)
         {
             var query = _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
@@ -44,8 +44,14 @@ namespace TeamUp.Services.Service
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(c => c.Name.Contains(name));
 
+            if (!string.IsNullOrWhiteSpace(type))
+                query = query.Where(c => c.SportsComplex.Type.Contains(type));
+
+            if (!string.IsNullOrWhiteSpace(address))
+                query = query.Where(c => c.SportsComplex.Address.Contains(address));
+
             if (pricePerHour.HasValue)
-                query = query.Where(c => c.PricePerHour == pricePerHour.Value);
+                query = query.Where(c => c.PricePerHour <= pricePerHour.Value);
 
             if (sportId.HasValue)
                 query = query.Where(r => r.SportsComplexId == sportId.Value);

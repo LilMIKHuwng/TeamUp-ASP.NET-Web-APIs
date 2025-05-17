@@ -23,13 +23,15 @@ namespace TeamUp.API.Controllers
         public async Task<ActionResult<ApiResult<object>>> GetAll(
             [FromQuery] string? name,
             [FromQuery] decimal? pricePerHour,
+            [FromQuery] string? address,
             [FromQuery] int? sportId,
+            [FromQuery] string? type,
             int pageNumber = 1,
             int pageSize = 5)
         {
             try
             {
-                var result = await _courtService.GetAllCourtxAsync(pageNumber, pageSize, name, pricePerHour, sportId);
+                var result = await _courtService.GetAllCourtxAsync(pageNumber, pageSize, name, pricePerHour, address, sportId, type);
                 return Ok(result);
             }
             catch (Exception ex)
