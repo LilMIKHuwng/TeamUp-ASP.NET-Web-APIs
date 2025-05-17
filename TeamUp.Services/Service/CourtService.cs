@@ -16,6 +16,7 @@ using TeamUp.ModelViews.SportsComplexModelViews;
 using Microsoft.EntityFrameworkCore;
 using TeamUp.Repositories.Entity;
 using static BabyCare.Core.Utils.SystemConstant;
+using TeamUp.ModelViews.RatingModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -24,15 +25,17 @@ namespace TeamUp.Services.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IRatingService _ratingService;
 
-        public CourtService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor)
+        public CourtService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor, IRatingService ratingService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
+            _ratingService = ratingService;
         }
 
-        public async Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour)
+        public async Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour, int? sportId)
         {
             var query = _unitOfWork.GetRepository<Court>().Entities
                 .Include(c => c.SportsComplex)
@@ -44,6 +47,9 @@ namespace TeamUp.Services.Service
             if (pricePerHour.HasValue)
                 query = query.Where(c => c.PricePerHour == pricePerHour.Value);
 
+            if (sportId.HasValue)
+                query = query.Where(r => r.SportsComplexId == sportId.Value);
+
             int totalCount = await query.CountAsync();
 
             var paginatedCourts = await query
@@ -54,14 +60,39 @@ namespace TeamUp.Services.Service
 
             var result = _mapper.Map<List<CourtModelView>>(paginatedCourts);
 
+            // Lấy danh sách các OwnerId duy nhất
+            var ownerIds = paginatedCourts
+                .Select(c => c.SportsComplex.OwnerId)
+                .Distinct()
+                .ToList();
+
+            // Tạo dictionary chứa rating summary theo OwnerId
+            var ratingSummaries = new Dictionary<int, RatingSummaryModelView>();
+
+            foreach (var ownerId in ownerIds)
+            {
+                var summary = await _ratingService.GetRatingSummaryForUserAsync(ownerId);
+                if (summary.IsSuccessed && summary.ResultObj != null)
+                {
+                    ratingSummaries[ownerId] = summary.ResultObj;
+                }
+            }
+
             for (int i = 0; i < result.Count; i++)
             {
                 result[i].SportsComplexModelView = _mapper.Map<SportsComplexModelView>(paginatedCourts[i].SportsComplex);
+
+                var ownerId = paginatedCourts[i].SportsComplex.OwnerId;
+                if (ratingSummaries.TryGetValue(ownerId, out var summary))
+                {
+                    result[i].RatingSummaryModelView = summary;
+                }
             }
 
             return new ApiSuccessResult<BasePaginatedList<CourtModelView>>(
                 new BasePaginatedList<CourtModelView>(result, totalCount, pageNumber, pageSize));
         }
+
 
         public async Task<ApiResult<object>> AddCourtAsync(CreateCourtModelView model)
         {
@@ -179,8 +210,16 @@ namespace TeamUp.Services.Service
             var result = _mapper.Map<CourtModelView>(court);
             result.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(court.SportsComplex);
 
+            // Thêm RatingSummaryModelView
+            var ratingSummaryResult = await _ratingService.GetRatingSummaryForUserAsync(court.SportsComplex.OwnerId);
+            if (ratingSummaryResult.IsSuccessed && ratingSummaryResult.ResultObj != null)
+            {
+                result.RatingSummaryModelView = ratingSummaryResult.ResultObj;
+            }
+
             return new ApiSuccessResult<CourtModelView>(result);
         }
+
 
         public async Task<ApiResult<List<CourtModelView>>> GetAllCourt()
         {
@@ -192,9 +231,33 @@ namespace TeamUp.Services.Service
 
             var result = _mapper.Map<List<CourtModelView>>(courts);
 
+            // Lấy danh sách các OwnerId duy nhất
+            var ownerIds = courts
+                .Select(c => c.SportsComplex.OwnerId)
+                .Distinct()
+                .ToList();
+
+            // Tạo dictionary chứa rating summary theo OwnerId
+            var ratingSummaries = new Dictionary<int, RatingSummaryModelView>();
+
+            foreach (var ownerId in ownerIds)
+            {
+                var summary = await _ratingService.GetRatingSummaryForUserAsync(ownerId);
+                if (summary.IsSuccessed && summary.ResultObj != null)
+                {
+                    ratingSummaries[ownerId] = summary.ResultObj;
+                }
+            }
+
             for (int i = 0; i < result.Count; i++)
             {
                 result[i].SportsComplexModelView = _mapper.Map<SportsComplexModelView>(courts[i].SportsComplex);
+
+                var ownerId = courts[i].SportsComplex.OwnerId;
+                if (ratingSummaries.TryGetValue(ownerId, out var summary))
+                {
+                    result[i].RatingSummaryModelView = summary;
+                }
             }
 
             return new ApiSuccessResult<List<CourtModelView>>(result);

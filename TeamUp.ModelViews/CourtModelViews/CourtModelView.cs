@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeamUp.Contract.Repositories.Entity;
+using TeamUp.ModelViews.RatingModelViews;
 using TeamUp.ModelViews.SportsComplexModelViews;
 
 namespace TeamUp.ModelViews.CourtModelViews
@@ -20,5 +21,7 @@ namespace TeamUp.ModelViews.CourtModelViews
         public List<string> ImageUrls { get; set; }
 
         public SportsComplexModelView SportsComplexModelView { get; set; }
+
+        public RatingSummaryModelView RatingSummaryModelView { get; set; }
     }
 }

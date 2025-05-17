@@ -11,7 +11,7 @@ namespace TeamUp.Contract.Services.Interface
 {
     public interface ICourtService
     {
-        Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour);
+        Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour, int? sportId);
         Task<ApiResult<object>> AddCourtAsync(CreateCourtModelView model);
         Task<ApiResult<object>> UpdateCourtAsync(int id, UpdateCourtModelView model);
         Task<ApiResult<object>> DeleteCourtAsync(int id);
