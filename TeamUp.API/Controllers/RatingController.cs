@@ -125,14 +125,14 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Get average rating for a specific user
+        /// Get average and count rating for a specific user
         /// </summary>
-        [HttpGet("average/{userId}")]
+        [HttpGet("average-count/{userId}")]
         public async Task<ActionResult<ApiResult<double>>> GetAverageRating(int userId)
         {
             try
             {
-                var result = await _ratingService.GetAverageRatingForUserAsync(userId);
+                var result = await _ratingService.GetRatingSummaryForUserAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -188,23 +188,6 @@ namespace TeamUp.API.Controllers
             try
             {
                 var result = await _ratingService.GetLatestRatingsForUserAsync(revieweeId, take);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new ApiErrorResult<List<RatingModelView>>(ex.Message));
-            }
-        }
-
-        /// <summary>
-        /// Lấy tổng số người đã đánh giá cho một người dùng
-        /// </summary>
-        [HttpGet("reviewers/count/{revieweeId}")]
-        public async Task<IActionResult> GetReviewerCount(int revieweeId)
-        {
-            try
-            {
-                var result = await _ratingService.GetTotalReviewerCountForUserAsync(revieweeId);
                 return Ok(result);
             }
             catch (Exception ex)

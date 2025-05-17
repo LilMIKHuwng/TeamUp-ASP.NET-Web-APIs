@@ -188,19 +188,6 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<List<RatingModelView>>(result);
         }
 
-        public async Task<ApiResult<double>> GetAverageRatingForUserAsync(int userId)
-        {
-            var ratings = await _unitOfWork.GetRepository<Rating>().Entities
-                .Where(r => r.RevieweeId == userId && !r.DeletedTime.HasValue)
-                .ToListAsync();
-
-            if (!ratings.Any())
-                return new ApiSuccessResult<double>(0);
-
-            var average = ratings.Average(r => r.RatingValue);
-            return new ApiSuccessResult<double>(Math.Round(average, 2));
-        }
-
         public async Task<ApiResult<Dictionary<int, int>>> GetRatingStatsForUserAsync(int userId)
         {
             var ratings = await _unitOfWork.GetRepository<Rating>().Entities
@@ -244,16 +231,31 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<List<RatingModelView>>(result);
         }
 
-        public async Task<ApiResult<int>> GetTotalReviewerCountForUserAsync(int revieweeId)
+        public async Task<ApiResult<RatingSummaryModelView>> GetRatingSummaryForUserAsync(int userId)
         {
-            var count = await _unitOfWork.GetRepository<Rating>()
-                .Entities
-                .Where(r => r.RevieweeId == revieweeId)
-                .Select(r => r.ReviewerId)
-                .Distinct()
-                .CountAsync();
+            var ratings = await _unitOfWork.GetRepository<Rating>().Entities
+                .Where(r => r.RevieweeId == userId && !r.DeletedTime.HasValue)
+                .ToListAsync();
 
-            return new ApiSuccessResult<int>(count);
+            if (!ratings.Any())
+            {
+                return new ApiSuccessResult<RatingSummaryModelView>(new RatingSummaryModelView
+                {
+                    AverageRating = 0,
+                    TotalReviewerCount = 0
+                });
+            }
+
+            var average = ratings.Average(r => r.RatingValue);
+            var totalReviewerCount = ratings.Count();
+
+            var result = new RatingSummaryModelView
+            {
+                AverageRating = Math.Round(average, 2),
+                TotalReviewerCount = totalReviewerCount
+            };
+
+            return new ApiSuccessResult<RatingSummaryModelView>(result);
         }
     }
 }

@@ -224,6 +224,15 @@ namespace TeamUp.Repositories.Context
                 }
             );
 
+            var firebaseImageUrls = new List<string>
+            {
+                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c",
+                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4",
+                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media&token=e239b164-1d55-437b-889d-19781c61a8b0",
+                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media&token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752",
+                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media&token=b2b2f296-f847-4c95-96d3-50ae7fc827a0"
+            };
+
             builder.Entity<SportsComplex>().HasData(
                 new SportsComplex
                 {
@@ -244,18 +253,40 @@ namespace TeamUp.Repositories.Context
                     OwnerId = 3, // Chủ sân có Id = 3
                     Status = "Active",
                     ImageUrls = new List<string> { "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c", "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4" }
+                },
+                new SportsComplex
+                {
+                    Id = 3,
+                    Name = "Khu Thể Thao GHI",
+                    Type = "Pickleball",
+                    Address = "789 Đường C, Quận 3, TP.HCM",
+                    OwnerId = 3,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new SportsComplex
+                {
+                    Id = 4,
+                    Name = "Khu Thể Thao JKL",
+                    Type = "Pickleball",
+                    Address = "321 Đường D, Quận 4, TP.HCM",
+                    OwnerId = 3,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new SportsComplex
+                {
+                    Id = 5,
+                    Name = "Khu Thể Thao MNO",
+                    Type = "Cầu lông",
+                    Address = "654 Đường E, Quận 6, TP.HCM",
+                    OwnerId = 3,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
                 }
 
             );
 
-            var firebaseImageUrls = new List<string>
-            {
-                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c",
-                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4",
-                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media&token=e239b164-1d55-437b-889d-19781c61a8b0",
-                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media&token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752",
-                "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media&token=b2b2f296-f847-4c95-96d3-50ae7fc827a0"
-            };
 
             builder.Entity<Court>().HasData(
                 new Court
@@ -297,6 +328,106 @@ namespace TeamUp.Repositories.Context
                     PricePerHour = 100000,
                     Status = "Active",
                     ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 5,
+                    SportsComplexId = 3,
+                    Name = "Sân Pickleball A",
+                    Description = "Sân ngoài trời, chất lượng cao",
+                    PricePerHour = 250000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 6,
+                    SportsComplexId = 3,
+                    Name = "Sân Pickleball B",
+                    Description = "Sân trong nhà, có mái che",
+                    PricePerHour = 300000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 7,
+                    SportsComplexId = 4,
+                    Name = "Sân Pickleball C",
+                    Description = "Sân chuẩn FIBA, sàn gỗ cao cấp",
+                    PricePerHour = 400000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 8,
+                    SportsComplexId = 4,
+                    Name = "Sân Pickleball D",
+                    Description = "Sân phong trào, phù hợp nhóm bạn",
+                    PricePerHour = 250000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 9,
+                    SportsComplexId = 4,
+                    Name = "Sân Pickleball E",
+                    Description = "Sân luyện tập cá nhân",
+                    PricePerHour = 200000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 10,
+                    SportsComplexId = 5,
+                    Name = "Sân cầu lông C",
+                    Description = "Sân trong nhà, chuẩn thi đấu",
+                    PricePerHour = 300000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 11,
+                    SportsComplexId = 5,
+                    Name = "Sân cầu lông D",
+                    Description = "Sân ngoài trời, thoáng mát",
+                    PricePerHour = 200000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 12,
+                    SportsComplexId = 5,
+                    Name = "Sân cầu lông E",
+                    Description = "Sân thi đấu chuyên nghiệp",
+                    PricePerHour = 350000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 13,
+                    SportsComplexId = 3,
+                    Name = "Sân Pickleball F",
+                    Description = "Sân tiêu chuẩn quốc tế",
+                    PricePerHour = 280000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
+                },
+                new Court
+                {
+                    Id = 14,
+                    SportsComplexId = 4,
+                    Name = "Sân cầu lông F",
+                    Description = "Sân mở ban đêm, có đèn chiếu",
+                    PricePerHour = 270000,
+                    Status = "Active",
+                    ImageUrls = firebaseImageUrls
                 }
             );
 
@@ -316,6 +447,86 @@ namespace TeamUp.Repositories.Context
                     RevieweeId = 3, // court owner
                     RatingValue = 4,
                     Comment = "Chủ sân thân thiện, sân sạch đẹp."
+                },
+                new Rating
+                {
+                    Id = 3,
+                    ReviewerId = 2,
+                    RevieweeId = 3,
+                    RatingValue = 5,
+                    Comment = "Chủ sân hỗ trợ rất nhiệt tình và chuyên nghiệp."
+                },
+                new Rating
+                {
+                    Id = 4,
+                    ReviewerId = 2,
+                    RevieweeId = 3,
+                    RatingValue = 4,
+                    Comment = "Không gian rộng rãi, dễ đặt lịch."
+                },
+                new Rating
+                {
+                    Id = 5,
+                    ReviewerId = 4,
+                    RevieweeId = 3,
+                    RatingValue = 3,
+                    Comment = "Thỉnh thoảng hơi chậm phản hồi tin nhắn."
+                },
+                new Rating
+                {
+                    Id = 6,
+                    ReviewerId = 4,
+                    RevieweeId = 3,
+                    RatingValue = 5,
+                    Comment = "Chủ sân dễ tính, rất dễ thương!"
+                },
+                new Rating
+                {
+                    Id = 7,
+                    ReviewerId = 2,
+                    RevieweeId = 3,
+                    RatingValue = 4,
+                    Comment = "Sân tốt, chủ sân chu đáo."
+                },
+                new Rating
+                {
+                    Id = 8,
+                    ReviewerId = 2,
+                    RevieweeId = 3,
+                    RatingValue = 5,
+                    Comment = "Quản lý chuyên nghiệp, xử lý tình huống nhanh chóng."
+                },
+                new Rating
+                {
+                    Id = 9,
+                    ReviewerId = 1,
+                    RevieweeId = 3,
+                    RatingValue = 4,
+                    Comment = "Dịch vụ ổn, sẽ quay lại lần nữa."
+                },
+                new Rating
+                {
+                    Id = 10,
+                    ReviewerId = 1,
+                    RevieweeId = 3,
+                    RatingValue = 5,
+                    Comment = "Chủ sân rất thân thiện, đáng tin cậy."
+                },
+                new Rating
+                {
+                    Id = 11,
+                    ReviewerId = 1,
+                    RevieweeId = 3,
+                    RatingValue = 3,
+                    Comment = "Cần cải thiện thời gian mở cửa đúng giờ hơn."
+                },
+                new Rating
+                {
+                    Id = 12,
+                    ReviewerId = 1,
+                    RevieweeId = 3,
+                    RatingValue = 5,
+                    Comment = "Chất lượng phục vụ tuyệt vời!"
                 }
             );
 
@@ -355,6 +566,90 @@ namespace TeamUp.Repositories.Context
                     RoomFee = 20000,
                     Status = "Full",
                     ScheduledTime = DateTime.Today.AddDays(3).AddHours(9) // 9h sáng 3 ngày nữa
+                },
+                new Room
+                {
+                    Id = 4,
+                    HostId = 2,
+                    CourtId = 4,
+                    Name = "Đá bóng chiều thứ 5",
+                    MaxPlayers = 10,
+                    Description = "Tìm team giao lưu vào chiều thứ 5.",
+                    RoomFee = 30000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(4).AddHours(17)
+                },
+                new Room
+                {
+                    Id = 5,
+                    HostId = 3,
+                    CourtId = 5,
+                    Name = "Pickleball sáng CN",
+                    MaxPlayers = 4,
+                    Description = "Pickleball nhẹ nhàng chủ nhật.",
+                    RoomFee = 40000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(5).AddHours(7)
+                },
+                new Room
+                {
+                    Id = 6,
+                    HostId = 2,
+                    CourtId = 6,
+                    Name = "Pickleball chiều thứ 7",
+                    MaxPlayers = 4,
+                    Description = "Giao lưu Pickleball chiều cuối tuần.",
+                    RoomFee = 50000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(6).AddHours(15)
+                },
+                new Room
+                {
+                    Id = 7,
+                    HostId = 3,
+                    CourtId = 7,
+                    Name = "Pickleball tối thứ 3",
+                    MaxPlayers = 10,
+                    Description = "Team Pickleball tụ tập tối thứ 3.",
+                    RoomFee = 25000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(3).AddHours(20)
+                },
+                new Room
+                {
+                    Id = 8,
+                    HostId = 2,
+                    CourtId = 8,
+                    Name = "Pickleball phong trào",
+                    MaxPlayers = 10,
+                    Description = "Vui là chính, ai cũng có thể tham gia.",
+                    RoomFee = 20000,
+                    Status = "Full",
+                    ScheduledTime = DateTime.Today.AddDays(2).AddHours(18)
+                },
+                new Room
+                {
+                    Id = 9,
+                    HostId = 3,
+                    CourtId = 10,
+                    Name = "Cầu lông tập luyện",
+                    MaxPlayers = 12,
+                    Description = "Đội hình luyện tập chuẩn bị giải.",
+                    RoomFee = 35000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(1).AddHours(16)
+                },
+                new Room
+                {
+                    Id = 10,
+                    HostId = 2,
+                    CourtId = 12,
+                    Name = "Chơi cầu lông tối",
+                    MaxPlayers = 4,
+                    Description = "Team cầu lông nhẹ nhàng tối làm về.",
+                    RoomFee = 25000,
+                    Status = "Waiting",
+                    ScheduledTime = DateTime.Today.AddDays(4).AddHours(19)
                 }
             );
         }

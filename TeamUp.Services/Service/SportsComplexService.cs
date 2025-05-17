@@ -18,6 +18,7 @@ using TeamUp.ModelViews.UserModelViews.Response;
 using BabyCare.Core.Utils;
 using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.Repositories.Entity;
+using TeamUp.ModelViews.RatingModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -26,12 +27,14 @@ namespace TeamUp.Services.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IRatingService _ratingService;
 
-        public SportsComplexService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor)
+        public SportsComplexService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor, IRatingService ratingService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
+            _ratingService = ratingService;
         }
 
         public async Task<ApiResult<BasePaginatedList<SportsComplexModelView>>> GetAllSportsComplexAsync(int pageNumber, int pageSize, string? name, string? address)
@@ -41,14 +44,10 @@ namespace TeamUp.Services.Service
                 .Where(sc => !sc.DeletedTime.HasValue && sc.Status == PackageStatus.Active);
 
             if (!string.IsNullOrWhiteSpace(name))
-            {
                 query = query.Where(sc => sc.Name.Contains(name));
-            }
 
             if (!string.IsNullOrWhiteSpace(address))
-            {
                 query = query.Where(sc => sc.Address.Contains(address));
-            }
 
             query = query.OrderByDescending(sc => sc.CreatedTime);
 
@@ -61,21 +60,38 @@ namespace TeamUp.Services.Service
 
             List<SportsComplexModelView> complexModelViews = _mapper.Map<List<SportsComplexModelView>>(paginatedComplexes);
 
-            foreach (var complexModelView in complexModelViews)
-            {
-                var originalEntity = paginatedComplexes
-                    .FirstOrDefault(sc => sc.Name == complexModelView.Name && sc.Address == complexModelView.Address);
+            // Lấy danh sách ownerId duy nhất
+            var ownerIds = paginatedComplexes.Select(sc => sc.OwnerId).Distinct();
 
-                if (originalEntity?.Owner != null)
+            // Gọi rating service cho từng owner
+            var ratingDict = new Dictionary<int, RatingSummaryModelView>();
+            foreach (var ownerId in ownerIds)
+            {
+                var ratingResult = await _ratingService.GetRatingSummaryForUserAsync(ownerId);
+                if (ratingResult.IsSuccessed)
                 {
-                    complexModelView.Owner = _mapper.Map<EmployeeResponseModel>(originalEntity.Owner);
+                    ratingDict[ownerId] = ratingResult.ResultObj;
                 }
             }
 
-            var result = new BasePaginatedList<SportsComplexModelView>(complexModelViews, totalCount, pageNumber, pageSize);
+            for (int i = 0; i < complexModelViews.Count; i++)
+            {
+                var originalEntity = paginatedComplexes[i];
+                if (originalEntity.Owner != null)
+                {
+                    complexModelViews[i].Owner = _mapper.Map<EmployeeResponseModel>(originalEntity.Owner);
+                }
 
+                var ownerId = originalEntity.OwnerId;
+                complexModelViews[i].RatingSummaryModelView = ratingDict.ContainsKey(ownerId)
+                    ? ratingDict[ownerId]
+                    : new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
+            }
+
+            var result = new BasePaginatedList<SportsComplexModelView>(complexModelViews, totalCount, pageNumber, pageSize);
             return new ApiSuccessResult<BasePaginatedList<SportsComplexModelView>>(result);
         }
+
 
         public async Task<ApiResult<object>> AddSportsComplexAsync(CreateSportsComplexModelView model)
         {
@@ -202,20 +218,32 @@ namespace TeamUp.Services.Service
             var repo = _unitOfWork.GetRepository<SportsComplex>();
             var complex = await repo.Entities
                 .Include(x => x.Owner)
-                 .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue && x.Status == PackageStatus.Active);
+                .FirstOrDefaultAsync(x => x.Id == id && !x.DeletedTime.HasValue && x.Status == PackageStatus.Active);
 
             if (complex == null)
                 return new ApiErrorResult<SportsComplexModelView>("Không tìm thấy khu thể thao.");
 
             var result = _mapper.Map<SportsComplexModelView>(complex);
 
+            // Gán thông tin chủ sân
             if (complex.Owner != null)
             {
                 result.Owner = _mapper.Map<EmployeeResponseModel>(complex.Owner);
+
+                // Gán RatingSummary nếu Owner tồn tại
+                var ratingResult = await _ratingService.GetRatingSummaryForUserAsync(complex.Owner.Id);
+                result.RatingSummaryModelView = ratingResult.IsSuccessed
+                    ? ratingResult.ResultObj
+                    : new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
+            }
+            else
+            {
+                result.RatingSummaryModelView = new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
             }
 
             return new ApiSuccessResult<SportsComplexModelView>(result);
         }
+
 
         public async Task<ApiResult<List<SportsComplexModelView>>> GetAllSportsComplex()
         {
@@ -227,9 +255,32 @@ namespace TeamUp.Services.Service
 
             var result = _mapper.Map<List<SportsComplexModelView>>(complexes);
 
-            for (int i = 0; i < complexes.Count; i++)
+            // Lấy danh sách ownerId duy nhất
+            var ownerIds = complexes.Select(sc => sc.OwnerId).Distinct();
+
+            // Gọi rating service cho từng owner
+            var ratingDict = new Dictionary<int, RatingSummaryModelView>();
+            foreach (var ownerId in ownerIds)
             {
-                result[i].Owner = _mapper.Map<EmployeeResponseModel>(complexes[i].Owner);
+                var ratingResult = await _ratingService.GetRatingSummaryForUserAsync(ownerId);
+                if (ratingResult.IsSuccessed)
+                {
+                    ratingDict[ownerId] = ratingResult.ResultObj;
+                }
+            }
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                var originalEntity = complexes[i];
+                if (originalEntity.Owner != null)
+                {
+                    result[i].Owner = _mapper.Map<EmployeeResponseModel>(originalEntity.Owner);
+                }
+
+                var ownerId = originalEntity.OwnerId;
+                result[i].RatingSummaryModelView = ratingDict.ContainsKey(ownerId)
+                    ? ratingDict[ownerId]
+                    : new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
             }
 
             return new ApiSuccessResult<List<SportsComplexModelView>>(result);
