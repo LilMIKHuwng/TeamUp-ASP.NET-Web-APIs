@@ -128,6 +128,20 @@ namespace TeamUp.API.Controllers
             }
         }
 
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOtp([FromQuery] string email)
+        {
+            try
+            {
+                var result = await _userService.ResendOtpAsync(email);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {

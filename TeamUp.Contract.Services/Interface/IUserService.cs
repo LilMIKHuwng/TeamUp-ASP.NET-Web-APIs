@@ -74,6 +74,8 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<EmployeeResponseModel>> GetEmployeeById(int Id);
         Task<ApiResult<UploadImageResponseModel>> UploadImage(UploadImageRequest request);
 
+        Task<ApiResult<object>> ResendOtpAsync(string email);
+
 
 
         #endregion
