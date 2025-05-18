@@ -418,6 +418,14 @@ namespace TeamUp.Services.Service
                     var slotStart = date.Add(hour);
                     var slotEnd = slotStart.AddHours(1);
 
+                    // Bỏ qua nếu giờ nằm trong khoảng 11:00 đến 13:00
+                    if (hour >= TimeSpan.FromHours(11) && hour < TimeSpan.FromHours(13))
+                        continue;
+
+                    // Nếu là ngày hôm nay và giờ đã qua => bỏ qua
+                    if (date == now.Date && slotEnd <= now)
+                        continue;
+
                     bool hasCourtBookingConflict = courtBookings.Any(b =>
                         slotStart < b.EndTime && slotEnd > b.StartTime);
 
@@ -446,6 +454,7 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<List<object>>(result);
         }
+
 
 
 
