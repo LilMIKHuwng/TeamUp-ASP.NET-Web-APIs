@@ -20,6 +20,7 @@ using TeamUp.ModelViews.CourtModelViews;
 using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using System.Globalization;
+using TeamUp.Core.Utils;
 
 namespace TeamUp.Services.Service
 {
@@ -197,7 +198,38 @@ namespace TeamUp.Services.Service
             await _unitOfWork.GetRepository<CourtBooking>().InsertAsync(booking);
             await _unitOfWork.SaveAsync();
 
-            return new ApiSuccessResult<object>("Đặt sân thành công.");
+            // Sau khi lưu thành công vào DB
+            var courtName = court.Name;
+            var startTimeFormatted = booking.StartTime.ToString("HH:mm");
+            var endTimeFormatted = booking.EndTime.ToString("HH:mm");
+            var dateFormatted = booking.StartTime.ToString("dd/MM/yyyy");
+            var totalPriceFormatted = booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN"));
+
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "CourtBookingSuccess.html");
+            path = Path.GetFullPath(path);
+
+            if (!File.Exists(path))
+            {
+                return new ApiErrorResult<object>("Không tìm thấy file gửi mail xác nhận.");
+            }
+
+            var content = File.ReadAllText(path);
+            content = content.Replace("{{UserEmail}}", user.Email);
+            content = content.Replace("{{CourtName}}", courtName);
+            content = content.Replace("{{StartTime}}", startTimeFormatted);
+            content = content.Replace("{{EndTime}}", endTimeFormatted);
+            content = content.Replace("{{Date}}", dateFormatted);
+            content = content.Replace("{{TotalPrice}}", totalPriceFormatted);
+            content = content.Replace("{{BookingStatus}}", booking.Status);
+
+            var resultSendMail = DoingMail.SendMail("TeamUp", "Xác Nhận Đặt Sân", content, user.Email);
+            if (!resultSendMail)
+            {
+                return new ApiErrorResult<object>("Đặt sân thành công nhưng gửi email thất bại.");
+            }
+
+
+            return new ApiSuccessResult<object>("Đặt sân thành công và đã gửi xác nhận email.");
         }
 
 
@@ -354,6 +386,32 @@ namespace TeamUp.Services.Service
 
             await repo.UpdateAsync(booking);
             await _unitOfWork.SaveAsync();
+
+            // Gửi email nếu trạng thái là Confirmed và đã thanh toán
+            if (booking.Status == BookingStatus.Confirmed)
+            {
+                var user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(booking.UserId);
+                var court = await _unitOfWork.GetRepository<Court>().GetByIdAsync(booking.CourtId);
+                var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(court.SportsComplex.OwnerId);
+
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "CourtBookingConfirmed.html");
+                path = Path.GetFullPath(path);
+
+                if (File.Exists(path))
+                {
+                    var content = File.ReadAllText(path);
+                    content = content.Replace("{{UserEmail}}", user.Email);
+                    content = content.Replace("{{OwnerEmail}}", owner.Email);
+                    content = content.Replace("{{CourtName}}", court.Name);
+                    content = content.Replace("{{Date}}", booking.StartTime.ToString("dd/MM/yyyy"));
+                    content = content.Replace("{{StartTime}}", booking.StartTime.ToString("HH:mm"));
+                    content = content.Replace("{{EndTime}}", booking.EndTime.ToString("HH:mm"));
+                    content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
+                    content = content.Replace("{{PaymentStatus}}", booking.PaymentStatus);
+
+                    DoingMail.SendMail("TeamUp", "Xác nhận đặt sân", content, user.Email);
+                }
+            }
 
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
         }

@@ -12,6 +12,8 @@ namespace TeamUp.ModelViews.UserModelViews.Request
         public IFormFile? AvatarUrl { get; set; }
         public string? PhoneNumber { get; set; }
 
+
+        public string? Type { get; set; }
         public string? Specialty { get; set; }
         public string? Certificate { get; set; }
         public string? WorkingAddress { get; set; }

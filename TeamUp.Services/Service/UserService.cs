@@ -1215,6 +1215,7 @@ namespace TeamUp.Services.Service
                 Age = user.Age,
                 Height = user.Height,
                 Weight = user.Weight,
+                Type = user.Type,
                 Specialty = user.Specialty,
                 Certificate = user.Certificate,
                 WorkingAddress = user.WorkingAddress,
@@ -1321,7 +1322,7 @@ namespace TeamUp.Services.Service
                 var searchLower = request.SearchValue.ToLower();
                 usersQuery = usersQuery.Where(x =>
                     x.FullName.ToLower().Contains(searchLower) ||
-                    x.Email.ToLower().Contains(searchLower));
+                    x.Email.ToLower().Contains(searchLower) || x.Type.ToLower().Contains(searchLower));
             }
 
             // Pagination
@@ -1344,6 +1345,7 @@ namespace TeamUp.Services.Service
                 Age = user.Age,
                 Height = user.Height,
                 Weight = user.Weight,
+                Type = user.Type,
                 Specialty = user.Specialty,
                 Certificate = user.Certificate,
                 WorkingAddress = user.WorkingAddress,

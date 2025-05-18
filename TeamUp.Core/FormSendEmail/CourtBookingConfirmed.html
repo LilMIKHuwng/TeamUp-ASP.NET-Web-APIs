@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Nhận Đặt Sân Thành Công</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        .content h2 {
+            color: #34d399;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            color: #333;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+            .info p {
+                margin: 8px 0;
+                font-size: 15px;
+            }
+
+            .info strong {
+                color: #2563eb; /* xanh dương */
+            }
+
+            .info .total {
+                color: #d97706; /* vàng cam */
+                font-weight: bold;
+            }
+
+            .info .status {
+                color: #16a34a; /* xanh lá đậm */
+                font-weight: bold;
+            }
+
+            .info .payment {
+                color: #16a34a;
+                font-weight: bold;
+            }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="logo">
+            <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="TeamUp Logo">
+        </div>
+        <div class="content">
+            <h2>Đặt Sân Đã Được Xác Nhận</h2>
+            <p>Xin chào <strong>{{UserEmail}}</strong>,</p>
+            <p>Chủ sân <strong>{{OwnerEmail}}</strong> đã xác nhận đơn đặt sân của bạn.</p>
+            <p>Bạn có thể yên tâm đến sân đúng giờ đã đặt:</p>
+
+            <div class="info">
+                <p><strong>Tên sân:</strong> <span>{{CourtName}}</span></p>
+                <p><strong>Ngày:</strong> <span>{{Date}}</span></p>
+                <p><strong>Thời gian:</strong> <span>{{StartTime}} - {{EndTime}}</span></p>
+                <p><strong>Tổng tiền:</strong> <span class="total">{{TotalPrice}} VNĐ</span></p>
+                <p><strong>Trạng thái đặt sân:</strong> <span class="status">Đã xác nhận</span></p>
+                <p><strong>Trạng thái thanh toán:</strong> <span class="payment">{{PaymentStatus}}</span></p>
+            </div>
+
+            <p>Cảm ơn bạn đã sử dụng TeamUp. Chúc bạn có trải nghiệm tuyệt vời!</p>
+        </div>
+        <div class="footer">
+            © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+            Email này được gửi tự động, vui lòng không phản hồi.
+        </div>
+    </div>
+</body>
+</html>
