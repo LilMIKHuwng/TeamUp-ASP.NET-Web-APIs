@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BabyCare.Core.Utils;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -181,9 +182,11 @@ namespace TeamUp.Repositories.Context
                 WorkingDate = "Thứ 2, 4, 6",
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 Status = 1,
-                StatusForCoach = "Active"
+                StatusForCoach = "Active",
+                Type = "Bóng đá"
             };
             coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
+
 
             builder.Entity<ApplicationUser>().HasData(adminUser, playerUser, courtOwnerUser, coachUser);
 
@@ -193,6 +196,157 @@ namespace TeamUp.Repositories.Context
                 new ApplicationUserRole { UserId = 3, RoleId = 3 }, // Chủ Sân
                 new ApplicationUserRole { UserId = 4, RoleId = 4 }  // Huấn Luyện Viên
             );
+
+            var coachUsers = new List<ApplicationUser>();
+            var coachRoles = new List<ApplicationUserRole>();
+
+            coachUsers.AddRange(new[]
+            {
+                new ApplicationUser
+                {
+                    Id = 5,
+                    UserName = "coach1",
+                    NormalizedUserName = "COACH1",
+                    Email = "coach1@teamup.com",
+                    NormalizedEmail = "COACH1@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 1",
+                    Specialty = "Bóng đá",
+                    Certificate = "Chứng chỉ B",
+                    PricePerSession = 250000,
+                    WorkingAddress = "Sân XYZ, Quận 5",
+                    WorkingDate = "Thứ 3, 5",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.Soccer,
+                },
+                new ApplicationUser
+                {
+                    Id = 6,
+                    UserName = "coach2",
+                    NormalizedUserName = "COACH2",
+                    Email = "coach2@teamup.com",
+                    NormalizedEmail = "COACH2@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 2",
+                    Specialty = "Cầu lông",
+                    Certificate = "Chứng chỉ C",
+                    PricePerSession = 180000,
+                    WorkingAddress = "Sân Lông, Quận 2",
+                    WorkingDate = "Thứ 2, 4",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.Badminton
+                },
+                new ApplicationUser
+                {
+                    Id = 7,
+                    UserName = "coach3",
+                    NormalizedUserName = "COACH3",
+                    Email = "coach3@teamup.com",
+                    NormalizedEmail = "COACH3@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 3",
+                    Specialty = "Pickleball",
+                    Certificate = "Chứng chỉ D",
+                    PricePerSession = 220000,
+                    WorkingAddress = "Sân PB, Quận 7",
+                    WorkingDate = "Thứ 6, 7",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.PickleBall
+                },
+                new ApplicationUser
+                {
+                    Id = 8,
+                    UserName = "coach4",
+                    NormalizedUserName = "COACH4",
+                    Email = "coach4@teamup.com",
+                    NormalizedEmail = "COACH4@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 4",
+                    Specialty = "Bóng đá",
+                    Certificate = "Chứng chỉ A",
+                    PricePerSession = 230000,
+                    WorkingAddress = "Sân K, Quận 6",
+                    WorkingDate = "Thứ 3, 6",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.Soccer
+                },
+                new ApplicationUser
+                {
+                    Id = 9,
+                    UserName = "coach5",
+                    NormalizedUserName = "COACH5",
+                    Email = "coach5@teamup.com",
+                    NormalizedEmail = "COACH5@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 5",
+                    Specialty = "Cầu lông",
+                    Certificate = "Chứng chỉ B",
+                    PricePerSession = 190000,
+                    WorkingAddress = "Sân Mây, Quận 10",
+                    WorkingDate = "Thứ 2, 5",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.Badminton
+                },
+                new ApplicationUser
+                {
+                    Id = 10,
+                    UserName = "coach6",
+                    NormalizedUserName = "COACH6",
+                    Email = "coach6@teamup.com",
+                    NormalizedEmail = "COACH6@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 6",
+                    Specialty = "Pickleball",
+                    Certificate = "Chứng chỉ E",
+                    PricePerSession = 210000,
+                    WorkingAddress = "Sân Pick, Quận 9",
+                    WorkingDate = "Thứ 4, 7",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.PickleBall
+                },
+                new ApplicationUser
+                {
+                    Id = 11,
+                    UserName = "coach7",
+                    NormalizedUserName = "COACH7",
+                    Email = "coach7@teamup.com",
+                    NormalizedEmail = "COACH7@TEAMUP.COM",
+                    EmailConfirmed = true,
+                    FullName = "HLV 7",
+                    Specialty = "Bóng đá",
+                    Certificate = "Chứng chỉ C",
+                    PricePerSession = 240000,
+                    WorkingAddress = "Sân Gold, Quận Tân Bình",
+                    WorkingDate = "Thứ 3, 5, 7",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    Status = 1,
+                    StatusForCoach = "Active",
+                    Type = SystemConstant.Type.Soccer
+                }
+            });
+
+            // Hash passwords
+            foreach (var user in coachUsers)
+            {
+                user.PasswordHash = hasher.HashPassword(user, "Coach@123");
+                coachRoles.Add(new ApplicationUserRole { UserId = user.Id, RoleId = 4 }); // Huấn luyện viên
+            }
+
+            // Add to modelBuilder
+            builder.Entity<ApplicationUser>().HasData(coachUsers);
+            builder.Entity<ApplicationUserRole>().HasData(coachRoles);
 
             builder.Entity<Package>().HasData(
                 new Package

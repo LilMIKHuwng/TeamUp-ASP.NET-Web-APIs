@@ -15,6 +15,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="FormSendEmail\CoachBookingConfirmed.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\CoachBookingSuccess.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\CourtBookingConfirmed.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\CourtBookingSuccess.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="FormSendEmail\SendCode.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

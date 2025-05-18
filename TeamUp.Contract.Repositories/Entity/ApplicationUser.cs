@@ -15,6 +15,7 @@ namespace TeamUp.Repositories.Entity
         public string? AvatarUrl { get; set; }
 
         // Nếu là HLV
+        public string? Type { get; set; }
         public string? Specialty { get; set; }
         public string? Certificate { get; set; }
         public string? WorkingAddress { get; set; }

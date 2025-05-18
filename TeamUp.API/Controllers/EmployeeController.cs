@@ -73,7 +73,7 @@ namespace TeamUp.API.Controllers
             }
         }
 
-        [HttpPost("get-owners")]
+        [HttpPost("get-owners-pagination")]
         public async Task<IActionResult> GetOwnerPagination([FromBody] BaseSearchRequest request)
         {
             try
@@ -101,7 +101,7 @@ namespace TeamUp.API.Controllers
             }
         }
 
-        [HttpPost("get-coaches")]
+        [HttpPost("get-coaches-pagination")]
         public async Task<IActionResult> GetCoachPagination([FromBody] BaseSearchRequest request)
         {
             try

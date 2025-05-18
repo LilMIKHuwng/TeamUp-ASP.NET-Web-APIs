@@ -12,7 +12,7 @@ using TeamUp.Repositories.Context;
 namespace TeamUp.Repositories.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250517071310_InitDb")]
+    [Migration("20250518062859_InitDb")]
     partial class InitDb
     {
         /// <inheritdoc />
@@ -170,36 +170,36 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(6962), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 777, DateTimeKind.Unspecified).AddTicks(9915), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Quản trị viên",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7015), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 777, DateTimeKind.Unspecified).AddTicks(9999), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7021), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(7), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Người dùng thông thường",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7022), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(8), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7024), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(10), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Chủ sân thể thao",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7024), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(10), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Owner",
                             NormalizedName = "OWNER"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7026), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(12), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Coach / Trainer",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7027), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(12), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });
@@ -238,6 +238,41 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             UserId = 4,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 5,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 6,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 7,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 8,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 9,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 10,
+                            RoleId = 4
+                        },
+                        new
+                        {
+                            UserId = 11,
                             RoleId = 4
                         });
                 });
@@ -370,10 +405,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7694), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8918), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân cỏ nhân tạo tiêu chuẩn",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7695), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8919), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân 5 người A",
                             PricePerHour = 200000m,
                             SportsComplexId = 1,
@@ -382,10 +417,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7698), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8922), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân chất lượng cao, đèn chiếu sáng ban đêm",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7699), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8923), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân 7 người B",
                             PricePerHour = 350000m,
                             SportsComplexId = 1,
@@ -394,10 +429,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7701), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8926), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân trong nhà, chuẩn thi đấu",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7702), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8927), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông A",
                             PricePerHour = 150000m,
                             SportsComplexId = 2,
@@ -406,10 +441,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7703), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8928), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân chuẩn phong trào",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7720), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8929), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông B",
                             PricePerHour = 100000m,
                             SportsComplexId = 2,
@@ -418,10 +453,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7788), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8931), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân ngoài trời, chất lượng cao",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7790), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8932), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball A",
                             PricePerHour = 250000m,
                             SportsComplexId = 3,
@@ -430,10 +465,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7791), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8934), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân trong nhà, có mái che",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7792), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8935), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball B",
                             PricePerHour = 300000m,
                             SportsComplexId = 3,
@@ -442,10 +477,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7794), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8940), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân chuẩn FIBA, sàn gỗ cao cấp",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7795), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8941), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball C",
                             PricePerHour = 400000m,
                             SportsComplexId = 4,
@@ -454,10 +489,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 8,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7987), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8943), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân phong trào, phù hợp nhóm bạn",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7987), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8944), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball D",
                             PricePerHour = 250000m,
                             SportsComplexId = 4,
@@ -466,10 +501,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 9,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7989), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8945), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân luyện tập cá nhân",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7990), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8946), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball E",
                             PricePerHour = 200000m,
                             SportsComplexId = 4,
@@ -478,10 +513,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 10,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7992), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8948), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân trong nhà, chuẩn thi đấu",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7993), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8949), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông C",
                             PricePerHour = 300000m,
                             SportsComplexId = 5,
@@ -490,10 +525,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 11,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7994), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8951), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân ngoài trời, thoáng mát",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7995), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8952), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông D",
                             PricePerHour = 200000m,
                             SportsComplexId = 5,
@@ -502,10 +537,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 12,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7997), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8953), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân thi đấu chuyên nghiệp",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7997), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8954), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông E",
                             PricePerHour = 350000m,
                             SportsComplexId = 5,
@@ -514,10 +549,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 13,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7999), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8956), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân tiêu chuẩn quốc tế",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8000), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8957), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân Pickleball F",
                             PricePerHour = 280000m,
                             SportsComplexId = 3,
@@ -526,10 +561,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 14,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8003), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8959), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Sân mở ban đêm, có đèn chiếu",
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8004), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8960), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Sân cầu lông F",
                             PricePerHour = 270000m,
                             SportsComplexId = 4,
@@ -650,10 +685,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7331), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8684), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Gói dịch vụ 365 ngày",
                             DurationDays = 30,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7388), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8696), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Basic",
                             Price = 399000m,
                             Type = "PackageHLV"
@@ -661,10 +696,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7399), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8708), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Gói cao cấp 1095 ngày",
                             DurationDays = 90,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7400), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8710), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Premium",
                             Price = 599000m,
                             Type = "PackageHLV"
@@ -672,10 +707,10 @@ namespace TeamUp.Repositories.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7402), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8712), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Gói cao cấp 1095 ngày",
                             DurationDays = 30,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7403), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8713), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Basic",
                             Price = 199000m,
                             Type = "PackageHLV"
@@ -798,8 +833,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             Comment = "HLV rất chuyên nghiệp, hướng dẫn tận tình.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8106), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8108), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9148), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9149), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 4,
                             ReviewerId = 2
@@ -808,8 +843,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 2,
                             Comment = "Chủ sân thân thiện, sân sạch đẹp.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8114), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8114), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9153), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9154), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 4,
                             RevieweeId = 3,
                             ReviewerId = 2
@@ -818,8 +853,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 3,
                             Comment = "Chủ sân hỗ trợ rất nhiệt tình và chuyên nghiệp.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8116), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8117), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9155), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9156), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 3,
                             ReviewerId = 2
@@ -828,8 +863,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 4,
                             Comment = "Không gian rộng rãi, dễ đặt lịch.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8118), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8119), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9158), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9159), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 4,
                             RevieweeId = 3,
                             ReviewerId = 2
@@ -838,8 +873,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 5,
                             Comment = "Thỉnh thoảng hơi chậm phản hồi tin nhắn.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8120), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8121), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9160), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9161), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 3,
                             RevieweeId = 3,
                             ReviewerId = 4
@@ -848,8 +883,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 6,
                             Comment = "Chủ sân dễ tính, rất dễ thương!",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8122), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8124), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9163), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9164), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 3,
                             ReviewerId = 4
@@ -858,8 +893,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 7,
                             Comment = "Sân tốt, chủ sân chu đáo.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8125), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8126), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9165), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9166), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 4,
                             RevieweeId = 3,
                             ReviewerId = 2
@@ -868,8 +903,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 8,
                             Comment = "Quản lý chuyên nghiệp, xử lý tình huống nhanh chóng.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8127), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8128), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9167), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9168), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 3,
                             ReviewerId = 2
@@ -878,8 +913,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 9,
                             Comment = "Dịch vụ ổn, sẽ quay lại lần nữa.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8130), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8130), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9173), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9174), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 4,
                             RevieweeId = 3,
                             ReviewerId = 1
@@ -888,8 +923,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 10,
                             Comment = "Chủ sân rất thân thiện, đáng tin cậy.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8132), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8133), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9175), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9176), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 3,
                             ReviewerId = 1
@@ -898,8 +933,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 11,
                             Comment = "Cần cải thiện thời gian mở cửa đúng giờ hơn.",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8135), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8135), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9178), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9179), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 3,
                             RevieweeId = 3,
                             ReviewerId = 1
@@ -908,8 +943,8 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 12,
                             Comment = "Chất lượng phục vụ tuyệt vời!",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8137), new TimeSpan(0, 7, 0, 0, 0)),
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8137), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9180), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9181), new TimeSpan(0, 7, 0, 0, 0)),
                             RatingValue = 5,
                             RevieweeId = 3,
                             ReviewerId = 1
@@ -982,140 +1017,140 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             CourtId = 1,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8187), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9231), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Tập hợp anh em giao lưu bóng đá sáng thứ 7.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8188), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9232), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 10,
                             Name = "Team Sáng Thứ 7",
                             RoomFee = 30000m,
-                            ScheduledTime = new DateTime(2025, 5, 18, 7, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 19, 7, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 2,
                             CourtId = 2,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8209), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9286), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Tìm đối đá giao hữu 7v7 buổi tối.",
                             HostId = 3,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8209), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9286), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 14,
                             Name = "Giao lưu buổi tối",
                             RoomFee = 50000m,
-                            ScheduledTime = new DateTime(2025, 5, 19, 20, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 20, 20, 0, 0, 0, DateTimeKind.Local),
                             Status = "Completed"
                         },
                         new
                         {
                             Id = 3,
                             CourtId = 3,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8212), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9290), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Đánh cầu cuối tuần, vui vẻ là chính.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8213), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9291), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 4,
                             Name = "Badminton Team CN",
                             RoomFee = 20000m,
-                            ScheduledTime = new DateTime(2025, 5, 20, 9, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 21, 9, 0, 0, 0, DateTimeKind.Local),
                             Status = "Full"
                         },
                         new
                         {
                             Id = 4,
                             CourtId = 4,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8216), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9293), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Tìm team giao lưu vào chiều thứ 5.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8217), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9294), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 10,
                             Name = "Đá bóng chiều thứ 5",
                             RoomFee = 30000m,
-                            ScheduledTime = new DateTime(2025, 5, 21, 17, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 22, 17, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 5,
                             CourtId = 5,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8219), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9297), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Pickleball nhẹ nhàng chủ nhật.",
                             HostId = 3,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8220), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9298), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 4,
                             Name = "Pickleball sáng CN",
                             RoomFee = 40000m,
-                            ScheduledTime = new DateTime(2025, 5, 22, 7, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 23, 7, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 6,
                             CourtId = 6,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8223), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9301), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Giao lưu Pickleball chiều cuối tuần.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8223), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9302), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 4,
                             Name = "Pickleball chiều thứ 7",
                             RoomFee = 50000m,
-                            ScheduledTime = new DateTime(2025, 5, 23, 15, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 24, 15, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 7,
                             CourtId = 7,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8226), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9304), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Team Pickleball tụ tập tối thứ 3.",
                             HostId = 3,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8227), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9305), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 10,
                             Name = "Pickleball tối thứ 3",
                             RoomFee = 25000m,
-                            ScheduledTime = new DateTime(2025, 5, 20, 20, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 21, 20, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 8,
                             CourtId = 8,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8231), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9308), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Vui là chính, ai cũng có thể tham gia.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8231), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9309), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 10,
                             Name = "Pickleball phong trào",
                             RoomFee = 20000m,
-                            ScheduledTime = new DateTime(2025, 5, 19, 18, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 20, 18, 0, 0, 0, DateTimeKind.Local),
                             Status = "Full"
                         },
                         new
                         {
                             Id = 9,
                             CourtId = 10,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8234), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9312), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Đội hình luyện tập chuẩn bị giải.",
                             HostId = 3,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8235), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9313), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 12,
                             Name = "Cầu lông tập luyện",
                             RoomFee = 35000m,
-                            ScheduledTime = new DateTime(2025, 5, 18, 16, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 19, 16, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         },
                         new
                         {
                             Id = 10,
                             CourtId = 12,
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8237), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9316), new TimeSpan(0, 7, 0, 0, 0)),
                             Description = "Team cầu lông nhẹ nhàng tối làm về.",
                             HostId = 2,
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(8238), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(9317), new TimeSpan(0, 7, 0, 0, 0)),
                             MaxPlayers = 4,
                             Name = "Chơi cầu lông tối",
                             RoomFee = 25000m,
-                            ScheduledTime = new DateTime(2025, 5, 21, 19, 0, 0, 0, DateTimeKind.Local),
+                            ScheduledTime = new DateTime(2025, 5, 22, 19, 0, 0, 0, DateTimeKind.Local),
                             Status = "Waiting"
                         });
                 });
@@ -1279,9 +1314,9 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             Address = "123 Đường A, Quận 1, TP.HCM",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7599), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8818), new TimeSpan(0, 7, 0, 0, 0)),
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7600), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8819), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Khu Thể Thao ABC",
                             OwnerId = 3,
                             Status = "Active",
@@ -1291,9 +1326,9 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 2,
                             Address = "456 Đường B, Quận 5, TP.HCM",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7608), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8825), new TimeSpan(0, 7, 0, 0, 0)),
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7609), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8832), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Khu Thể Thao DEF",
                             OwnerId = 3,
                             Status = "Active",
@@ -1303,9 +1338,9 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 3,
                             Address = "789 Đường C, Quận 3, TP.HCM",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7612), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8864), new TimeSpan(0, 7, 0, 0, 0)),
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7612), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8865), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Khu Thể Thao GHI",
                             OwnerId = 3,
                             Status = "Active",
@@ -1315,9 +1350,9 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 4,
                             Address = "321 Đường D, Quận 4, TP.HCM",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7614), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8867), new TimeSpan(0, 7, 0, 0, 0)),
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7615), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8868), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Khu Thể Thao JKL",
                             OwnerId = 3,
                             Status = "Active",
@@ -1327,9 +1362,9 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 5,
                             Address = "654 Đường E, Quận 6, TP.HCM",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7619), new TimeSpan(0, 7, 0, 0, 0)),
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8870), new TimeSpan(0, 7, 0, 0, 0)),
                             ImageUrls = "[\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media\\u0026token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media\\u0026token=cc65bd49-e3df-4a51-b513-c7bb534b63d4\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest3.png?alt=media\\u0026token=e239b164-1d55-437b-889d-19781c61a8b0\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media\\u0026token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752\",\"https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media\\u0026token=b2b2f296-f847-4c95-96d3-50ae7fc827a0\"]",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 784, DateTimeKind.Unspecified).AddTicks(7619), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 590, DateTimeKind.Unspecified).AddTicks(8871), new TimeSpan(0, 7, 0, 0, 0)),
                             Name = "Khu Thể Thao MNO",
                             OwnerId = 3,
                             Status = "Active",
@@ -1501,6 +1536,9 @@ namespace TeamUp.Repositories.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -1533,19 +1571,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "12582ed2-184b-4fa8-8211-e45128dc91f4",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7286), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "14cb2f74-ccf5-493a-bd7a-9fb075353d8f",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(501), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "admin@teamup.com",
                             EmailConfirmed = true,
                             FullName = "System Admin",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 459, DateTimeKind.Unspecified).AddTicks(7287), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 778, DateTimeKind.Unspecified).AddTicks(503), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@TEAMUP.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBDlNhqTHkeWgkqq1i2k0zE8AECS9mgFnXVpw73FiWErZOuPACN585aO7T2VDmRPnA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKCjc51JMFsu/kVWRHnRVJGnxvYNS8X2eHJIQuxtxaOl4NZrTIEoiOSQK3EmsN7dNQ==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "1c5a265c-91f7-42b6-94f3-d28d1fae15e2",
+                            SecurityStamp = "aa9089cf-48a3-4bfa-9225-4a8b87563d18",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -1554,19 +1592,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a74a4c58-8491-42a3-9324-fcbb0b02405d",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 539, DateTimeKind.Unspecified).AddTicks(5204), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "017b5ce0-932e-487c-b3a7-5974d684da1b",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 861, DateTimeKind.Unspecified).AddTicks(9742), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "player@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Người Chơi A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 539, DateTimeKind.Unspecified).AddTicks(5274), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 861, DateTimeKind.Unspecified).AddTicks(9821), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "PLAYER@TEAMUP.COM",
                             NormalizedUserName = "PLAYER",
-                            PasswordHash = "AQAAAAIAAYagAAAAENjRVH01uXbNRkmhp80AqaMNDbi/vDV32bkyrp8HGuit2Qfirp+U+XKz843k1r29Vg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFNwDzpb0SAdm4e1L+1LAgXnet6R2o5tWxlOqhpbhkOzPklOhqAYvfNzqPI12ra3Iw==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "8ee11d82-89b5-4a80-be4e-b77ac4fceed1",
+                            SecurityStamp = "d7803f6c-3b08-49dc-91a4-ab7ab5cfceba",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "player"
@@ -1575,19 +1613,19 @@ namespace TeamUp.Repositories.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "caefec6c-3643-4edd-870f-6e9bd6fdc896",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 628, DateTimeKind.Unspecified).AddTicks(6068), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "cd171836-fb39-4cef-a915-57ec978b1c23",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 959, DateTimeKind.Unspecified).AddTicks(8197), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "chusan@teamup.com",
                             EmailConfirmed = true,
                             FullName = "Chủ Sân A",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 628, DateTimeKind.Unspecified).AddTicks(6140), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 57, 959, DateTimeKind.Unspecified).AddTicks(8221), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "CHUSAN@TEAMUP.COM",
                             NormalizedUserName = "CHUSAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGwKo2N2FXxdaYcMYNgToy2TE6MjsoLRzt8KwRwijGLVbb795JbSIwD62orsiaIZnw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAinQ9BxVhisxGslpCIsLY0Yz9D+wmUNcm0Uc+Qaso1TxHs5i+AgYjgyHPCigPZr+g==",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "167f108d-b6dc-43ba-9473-28fca59c01a7",
+                            SecurityStamp = "21c8c6dd-be41-4f7e-8454-4c32ff7b679b",
                             Status = 1,
                             TwoFactorEnabled = false,
                             UserName = "chusan"
@@ -1597,27 +1635,224 @@ namespace TeamUp.Repositories.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             Certificate = "Chứng chỉ A",
-                            ConcurrencyStamp = "6597ff1b-0967-4ccb-9449-d3bed1b44a67",
-                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 708, DateTimeKind.Unspecified).AddTicks(2277), new TimeSpan(0, 7, 0, 0, 0)),
+                            ConcurrencyStamp = "93ed93f7-5ed0-467b-b165-7043c123e77d",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 52, DateTimeKind.Unspecified).AddTicks(9983), new TimeSpan(0, 7, 0, 0, 0)),
                             Email = "coach@teamup.com",
                             EmailConfirmed = true,
                             FullName = "HLV B",
-                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 17, 14, 13, 9, 708, DateTimeKind.Unspecified).AddTicks(2302), new TimeSpan(0, 7, 0, 0, 0)),
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 53, DateTimeKind.Unspecified).AddTicks(11), new TimeSpan(0, 7, 0, 0, 0)),
                             LockoutEnabled = false,
                             NormalizedEmail = "COACH@TEAMUP.COM",
                             NormalizedUserName = "COACH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHAv88B+OGf8nNbqEUFKKfAjFMd5DE1riN78dK6xXT2I4AQKwGGv5Fg5Ec2RQlIGdg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGGdqNZXhps6YaRguog44Yim5ebURtkvyRtMJjo7tH5Ntz3KbKeq/KCMH5NYxV+B5A==",
                             PhoneNumberConfirmed = false,
                             PricePerSession = 200000m,
                             RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            SecurityStamp = "eeb8e1ce-4c2a-46ec-a497-760f416e1b38",
+                            SecurityStamp = "b47b0c68-1b50-44c1-9bea-2de00abf7d5a",
                             Specialty = "Bóng đá",
                             Status = 1,
                             StatusForCoach = "Active",
                             TwoFactorEnabled = false,
+                            Type = "Bóng đá",
                             UserName = "coach",
                             WorkingAddress = "Sân ABC, Quận 1",
                             WorkingDate = "Thứ 2, 4, 6"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ B",
+                            ConcurrencyStamp = "330f6117-1eda-42df-95d7-86f59f800807",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8368), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach1@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 1",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8383), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH1@TEAMUP.COM",
+                            NormalizedUserName = "COACH1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAVxzqWKWNB0kZeNQ15xbl35exxwaxFgbCPr9ZXx0F1GlrFLddFkWc5hOEM8GQd5sQ==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 250000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "68e349a5-1291-4bd3-8287-4bf8a2b27335",
+                            Specialty = "Bóng đá",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Bóng đá",
+                            UserName = "coach1",
+                            WorkingAddress = "Sân XYZ, Quận 5",
+                            WorkingDate = "Thứ 3, 5"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ C",
+                            ConcurrencyStamp = "95eaadf0-4baa-4c6b-9d48-801b59ac720a",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8467), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach2@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 2",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8468), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH2@TEAMUP.COM",
+                            NormalizedUserName = "COACH2",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKBCWJrZEE0CnTkylbXyr6N37/VU7tP4r+XFlW4c13iLKPiIbr5IGNSauAInhPM6Gg==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 180000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "5f1bdcbb-3b82-46dc-a3cd-598e521583ee",
+                            Specialty = "Cầu lông",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Cầu lông",
+                            UserName = "coach2",
+                            WorkingAddress = "Sân Lông, Quận 2",
+                            WorkingDate = "Thứ 2, 4"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ D",
+                            ConcurrencyStamp = "22550bce-68b2-475e-9c63-f1bf359538b8",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8476), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach3@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 3",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8477), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH3@TEAMUP.COM",
+                            NormalizedUserName = "COACH3",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOfHrDeseIUqjQnDbe6/dm0+WAW5IM93yuVQPvtZmt55Hcan3hv7h5K5E3ClCZBv3A==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 220000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "67254d22-e193-4c04-9e48-39c0b237f33b",
+                            Specialty = "Pickleball",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Pickleball",
+                            UserName = "coach3",
+                            WorkingAddress = "Sân PB, Quận 7",
+                            WorkingDate = "Thứ 6, 7"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ A",
+                            ConcurrencyStamp = "343907db-041a-4f19-9126-75c2500c3f2b",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8488), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach4@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 4",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8489), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH4@TEAMUP.COM",
+                            NormalizedUserName = "COACH4",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKM9siDRt/G1v1kbmyhyiAuxuz9A9Icdd4PHxc4gL31YbTYA9sF2vKVGaWG5F7qirA==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 230000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "2ffb1175-52ec-4ad9-9dc6-1b4fd2cb5324",
+                            Specialty = "Bóng đá",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Bóng đá",
+                            UserName = "coach4",
+                            WorkingAddress = "Sân K, Quận 6",
+                            WorkingDate = "Thứ 3, 6"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ B",
+                            ConcurrencyStamp = "16dbb43b-e812-4b7c-aed9-66cb7e616d2a",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8500), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach5@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 5",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8501), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH5@TEAMUP.COM",
+                            NormalizedUserName = "COACH5",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBa//Aj+6+W/FR2fJsYM/Pg549zf3J6FojNumGwfyJPpxI+ppH1UELUXAeyCKnpiJQ==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 190000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "bbfa944a-93b7-4436-9a59-17fc456c4f10",
+                            Specialty = "Cầu lông",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Cầu lông",
+                            UserName = "coach5",
+                            WorkingAddress = "Sân Mây, Quận 10",
+                            WorkingDate = "Thứ 2, 5"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ E",
+                            ConcurrencyStamp = "87603893-e75f-4012-83dc-493c2db6f46d",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8510), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach6@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 6",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8511), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH6@TEAMUP.COM",
+                            NormalizedUserName = "COACH6",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGoMkBqsYybgLlHy/17R78bxW1DW5SvzfyHHQ4sIdcsAeRgOk4yF3LZBbUSITwYK4Q==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 210000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "277517f8-7c29-4c94-bb68-1568710694b7",
+                            Specialty = "Pickleball",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Pickleball",
+                            UserName = "coach6",
+                            WorkingAddress = "Sân Pick, Quận 9",
+                            WorkingDate = "Thứ 4, 7"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AccessFailedCount = 0,
+                            Certificate = "Chứng chỉ C",
+                            ConcurrencyStamp = "faf85a3c-7ece-43d2-8752-31b850ddc18f",
+                            CreatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8518), new TimeSpan(0, 7, 0, 0, 0)),
+                            Email = "coach7@teamup.com",
+                            EmailConfirmed = true,
+                            FullName = "HLV 7",
+                            LastUpdatedTime = new DateTimeOffset(new DateTime(2025, 5, 18, 13, 28, 58, 124, DateTimeKind.Unspecified).AddTicks(8519), new TimeSpan(0, 7, 0, 0, 0)),
+                            LockoutEnabled = false,
+                            NormalizedEmail = "COACH7@TEAMUP.COM",
+                            NormalizedUserName = "COACH7",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGGCJ5qXabSuh/fWlwoPd88VGueERupGtDpA4mriGZb8gkYo7r3SCOh6jI8dyUAxbg==",
+                            PhoneNumberConfirmed = false,
+                            PricePerSession = 240000m,
+                            RefreshTokenExpiryTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            SecurityStamp = "7c7c530f-ac27-4bce-820d-c919136ad5fd",
+                            Specialty = "Bóng đá",
+                            Status = 1,
+                            StatusForCoach = "Active",
+                            TwoFactorEnabled = false,
+                            Type = "Bóng đá",
+                            UserName = "coach7",
+                            WorkingAddress = "Sân Gold, Quận Tân Bình",
+                            WorkingDate = "Thứ 3, 5, 7"
                         });
                 });
 

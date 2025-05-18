@@ -17,6 +17,9 @@ using TeamUp.Repositories.Entity;
 using Microsoft.EntityFrameworkCore;
 using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.ModelViews.SportsComplexModelViews;
+using TeamUp.Core.Utils;
+using System.Globalization;
+using Firebase.Auth;
 
 namespace TeamUp.Services.Service
 {
@@ -173,7 +176,27 @@ namespace TeamUp.Services.Service
             await _unitOfWork.GetRepository<CoachBooking>().InsertAsync(booking);
             await _unitOfWork.SaveAsync();
 
-            return new ApiSuccessResult<object>("Đặt huấn luyện viên thành công.");
+            // ✅ Gửi email xác nhận sử dụng DoingMail
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "CoachBookingSuccess.html");
+            path = Path.GetFullPath(path);
+
+            if (File.Exists(path))
+            {
+                var content = File.ReadAllText(path);
+
+                content = content.Replace("{{UserEmail}}", user.Email);
+                content = content.Replace("{{CoachEmail}}", coach.Email);
+                content = content.Replace("{{CourtName}}", court.Name);
+                content = content.Replace("{{Date}}", string.Join(", ", distinctDates.Select(d => d.ToString("dd/MM/yyyy"))));
+                content = content.Replace("{{StartTime}}", model.StartTime.ToString(@"hh\:mm"));
+                content = content.Replace("{{EndTime}}", model.EndTime.ToString(@"hh\:mm"));
+                content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
+                content = content.Replace("{{Status}}", booking.Status.ToString());
+
+                DoingMail.SendMail("TeamUp", "Xác nhận đặt huấn luyện viên", content, user.Email);
+            }
+
+            return new ApiSuccessResult<object>("Đặt huấn luyện viên thành công và đã gửi xác nhận email.");
         }
 
 
@@ -337,6 +360,30 @@ namespace TeamUp.Services.Service
 
             await _unitOfWork.GetRepository<CoachBooking>().UpdateAsync(booking);
             await _unitOfWork.SaveAsync();
+
+            // 📨 Gửi email xác nhận nếu trạng thái là Confirmed
+            if (booking.Status == BookingStatus.Confirmed)
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "CoachBookingConfirmed.html");
+                path = Path.GetFullPath(path);
+
+                if (File.Exists(path))
+                {
+                    var content = File.ReadAllText(path);
+
+                    content = content.Replace("{{UserEmail}}", booking.Player?.Email);
+                    content = content.Replace("{{CoachEmail}}", booking.Coach?.Email);
+                    content = content.Replace("{{CourtName}}", booking.Court?.Name);
+                    content = content.Replace("{{Date}}", string.Join(", ", booking.SelectedDates.Select(d => d.ToString("dd/MM/yyyy"))));
+                    content = content.Replace("{{StartTime}}", booking.StartTime.ToString(@"hh\:mm"));
+                    content = content.Replace("{{EndTime}}", booking.EndTime.ToString(@"hh\:mm"));
+                    content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
+                    content = content.Replace("{{Status}}", booking.Status.ToString());
+                    content = content.Replace("{{PaymentStatus}}", booking.PaymentStatus);
+
+                    DoingMail.SendMail("TeamUp", "Xác nhận đặt huấn luyện viên", content, booking.Player?.Email);
+                }
+            }
 
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
         }
