@@ -21,6 +21,8 @@ namespace TeamUp.ModelViews.UserModelViews.Response
         public string? WorkingAddress { get; set; }
         public string? WorkingDate { get; set; }
         public decimal? PricePerSession { get; set; }
+        public string? Experience { get; set; }
+        public string? TargetObject { get; set; }
 
         public string? StatusForCoach { get; set; }
 
