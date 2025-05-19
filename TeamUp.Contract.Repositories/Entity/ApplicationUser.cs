@@ -20,6 +20,8 @@ namespace TeamUp.Repositories.Entity
         public string? Certificate { get; set; }
         public string? WorkingAddress { get; set; }
         public string? WorkingDate { get; set; }
+        public string? Experience { get; set; }
+        public string? TargetObject { get; set; }
         public decimal? PricePerSession { get; set; }
         public string? StatusForCoach { get; set; }
 

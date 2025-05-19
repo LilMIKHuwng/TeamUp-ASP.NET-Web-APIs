@@ -180,6 +180,8 @@ namespace TeamUp.Repositories.Context
                 PricePerSession = 200000,
                 WorkingAddress = "Sân ABC, Quận 1",
                 WorkingDate = "Thứ 2, 4, 6",
+                Experience = "5 năm huấn luyện đội trẻ U15",
+                TargetObject = "Trẻ em, thanh thiếu niên",
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 Status = 1,
                 StatusForCoach = "Active",
@@ -216,6 +218,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 250000,
                     WorkingAddress = "Sân XYZ, Quận 5",
                     WorkingDate = "Thứ 3, 5",
+                    Experience = "5 năm huấn luyện đội trẻ U15",
+                    TargetObject = "Trẻ em, thanh thiếu niên",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -235,6 +239,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 180000,
                     WorkingAddress = "Sân Lông, Quận 2",
                     WorkingDate = "Thứ 2, 4",
+                    Experience = "3 năm huấn luyện cá nhân và nhóm",
+                    TargetObject = "Người lớn, học sinh",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -254,6 +260,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 220000,
                     WorkingAddress = "Sân PB, Quận 7",
                     WorkingDate = "Thứ 6, 7",
+                    Experience = "2 năm giảng dạy cho người mới bắt đầu",
+                    TargetObject = "Người mới chơi, người cao tuổi",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -273,6 +281,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 230000,
                     WorkingAddress = "Sân K, Quận 6",
                     WorkingDate = "Thứ 3, 6",
+                    Experience = "8 năm làm HLV cho các đội phong trào",
+                    TargetObject = "Người lớn, sinh viên",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -292,6 +302,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 190000,
                     WorkingAddress = "Sân Mây, Quận 10",
                     WorkingDate = "Thứ 2, 5",
+                    Experience = "4 năm giảng dạy tại trung tâm thể thao",
+                    TargetObject = "Thiếu nhi, người đi làm",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -311,6 +323,8 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 210000,
                     WorkingAddress = "Sân Pick, Quận 9",
                     WorkingDate = "Thứ 4, 7",
+                    Experience = "1 năm hỗ trợ luyện tập cơ bản và thi đấu",
+                    TargetObject = "Người cao tuổi, học viên nữ",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
@@ -330,11 +344,14 @@ namespace TeamUp.Repositories.Context
                     PricePerSession = 240000,
                     WorkingAddress = "Sân Gold, Quận Tân Bình",
                     WorkingDate = "Thứ 3, 5, 7",
+                    Experience = "6 năm giảng dạy các lớp nâng cao",
+                    TargetObject = "Học viên đã có nền tảng",
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     Status = 1,
                     StatusForCoach = "Active",
                     Type = SystemConstant.Type.Soccer
                 }
+
             });
 
             // Hash passwords
@@ -683,6 +700,57 @@ namespace TeamUp.Repositories.Context
                     Comment = "Chất lượng phục vụ tuyệt vời!"
                 }
             );
+
+            builder.Entity<Rating>().HasData(
+                // Coach Id = 4
+                new Rating { Id = 13, ReviewerId = 2, RevieweeId = 4, RatingValue = 5, Comment = "HLV rất tâm huyết và chuyên nghiệp." },
+                new Rating { Id = 14, ReviewerId = 3, RevieweeId = 4, RatingValue = 4, Comment = "Giảng dạy dễ hiểu, thái độ thân thiện." },
+                new Rating { Id = 15, ReviewerId = 5, RevieweeId = 4, RatingValue = 4, Comment = "Tận tình hỗ trợ, kỹ năng tốt." },
+                new Rating { Id = 16, ReviewerId = 6, RevieweeId = 4, RatingValue = 5, Comment = "Cực kỳ có trách nhiệm với học viên." },
+
+                // Coach Id = 5
+                new Rating { Id = 17, ReviewerId = 2, RevieweeId = 5, RatingValue = 4, Comment = "Phương pháp huấn luyện rõ ràng." },
+                new Rating { Id = 18, ReviewerId = 3, RevieweeId = 5, RatingValue = 5, Comment = "Đúng giờ, vui vẻ và tận tâm." },
+                new Rating { Id = 19, ReviewerId = 6, RevieweeId = 5, RatingValue = 5, Comment = "Cải thiện kỹ năng rõ rệt sau vài buổi." },
+                new Rating { Id = 20, ReviewerId = 7, RevieweeId = 5, RatingValue = 4, Comment = "Kỹ năng truyền đạt tốt, dễ hiểu." },
+
+                // Coach Id = 6
+                new Rating { Id = 21, ReviewerId = 2, RevieweeId = 6, RatingValue = 3, Comment = "Cần tăng tính kỷ luật, nhưng kỹ năng ổn." },
+                new Rating { Id = 22, ReviewerId = 3, RevieweeId = 6, RatingValue = 4, Comment = "Nhiệt tình, vui vẻ, luôn động viên học viên." },
+                new Rating { Id = 23, ReviewerId = 4, RevieweeId = 6, RatingValue = 5, Comment = "Bài tập sáng tạo, dễ áp dụng." },
+                new Rating { Id = 24, ReviewerId = 5, RevieweeId = 6, RatingValue = 4, Comment = "Có chuyên môn cao, dễ tiếp cận." },
+
+                // Coach Id = 7
+                new Rating { Id = 25, ReviewerId = 2, RevieweeId = 7, RatingValue = 5, Comment = "Giúp tôi nâng cao thể lực rõ rệt." },
+                new Rating { Id = 26, ReviewerId = 3, RevieweeId = 7, RatingValue = 5, Comment = "Đào tạo bài bản, bài tập phù hợp trình độ." },
+                new Rating { Id = 27, ReviewerId = 4, RevieweeId = 7, RatingValue = 4, Comment = "Thời gian linh hoạt, hỗ trợ tốt." },
+                new Rating { Id = 28, ReviewerId = 6, RevieweeId = 7, RatingValue = 5, Comment = "Có kinh nghiệm thực tế, phong cách giảng dạy chuyên nghiệp." },
+
+                // Coach Id = 8
+                new Rating { Id = 29, ReviewerId = 2, RevieweeId = 8, RatingValue = 4, Comment = "Khả năng truyền đạt tốt, thân thiện." },
+                new Rating { Id = 30, ReviewerId = 3, RevieweeId = 8, RatingValue = 4, Comment = "Kiến thức vững, giao tiếp tốt." },
+                new Rating { Id = 31, ReviewerId = 4, RevieweeId = 8, RatingValue = 5, Comment = "Luôn khuyến khích học viên cố gắng." },
+                new Rating { Id = 32, ReviewerId = 5, RevieweeId = 8, RatingValue = 5, Comment = "Cực kỳ chuyên nghiệp và dễ thương." },
+
+                // Coach Id = 9
+                new Rating { Id = 33, ReviewerId = 2, RevieweeId = 9, RatingValue = 5, Comment = "Bài giảng sáng tạo, dễ hiểu." },
+                new Rating { Id = 34, ReviewerId = 3, RevieweeId = 9, RatingValue = 4, Comment = "Có nhiều kinh nghiệm thực chiến." },
+                new Rating { Id = 35, ReviewerId = 6, RevieweeId = 9, RatingValue = 4, Comment = "Tận tâm với học viên, hỗ trợ thêm ngoài giờ." },
+                new Rating { Id = 36, ReviewerId = 7, RevieweeId = 9, RatingValue = 5, Comment = "Chuyên nghiệp, luôn đúng giờ." },
+
+                // Coach Id = 10
+                new Rating { Id = 37, ReviewerId = 2, RevieweeId = 10, RatingValue = 5, Comment = "Nội dung giảng dạy phù hợp từng người." },
+                new Rating { Id = 38, ReviewerId = 3, RevieweeId = 10, RatingValue = 5, Comment = "Tạo động lực cho học viên rất tốt." },
+                new Rating { Id = 39, ReviewerId = 4, RevieweeId = 10, RatingValue = 4, Comment = "Rất tận tình, thân thiện." },
+                new Rating { Id = 40, ReviewerId = 5, RevieweeId = 10, RatingValue = 5, Comment = "Phong cách dạy chuyên nghiệp và hiệu quả." },
+
+                // Coach Id = 11
+                new Rating { Id = 41, ReviewerId = 2, RevieweeId = 11, RatingValue = 5, Comment = "HLV dày dạn kinh nghiệm, đáng học hỏi." },
+                new Rating { Id = 42, ReviewerId = 3, RevieweeId = 11, RatingValue = 5, Comment = "Dạy dễ hiểu, luôn hỗ trợ đúng lúc." },
+                new Rating { Id = 43, ReviewerId = 6, RevieweeId = 11, RatingValue = 4, Comment = "Phong thái chuyên nghiệp, vui vẻ." },
+                new Rating { Id = 44, ReviewerId = 7, RevieweeId = 11, RatingValue = 5, Comment = "Giúp tôi cải thiện kỹ thuật rõ rệt." }
+            );
+
 
             builder.Entity<Room>().HasData(
                 new Room

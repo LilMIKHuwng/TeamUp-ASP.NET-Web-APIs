@@ -481,7 +481,7 @@ namespace TeamUp.Services.Service
                         continue;
 
                     // Nếu là ngày hôm nay và giờ đã qua => bỏ qua
-                    if (date == now.Date && slotEnd <= now)
+                    if (date == now.Date && slotStart <= now)
                         continue;
 
                     bool hasCourtBookingConflict = courtBookings.Any(b =>

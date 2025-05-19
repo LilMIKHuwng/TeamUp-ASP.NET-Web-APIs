@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using TeamUp.Contract.Repositories.Entity;
 
 namespace TeamUp.ModelViews.UserModelViews.Request
 {
@@ -18,6 +19,8 @@ namespace TeamUp.ModelViews.UserModelViews.Request
         public string? Certificate { get; set; }
         public string? WorkingAddress { get; set; }
         public string? WorkingDate { get; set; }
+        public string? Experience { get; set; }
+        public string? TargetObject { get; set; }
         public decimal? PricePerSession { get; set; }
 
     }

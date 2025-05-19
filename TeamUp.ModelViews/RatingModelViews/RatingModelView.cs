@@ -11,7 +11,7 @@ namespace TeamUp.ModelViews.RatingModelViews
 {
     public class RatingModelView
     {
-        int Id { get; set; }
+        public int Id { get; set; }
         public UserResponseModel Reviewer { get; set; }
         public UserResponseModel Reviewee { get; set; }
         public int RatingValue { get; set; }

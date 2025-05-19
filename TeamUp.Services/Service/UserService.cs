@@ -414,6 +414,8 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                Experience = user.Experience,
+                TargetObject = user.TargetObject,
                 StartDate = user.StartDate,
                 ExpireDate = user.ExpireDate,
 
@@ -1222,6 +1224,8 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                Experience = user.Experience,
+                TargetObject = user.TargetObject,
 
                 StartDate = user.StartDate,
                 ExpireDate = user.ExpireDate,
@@ -1279,6 +1283,8 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                Experience = user.Experience,
+                TargetObject = user.TargetObject,
 
                 StartDate = user.StartDate,
                 ExpireDate = user.ExpireDate,
@@ -1352,6 +1358,8 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                Experience = user.Experience,
+                TargetObject = user.TargetObject,
 
                 StartDate = user.StartDate,
                 ExpireDate = user.ExpireDate,
@@ -1409,6 +1417,8 @@ namespace TeamUp.Services.Service
                 WorkingDate = user.WorkingDate,
                 PricePerSession = user.PricePerSession,
                 StatusForCoach = user.StatusForCoach,
+                Experience = user.Experience,
+                TargetObject = user.TargetObject,
 
                 StartDate = user.StartDate,
                 ExpireDate = user.ExpireDate,
