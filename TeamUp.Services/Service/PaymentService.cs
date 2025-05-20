@@ -25,6 +25,8 @@ using VNPAY.NET.Models;
 using BabyCare.Core.Utils;
 using TeamUp.Repositories.Entity;
 using static BabyCare.Core.Utils.SystemConstant;
+using Net.payOS.Types;
+using Net.payOS;
 
 namespace TeamUp.Services.Service
 {
@@ -36,18 +38,21 @@ namespace TeamUp.Services.Service
         private readonly IConfiguration _configuration;
         private readonly IVnpay _vnpay;
 
+        private readonly PayOS _payOs;
+
         private string _tmnCode;
         private string _hashSecret;
         private string _baseUrl;
         private string _callbackUrl;
 
-        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor, IConfiguration configuration, IVnpay vnpay)
+        public PaymentService(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor contextAccessor, IConfiguration configuration, IVnpay vnpay, PayOS payOS)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
             _configuration = configuration;
             _vnpay = vnpay;
+            _payOs = payOS;
 
             _tmnCode = configuration["Vnpay:TmnCode"];
             _hashSecret = configuration["Vnpay:HashSecret"];
@@ -155,10 +160,6 @@ namespace TeamUp.Services.Service
                     if (booking == null)
                         return new ApiErrorResult<object>("Không tìm thấy thông tin đặt sân.");
 
-                    booking.Status = result.IsSuccess
-                        ? SystemConstant.BookingStatus.Completed
-                        : SystemConstant.BookingStatus.Failed;
-
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
                         : SystemConstant.PaymentStatus.Failed;
@@ -175,10 +176,6 @@ namespace TeamUp.Services.Service
                         .GetByIdAsync(bookingId);
                     if (booking == null)
                         return new ApiErrorResult<object>("Không tìm thấy thông tin đặt huấn luyện viên.");
-
-                    booking.Status = result.IsSuccess
-                        ? SystemConstant.BookingStatus.Completed
-                        : SystemConstant.BookingStatus.Failed;
 
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
@@ -277,6 +274,240 @@ namespace TeamUp.Services.Service
             }
         }
 
+
+        public async Task<ApiResult<string>> CreatePayOSPaymentUrlAsync(CreatePaymentModelView model)
+        {
+            if (model.CourtBookingId == null && model.CoachBookingId == null && model.PackageId == null)
+                return new ApiErrorResult<string>("Invalid payment information");
+
+            decimal amount = 0;
+            string description = "";
+
+            if (model.CourtBookingId.HasValue)
+            {
+                var booking = await _unitOfWork.GetRepository<CourtBooking>()
+                    .Entities.FirstOrDefaultAsync(x => x.Id == model.CourtBookingId && !x.DeletedTime.HasValue);
+                if (booking == null)
+                    return new ApiErrorResult<string>("Không tìm thấy đặt sân.");
+
+                amount = booking.TotalPrice;
+                description = $"Thanh toán đặt sân";
+            }
+            else if (model.CoachBookingId.HasValue)
+            {
+                var booking = await _unitOfWork.GetRepository<CoachBooking>()
+                    .Entities.FirstOrDefaultAsync(x => x.Id == model.CoachBookingId && !x.DeletedTime.HasValue);
+                if (booking == null)
+                    return new ApiErrorResult<string>("Không tìm thấy đặt huấn luyện viên.");
+
+                amount = booking.TotalPrice;
+                description = $"Thanh toán đặt HLV";
+            }
+            else if (model.PackageId.HasValue)
+            {
+                var package = await _unitOfWork.GetRepository<Package>()
+                    .Entities.FirstOrDefaultAsync(x => x.Id == model.PackageId && !x.DeletedTime.HasValue);
+                if (package == null)
+                    return new ApiErrorResult<string>("Không tìm thấy gói bạn cần.");
+
+                amount = package.Price;
+                description = $"Thanh toán mua gói";
+            }
+
+            try
+            {
+                long orderCode = long.Parse(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString().Substring(3, 10));
+
+                var paymentTemp = new PaymentTemp
+                {
+                    OrderCode = orderCode,
+                    UserId = model.UserId,
+                    Type = model.CourtBookingId.HasValue ? "Court" :
+                           model.CoachBookingId.HasValue ? "Coach" : "Package",
+                    BookingId = model.CourtBookingId ?? model.CoachBookingId ?? model.PackageId ?? 0,
+                    CreatedTime = DateTime.Now
+                };
+
+                await _unitOfWork.GetRepository<PaymentTemp>().InsertAsync(paymentTemp);
+                await _unitOfWork.SaveAsync();
+
+                var item = new ItemData("Thanh toán dịch vụ", 1, (int)(amount * 1000)); // VND
+                var items = new List<ItemData> { item };
+
+                var paymentData = new PaymentData(
+                    orderCode: orderCode,
+                    amount: (int)(amount),
+                    description: description,
+                    items: items,
+                    returnUrl: _configuration["PayOS:ReturnUrl"],
+                    cancelUrl: _configuration["PayOS:ReturnUrl"],
+                    buyerName: "",
+                    buyerEmail: "",
+                    buyerPhone: "",
+                    expiredAt: long.Parse(DateTimeOffset.UtcNow.AddMinutes(30).ToUnixTimeSeconds().ToString()),
+                    signature: ""
+                );
+
+                var result = await _payOs.createPaymentLink(paymentData);
+                return new ApiSuccessResult<string>(result.checkoutUrl);
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<string>($"Không thể tạo link thanh toán: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResult<object>> HandlePayOSReturnAsync(IQueryCollection payosParams)
+        {
+            string status = payosParams["status"];
+            string orderCodeStr = payosParams["orderCode"];
+
+            if (!long.TryParse(orderCodeStr, out var orderCode))
+                return new ApiErrorResult<object>("Phản hồi thanh toán không hợp lệ.");
+
+            var temp = await _unitOfWork.GetRepository<PaymentTemp>()
+                           .Entities.FirstOrDefaultAsync(x => x.OrderCode == orderCode);
+
+            if (temp == null)
+                return new ApiErrorResult<object>("Không tìm thấy thông tin thanh toán tạm thời.");
+
+            int userId = temp.UserId;
+            string type = temp.Type;
+            int bookingId = temp.BookingId;
+
+            // ❗ Nếu không phải PAID, ngắt xử lý tại đây
+            if (status != "PAID")
+            {
+                string message = status == "CANCELLED" ? "Giao dịch đã bị hủy." :
+                                 status == "EXPIRED" ? "Liên kết thanh toán đã hết hạn." :
+                                 "Giao dịch chưa hoàn tất.";
+                return new ApiErrorResult<object>($"Thanh toán PayOS thất bại: {message}");
+            }
+
+            _unitOfWork.BeginTransaction();
+
+            try
+            {
+                Payment payment = new Payment
+                {
+                    CreatedTime = DateTime.Now,
+                    CreatedBy = userId,
+                    Method = "PayOS",
+                    UserId = userId,
+                    PaymentDate = DateTime.Now,
+                    Status = status == "PAID" ? "Success" : "Failed"
+                };
+
+                if (type == "Court")
+                {
+                    var booking = await _unitOfWork.GetRepository<CourtBooking>().GetByIdAsync(bookingId);
+                    if (booking == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt sân.");
+
+                    booking.PaymentStatus = status == "PAID" ? SystemConstant.PaymentStatus.Paid : SystemConstant.PaymentStatus.Failed;
+
+                    _unitOfWork.GetRepository<CourtBooking>().Update(booking);
+                    payment.Amount = booking.TotalPrice;
+                    payment.CourtBookingId = bookingId;
+                }
+                else if (type == "Coach")
+                {
+                    var booking = await _unitOfWork.GetRepository<CoachBooking>().GetByIdAsync(bookingId);
+                    if (booking == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt HLV.");
+
+                    booking.PaymentStatus = status == "PAID" ? SystemConstant.PaymentStatus.Paid : SystemConstant.PaymentStatus.Failed;
+
+                    _unitOfWork.GetRepository<CoachBooking>().Update(booking);
+                    payment.Amount = booking.TotalPrice;
+                    payment.CoachBookingId = bookingId;
+                }
+                else
+                {
+                    var user = await _unitOfWork.GetRepository<ApplicationUser>()
+                        .GetByIdAsync(userId);
+                    if (user == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin người chơi.");
+
+                    var package = await _unitOfWork.GetRepository<Package>()
+                        .GetByIdAsync(bookingId);
+                    if (package == null)
+                        return new ApiErrorResult<object>("Không tìm thấy thông tin gói.");
+
+                    user.StartDate = DateTime.Now;
+
+                    user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
+
+                    user.PackageId = package.Id;
+
+                    _unitOfWork.GetRepository<ApplicationUser>().Update(user);
+
+                    var userRoleRepo = _unitOfWork.GetRepository<ApplicationUserRole>();
+                    var roleRepo = _unitOfWork.GetRepository<ApplicationRole>();
+
+                    var userRole = await userRoleRepo.Entities
+                        .Where(ur => ur.UserId == user.Id)
+                        .Select(ur => ur.RoleId)
+                        .FirstOrDefaultAsync();
+
+                    var role = await roleRepo.Entities
+                        .Where(r => r.Id == userRole)
+                        .Select(r => r.Name)
+                        .FirstOrDefaultAsync();
+
+                    if (string.IsNullOrEmpty(role))
+                        return new ApiErrorResult<object>("Không xác định được vai trò của người dùng.");
+
+                    if (role == "Owner")
+                    {
+                        var sportsComplexRepo = _unitOfWork.GetRepository<SportsComplex>();
+                        var courtRepo = _unitOfWork.GetRepository<Court>();
+
+                        // Lấy danh sách khu thể thao của user
+                        var complexes = await sportsComplexRepo.Entities
+                            .Where(x => x.OwnerId == user.Id && !x.DeletedTime.HasValue)
+                            .ToListAsync();
+
+                        foreach (var complex in complexes)
+                        {
+                            complex.Status = PackageStatus.Active;
+                            sportsComplexRepo.Update(complex);
+
+                            // Lấy và cập nhật sân trong khu thể thao
+                            var courts = await courtRepo.Entities
+                                .Where(c => c.SportsComplexId == complex.Id && !c.DeletedTime.HasValue)
+                                .ToListAsync();
+
+                            foreach (var court in courts)
+                            {
+                                court.Status = PackageStatus.Active;
+                                courtRepo.Update(court);
+                            }
+                        }
+                    }
+                    else if (role == "Coach")
+                    {
+                        user.StatusForCoach = PackageStatus.Active;
+
+                        _unitOfWork.GetRepository<ApplicationUser>().Update(user);
+                    }
+
+                    payment.Amount = package.Price;
+                    payment.PackageId = bookingId;
+                }
+
+                await _unitOfWork.GetRepository<Payment>().InsertAsync(payment);
+                await _unitOfWork.SaveAsync();
+                _unitOfWork.CommitTransaction();
+
+                return new ApiSuccessResult<object>("Xử lý thanh toán PayOS thành công.");
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollBack();
+                return new ApiErrorResult<object>($"Lỗi xử lý thanh toán PayOS: {ex.Message}");
+            }
+        }
 
 
         public async Task<ApiResult<PaymentModelView>> GetPaymentByIdAsync(int id)

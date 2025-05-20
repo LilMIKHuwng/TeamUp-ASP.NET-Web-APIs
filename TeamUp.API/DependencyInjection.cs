@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Net.payOS;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,6 +28,11 @@ namespace TeamUp.API
             services.AddInfrastructure(configuration);
             services.AddServices();
             services.AddAutoMapperProfiles();
+            services.AddSingleton(new PayOS(
+                clientId: configuration["PayOS:PAYOS_CLIENT_ID"],
+                apiKey: configuration["PayOS:PAYOS_API_KEY"],
+                checksumKey: configuration["PayOS:PAYOS_CHECKSUM_KEY"]
+            ));
         }
         public static void ConfigRoute(this IServiceCollection services)
         {

@@ -16,7 +16,6 @@ namespace TeamUp.API.Controllers
             _paymentService = paymentService;
         }
 
-
         public static string GetIpAddress(HttpContext context)
         {
             var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
@@ -24,18 +23,17 @@ namespace TeamUp.API.Controllers
             {
                 ip = context.Connection.RemoteIpAddress?.ToString();
             }
-            return ip ?? "0.0.0.0"; // Tránh null
+            return ip ?? "0.0.0.0";
         }
 
-        /// <summary>
-        /// Tạo URL thanh toán VNPay
-        /// </summary>
+        // ==== VNPay ====
+
         [HttpPost("create-vnpay-url")]
         public async Task<ActionResult<ApiResult<string>>> CreateVNPayUrl([FromBody] CreatePaymentModelView model)
         {
             try
             {
-                var ipAddress = PaymentController.GetIpAddress(HttpContext);
+                var ipAddress = GetIpAddress(HttpContext);
                 var result = await _paymentService.CreateVNPayPaymentUrlAsync(model, ipAddress);
                 return Ok(result);
             }
@@ -45,9 +43,6 @@ namespace TeamUp.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Xử lý callback từ VNPay sau thanh toán
-        /// </summary>
         [HttpGet("vnpay-return")]
         public async Task<ActionResult<ApiResult<object>>> VNPayReturn()
         {
@@ -62,9 +57,44 @@ namespace TeamUp.API.Controllers
             }
         }
 
+        // ==== PayOS ====
+
         /// <summary>
-        /// Lấy chi tiết thanh toán theo ID
+        /// Tạo link thanh toán PayOS
         /// </summary>
+        [HttpPost("create-payos-url")]
+        public async Task<ActionResult<ApiResult<string>>> CreatePayOSUrl([FromBody] CreatePaymentModelView model)
+        {
+            try
+            {
+                var result = await _paymentService.CreatePayOSPaymentUrlAsync(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<string>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Xử lý callback từ PayOS
+        /// </summary>
+        [HttpGet("payos-return")]
+        public async Task<ActionResult<ApiResult<object>>> PayOSReturn()
+        {
+            try
+            {
+                var result = await _paymentService.HandlePayOSReturnAsync(Request.Query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        // ==== Common ====
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResult<PaymentModelView>>> GetById(int id)
         {
@@ -79,9 +109,6 @@ namespace TeamUp.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Lấy danh sách tất cả thanh toán
-        /// </summary>
         [HttpGet("all")]
         public async Task<ActionResult<ApiResult<List<PaymentModelView>>>> GetAll(
             [FromQuery] int? userId,
