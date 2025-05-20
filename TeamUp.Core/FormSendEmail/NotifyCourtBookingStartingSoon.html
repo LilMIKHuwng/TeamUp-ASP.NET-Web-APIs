@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Đặt Sân Sắp Diễn Ra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .logo img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #22c55e;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .details {
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="TeamUp Logo" />
+        </div>
+
+        <h2>Lịch Đặt Sân Sắp Diễn Ra</h2>
+        <p>Xin chào <strong>{{UserName}}</strong>,</p>
+        <p>Bạn đã đặt sân <strong>{{CourtName}}</strong> trên TeamUp.</p>
+
+        <div class="details">
+            <p><strong>Bắt đầu:</strong> {{StartTime}}</p>
+            <p><strong>Kết thúc:</strong> {{EndTime}}</p>
+            <p><strong>Lưu ý:</strong> Hãy đến đúng giờ và chuẩn bị trang phục phù hợp.</p>
+        </div>
+
+        <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+
+        <div class="footer">
+            © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+            Email này được gửi tự động, vui lòng không phản hồi.
+        </div>
+    </div>
+</body>
+</html>

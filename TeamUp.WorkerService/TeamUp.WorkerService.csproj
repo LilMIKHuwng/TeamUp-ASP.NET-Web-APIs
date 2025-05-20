@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TeamUp.Contract.Repositories\TeamUp.Contract.Repositories.csproj" />
+    <ProjectReference Include="..\TeamUp.Contract.Services\TeamUp.Contract.Services.csproj" />
+    <ProjectReference Include="..\TeamUp.Core\TeamUp.Core.csproj" />
+    <ProjectReference Include="..\TeamUp.Repositories\TeamUp.Repositories.csproj" />
+    <ProjectReference Include="..\TeamUp.Services\TeamUp.Services.csproj" />
+  </ItemGroup>
+
+</Project>

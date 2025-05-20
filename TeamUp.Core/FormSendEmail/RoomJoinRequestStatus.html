@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trạng thái yêu cầu tham gia phòng</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        .email-container {
+            padding: 20px;
+        }
+
+        .email-content {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            border: 1px solid #dedede;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .email-header {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 36px 48px;
+        }
+
+            .email-header h1 {
+                font-size: 28px;
+                font-weight: bold;
+                margin: 0;
+            }
+
+        .email-logo img {
+            width: 180px;
+            margin-top: 10px;
+        }
+
+        .email-body {
+            padding: 24px 48px;
+            text-align: center;
+        }
+
+            .email-body h2 {
+                font-size: 20px;
+                margin-bottom: 18px;
+            }
+
+            .email-body p {
+                font-size: 16px;
+                color: #333;
+            }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            color: #888;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-content">
+            <div class="email-header">
+                <h1>TEAMUP</h1>
+                <div class="email-logo">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="TeamUp Logo">
+                </div>
+            </div>
+            <div class="email-body">
+                <h2>Xin chào, {{Name}}</h2>
+                <p>{{RoleMessage}}</p>
+                <p>Cảm ơn bạn đã sử dụng TeamUp.</p>
+            </div>
+        </div>
+        <div class="footer">
+            © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+            Email này được gửi tự động, vui lòng không phản hồi.
+        </div>
+    </div>
+</body>
+</html>
