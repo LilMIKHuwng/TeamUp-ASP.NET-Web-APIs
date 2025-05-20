@@ -31,6 +31,8 @@ namespace TeamUp.Repositories.Context
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<UserMessage> UserMessages { get; set; }
         public virtual DbSet<Package> Packages { get; set; }
+        public virtual DbSet<PaymentTemp> PaymentTemps { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -177,7 +179,7 @@ namespace TeamUp.Repositories.Context
                 FullName = "HLV B",
                 Specialty = "Bóng đá",
                 Certificate = "Chứng chỉ A",
-                PricePerSession = 200000,
+                PricePerSession = 5000,
                 WorkingAddress = "Sân ABC, Quận 1",
                 WorkingDate = "Thứ 2, 4, 6",
                 Experience = "5 năm huấn luyện đội trẻ U15",
@@ -370,7 +372,7 @@ namespace TeamUp.Repositories.Context
                 {
                     Id = 1,
                     Name = "Basic",
-                    Price = 399000,
+                    Price = 10000,
                     Description = "Gói dịch vụ 365 ngày",
                     DurationDays = 30,
                     Type = "PackageHLV"
@@ -466,7 +468,7 @@ namespace TeamUp.Repositories.Context
                     SportsComplexId = 1,
                     Name = "Sân 5 người A",
                     Description = "Sân cỏ nhân tạo tiêu chuẩn",
-                    PricePerHour = 200000,
+                    PricePerHour = 10000,
                     Status = "Active",
                     ImageUrls = firebaseImageUrls
                 },

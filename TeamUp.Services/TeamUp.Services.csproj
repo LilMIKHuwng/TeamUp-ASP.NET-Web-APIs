@@ -10,6 +10,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+		<PackageReference Include="payOS" Version="1.0.9" />
 		<PackageReference Include="PusherServer" Version="5.0.0" />
 		<PackageReference Include="VNPAY.NET" Version="8.5.0" />
 	</ItemGroup>
