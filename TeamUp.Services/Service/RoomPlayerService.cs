@@ -19,6 +19,8 @@ using TeamUp.ModelViews.CourtModelViews;
 using TeamUp.ModelViews.RoomModelViews;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using TeamUp.ModelViews.UserModelViews.Response;
+using BabyCare.Core.Utils;
+using TeamUp.Core.Utils;
 
 namespace TeamUp.Services.Service
 {
@@ -46,6 +48,15 @@ namespace TeamUp.Services.Service
             if (player == null)
                 return new ApiErrorResult<object>("Không tìm thấy người chơi.");
 
+            // Kiểm tra số lượng người chơi đã đủ chưa
+            var currentPlayerCount = await _unitOfWork.GetRepository<RoomPlayer>().Entities
+                .Where(rp => rp.RoomId == model.RoomId && rp.Status == RoomPlayerStatus.Accepted)
+                .CountAsync();
+
+            if (currentPlayerCount >= room.MaxPlayers)
+                return new ApiErrorResult<object>("Phòng đã đủ người chơi.");
+
+            // Kiểm tra người chơi đã được chấp nhận vào phòng chưa
             var joinRequest = await _unitOfWork.GetRepository<RoomJoinRequest>().Entities
                 .Where(r => r.RoomId == model.RoomId && r.RequesterId == model.PlayerId)
                 .OrderByDescending(r => r.RequestedAt)
@@ -54,10 +65,16 @@ namespace TeamUp.Services.Service
             if (joinRequest == null || joinRequest.Status != RoomJoinRequestStatus.Accepted)
                 return new ApiErrorResult<object>("Người chơi chưa được chấp nhận vào phòng.");
 
+            // Kiểm tra trùng người chơi đã có trong phòng
+            var existingPlayer = await _unitOfWork.GetRepository<RoomPlayer>().Entities
+                .FirstOrDefaultAsync(rp => rp.RoomId == model.RoomId && rp.PlayerId == model.PlayerId);
+
+            if (existingPlayer != null)
+                return new ApiErrorResult<object>("Người chơi đã có trong phòng.");
+
             var newRoomPlayer = _mapper.Map<RoomPlayer>(model);
             newRoomPlayer.Status = RoomPlayerStatus.Accepted;
             newRoomPlayer.JoinedAt = DateTime.Now;
-
             newRoomPlayer.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             newRoomPlayer.CreatedTime = DateTime.Now;
 
@@ -66,6 +83,7 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<object>("Thêm người chơi vào phòng thành công.");
         }
+
 
         public async Task<ApiResult<object>> DeleteRoomPlayerAsync(int id)
         {
@@ -183,17 +201,45 @@ namespace TeamUp.Services.Service
             if (entity == null)
                 return new ApiErrorResult<object>("Không tìm thấy người chơi trong phòng.");
 
-            int roomId = model.RoomId ?? entity.RoomId;
-            int playerId = model.PlayerId ?? entity.PlayerId;
+            int newRoomId = model.RoomId ?? entity.RoomId;
+            int newPlayerId = model.PlayerId ?? entity.PlayerId;
 
+            // Kiểm tra yêu cầu tham gia phòng đã được chấp nhận chưa
             var joinRequest = await _unitOfWork.GetRepository<RoomJoinRequest>().Entities
-                .Where(r => r.RoomId == roomId && r.RequesterId == playerId)
+                .Where(r => r.RoomId == newRoomId && r.RequesterId == newPlayerId)
                 .OrderByDescending(r => r.RequestedAt)
                 .FirstOrDefaultAsync();
 
             if (joinRequest == null || joinRequest.Status != RoomJoinRequestStatus.Accepted)
                 return new ApiErrorResult<object>("Người chơi chưa được chấp nhận vào phòng.");
 
+            // Nếu chuyển sang phòng khác thì kiểm tra số lượng người chơi trong phòng mới
+            if (model.RoomId.HasValue && model.RoomId.Value != entity.RoomId)
+            {
+                var newRoom = await _unitOfWork.GetRepository<Room>().GetByIdAsync(model.RoomId.Value);
+                if (newRoom == null || newRoom.DeletedTime.HasValue)
+                    return new ApiErrorResult<object>("Không tìm thấy phòng mới.");
+
+                var acceptedCount = await _unitOfWork.GetRepository<RoomPlayer>().Entities
+                    .Where(rp => rp.RoomId == newRoom.Id && rp.Status == RoomPlayerStatus.Accepted)
+                    .CountAsync();
+
+                if (acceptedCount >= newRoom.MaxPlayers)
+                    return new ApiErrorResult<object>("Phòng mới đã đủ người chơi.");
+            }
+
+            // Kiểm tra trùng người chơi trong phòng mới (nếu đổi playerId hoặc roomId)
+            if ((model.RoomId.HasValue && model.RoomId.Value != entity.RoomId) ||
+                (model.PlayerId.HasValue && model.PlayerId.Value != entity.PlayerId))
+            {
+                var duplicate = await _unitOfWork.GetRepository<RoomPlayer>().Entities
+                    .FirstOrDefaultAsync(rp => rp.Id != entity.Id && rp.RoomId == newRoomId && rp.PlayerId == newPlayerId);
+
+                if (duplicate != null)
+                    return new ApiErrorResult<object>("Người chơi này đã có trong phòng.");
+            }
+
+            // Áp dụng cập nhật
             if (model.PlayerId.HasValue)
                 entity.PlayerId = model.PlayerId.Value;
 
@@ -225,6 +271,7 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>("Cập nhật thông tin thành công.");
         }
 
+
         public async Task<ApiResult<object>> UpdateRoomPlayergStatusAsync(int id, string status)
         {
             var entity = await _unitOfWork.GetRepository<RoomPlayer>().GetByIdAsync(id);
@@ -249,6 +296,29 @@ namespace TeamUp.Services.Service
 
             await _unitOfWork.GetRepository<RoomPlayer>().UpdateAsync(entity);
             await _unitOfWork.SaveAsync();
+
+
+            // Gửi email thông báo
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "RoomPlayerCancelStatus.html");
+            path = Path.GetFullPath(path);
+            if (!File.Exists(path))
+                return new ApiErrorResult<object>("Không tìm thấy file gửi mail");
+
+            var content = File.ReadAllText(path);
+            content = content.Replace("{{Name}}", entity.Player.Email);
+
+            string roleMessage = status switch
+            {
+                "Cancelled" => $"Yêu cầu tham gia phòng <strong>{entity.Room.Name}</strong> của bạn đã được <span style='color:orange;font-weight:bold'>HUỶ</span>.",
+                _ => "Trạng thái yêu cầu đã được cập nhật."
+            };
+            content = content.Replace("{{RoleMessage}}", roleMessage);
+
+            var resultSendMail = DoingMail.SendMail("TeamUp", "Cập nhật trạng thái yêu cầu tham gia phòng", content, entity.Player.Email);
+            if (!resultSendMail)
+            {
+                return new ApiErrorResult<object>("Không thể gửi email tới " + entity.Player.Email);
+            }
 
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
         }

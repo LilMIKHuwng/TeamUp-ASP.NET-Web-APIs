@@ -21,10 +21,34 @@
 	  <None Update="FormSendEmail\CoachBookingSuccess.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
+	  <None Update="FormSendEmail\CoachPackageExpired.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="FormSendEmail\CourtBookingConfirmed.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="FormSendEmail\CourtBookingSuccess.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\NotifyCoachBooking.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\NotifyCourtBookingStartingSoon.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\NotifyHostRoomJoinRequest.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\NotifyRoomStartingSoon.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\OwnerPackageExpired.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\RoomJoinRequestStatus.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="FormSendEmail\RoomPlayerCancelStatus.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	  <None Update="FormSendEmail\SendCode.html">

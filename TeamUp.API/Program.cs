@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using TeamUp.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,12 @@ builder.Services.AddConfig(builder.Configuration);
 builder.Services.AddConfigJWT(builder.Configuration);
 builder.Services.AddCorsPolicyBackend();
 builder.Services.AddHttpClient();
+
+//builder.Services.AddHostedService<RoomPlayerWorker>();
+//builder.Services.AddHostedService<CoachWorker>();
+//builder.Services.AddHostedService<CoachBookingWorker>();
+//builder.Services.AddHostedService<OwnerWorker>();
+//builder.Services.AddHostedService<CourtBookingWorker>();
 
 var app = builder.Build();
 

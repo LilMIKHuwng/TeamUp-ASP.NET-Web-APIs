@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TeamUp.Services\TeamUp.Services.csproj" />
+    <ProjectReference Include="..\TeamUp.WorkerService\TeamUp.WorkerService.csproj" />
   </ItemGroup>
 
 </Project>

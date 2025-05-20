@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Yêu cầu tham gia phòng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 36px 48px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                color: #333;
+            }
+
+        .logo img {
+            width: 160px;
+            margin-top: 12px;
+        }
+
+        .content {
+            padding: 24px 48px;
+            text-align: center;
+        }
+
+            .content p {
+                font-size: 16px;
+                color: #333;
+            }
+
+            .content .highlight {
+                font-weight: bold;
+                color: #007BFF;
+            }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            color: #888;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TEAMUP</h1>
+            <div class="logo">
+                <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="TeamUp Logo">
+            </div>
+        </div>
+        <div class="content">
+            <p>Xin chào, {{HostName}}!</p>
+            <p>Người dùng <span class="highlight">{{RequesterEmail}}</span> đã gửi yêu cầu tham gia phòng <span class="highlight">{{RoomTitle}}</span>.</p>
+            <p>Vui lòng truy cập TeamUp để xử lý yêu cầu này.</p>
+        </div>
+        <div class="footer">
+            © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+            Email này được gửi tự động, vui lòng không phản hồi.
+        </div>
+    </div>
+</body>
+</html>

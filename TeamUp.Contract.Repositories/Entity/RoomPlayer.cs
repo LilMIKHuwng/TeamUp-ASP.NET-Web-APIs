@@ -14,6 +14,8 @@ namespace TeamUp.Contract.Repositories.Entity
 
         public string Status { get; set; }
 
+        public bool IsNotified { get; set; } = false;
+
         public DateTime JoinedAt { get; set; } = DateTime.Now;
     }
 }

@@ -445,24 +445,33 @@ namespace TeamUp.Services.Service
                 return new ApiErrorResult<List<object>>("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
             }
 
+            var cancelledStatuses = new[]
+            {
+                BookingStatus.CancelledByUser,
+                BookingStatus.CancelledByOwner,
+                BookingStatus.CancelledByCoach,
+                BookingStatus.Failed,
+                BookingStatus.NoShow
+            };
+
             var endDate = startDate.Date.AddDays(7);
             var openTime = TimeSpan.FromHours(5);    // 5:00 AM
             var closeTime = TimeSpan.FromHours(23);  // 11:00 PM
 
-            // Lấy booking của sân trong khoảng ngày
             var courtBookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Where(b =>
                     b.CourtId == courtId &&
                     !b.DeletedTime.HasValue &&
+                    !cancelledStatuses.Contains(b.Status) &&
                     b.StartTime < endDate &&
                     b.EndTime > startDate)
                 .ToListAsync();
 
-            // Lấy coach bookings có courtId tương ứng
             var coachBookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Where(cb =>
                     cb.CourtId == courtId &&
-                    !cb.DeletedTime.HasValue)
+                    !cb.DeletedTime.HasValue &&
+                    !cancelledStatuses.Contains(cb.Status))
                 .ToListAsync();
 
             var result = new List<object>();

@@ -185,7 +185,7 @@ namespace TeamUp.Repositories.Context
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 Status = 1,
                 StatusForCoach = "Active",
-                Type = "Bóng đá"
+                Type = "Bóng đá",
             };
             coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
 

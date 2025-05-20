@@ -25,6 +25,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
 
+        public bool IsNotified { get; set; } = false;
+
         public virtual ICollection<Payment> Payments { get; set; } 
     }
 

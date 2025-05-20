@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhắc Nhở Lịch Huấn Luyện</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        .content h2 {
+            color: #34d399;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            color: #333;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+            .info p {
+                margin: 8px 0;
+                font-size: 15px;
+            }
+
+            .info strong {
+                color: #2563eb;
+            }
+
+            .info ul {
+                padding-left: 20px;
+                text-align: left;
+                font-size: 14px;
+            }
+            .info .status {
+                color: #16a34a; /* xanh lá đậm */
+                font-weight: bold;
+            }
+
+                .info ul li {
+                    margin: 5px 0;
+                }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 13px;
+            color: #888;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="logo">
+            <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="Logo">
+        </div>
+        <div class="content">
+            <h2>Nhắc Nhở Lịch Huấn Luyện Sắp Tới</h2>
+            <p>Xin chào <strong>{{UserEmail}}</strong>,</p>
+            <p>Đây là danh sách các buổi huấn luyện với huấn luyện viên <strong>{{CoachEmail}}</strong> tại sân <strong>{{CourtName}}</strong> mà bạn đã đặt:</p>
+            <div class="info">
+                <p><strong>Lịch huấn luyện:</strong></p>
+                <ul>
+                    {{SessionsList}}
+                </ul>
+                <p><strong>Trạng thái lịch:</strong> <span class="status">{{Status}}</span></p>
+            </div>
+            <p>Vui lòng đến đúng giờ. Cảm ơn bạn đã sử dụng TeamUp!</p>
+        </div>
+        <div class="footer">
+            © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+            Email này được gửi tự động, vui lòng không phản hồi.
+        </div>
+    </div>
+</body>
+</html>
