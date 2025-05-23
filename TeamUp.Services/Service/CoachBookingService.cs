@@ -407,5 +407,119 @@ namespace TeamUp.Services.Service
                 TotalPrice = totalPrice
             });
         }
+
+
+
+
+        public async Task<ApiResult<object>> GetCoachBookingStatsAsync(int coachId)
+        {
+            var query = _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue);
+
+            var totalBookings = await query.CountAsync();
+
+            var totalRevenue = await query
+                .Where(cb => cb.PaymentStatus == "Paid")
+                .SumAsync(cb => cb.TotalPrice);
+
+            var uniqueStudents = await query
+                .Select(cb => cb.PlayerId)
+                .Distinct()
+                .CountAsync();
+
+            var result = new
+            {
+                CoachId = coachId,
+                TotalBookings = totalBookings,
+                TotalRevenue = totalRevenue,
+                UniqueStudents = uniqueStudents
+            };
+
+            return new ApiSuccessResult<object>(result);
+        }
+
+        public async Task<ApiResult<List<object>>> GetPlayersByCoachAsync(int coachId)
+        {
+            var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue)
+                .Include(cb => cb.Player)
+                .GroupBy(cb => cb.PlayerId)
+                .Select(g => new
+                {
+                    PlayerId = g.Key,
+                    PlayerInfo = g.First().Player
+                })
+                .ToListAsync();
+
+            var result = bookings.Select(b => new
+            {
+                b.PlayerId,
+                FullName = b.PlayerInfo.FullName,
+                Email = b.PlayerInfo.Email,
+                PhoneNumber = b.PlayerInfo.PhoneNumber,
+                AvaterUrl = b.PlayerInfo.AvatarUrl
+            }).ToList<object>();
+
+            return new ApiSuccessResult<List<object>>(result);
+        }
+
+
+        public async Task<ApiResult<object>> GetTotalBookingsThisMonthByCoachAsync(int coachId)
+        {
+            var now = DateTime.UtcNow;
+            var startMonth = new DateTime(now.Year, now.Month, 1);
+            var endMonth = startMonth.AddMonths(1);
+
+            var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue &&
+                             cb.CreatedTime >= startMonth && cb.CreatedTime < endMonth)
+                .CountAsync();
+
+            return new ApiSuccessResult<object>(new
+            {
+                CoachId = coachId,
+                Month = now.Month,
+                Year = now.Year,
+                TotalBookings = bookings
+            });
+        }
+
+        public async Task<ApiResult<List<object>>> GetBookedSlotsThisWeekByCoachAsync(int coachId)
+        {
+            DateTime now = DateTime.Now;
+            int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime startOfWeek = now.Date.AddDays(-1 * diff);
+            DateTime endOfWeek = startOfWeek.AddDays(7).AddSeconds(-1);
+
+            var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.CoachId == coachId &&
+                             !cb.DeletedTime.HasValue &&
+                             cb.SelectedDates.Any(d => d >= startOfWeek && d < endOfWeek)
+                             && (
+                                cb.Status == BookingStatus.Pending ||
+                                cb.Status == BookingStatus.Confirmed ||
+                                cb.Status == BookingStatus.InProgress ||
+                                cb.Status == BookingStatus.Completed
+                             ))
+                .ToListAsync();
+
+            var result = new List<object>();
+
+            foreach (var booking in bookings)
+            {
+                foreach (var date in booking.SelectedDates.Where(d => d >= startOfWeek && d < endOfWeek))
+                {
+                    result.Add(new
+                    {
+                        booking.CourtId,
+                        WeekDay = date.ToString("dddd", new CultureInfo("vi-VN")),
+                        Date = date.ToString("yyyy-MM-dd"),
+                        BookedSlot = $"{booking.StartTime:hh\\:mm} - {booking.EndTime:hh\\:mm}"
+                    });
+                }
+            }
+
+            return new ApiSuccessResult<List<object>>(result);
+        }
     }
 }

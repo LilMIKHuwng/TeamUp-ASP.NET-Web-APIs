@@ -12,7 +12,7 @@ namespace TeamUp.ModelViews.CourtBookingModelViews
 {
     public class CourtBookingModelView
     {
-        int Id { get; set; }
+        public int Id { get; set; }
         public CourtModelView Court { get; set; }
         public UserResponseModel User { get; set; }
 

@@ -12,7 +12,7 @@ namespace TeamUp.ModelViews.PaymentModelViews
 {
     public class PaymentModelView
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public UserResponseModel User { get; set; }
         public CourtBookingModelView? CourtBooking { get; set; }
         public CoachBookingModelView? CoachBooking { get; set; }

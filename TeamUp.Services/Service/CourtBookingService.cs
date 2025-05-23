@@ -523,7 +523,112 @@ namespace TeamUp.Services.Service
         }
 
 
+        public async Task<ApiResult<object>> GetCourtBookingStatsByOwnerAsync(int ownerId)
+        {
+            var query = _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Where(cb => !cb.DeletedTime.HasValue)
+                .Include(cb => cb.Court)
+                    .ThenInclude(c => c.SportsComplex);
 
+            var ownerBookings = query.Where(cb => cb.Court.SportsComplex.OwnerId == ownerId);
+
+            var uniquePlayerCount = await ownerBookings
+                .Select(cb => cb.UserId)
+                .Distinct()
+                .CountAsync();
+
+            var totalBookings = await ownerBookings.CountAsync();
+
+            var totalRevenue = await ownerBookings
+                .Where(cb => cb.PaymentStatus == "Paid")
+                .SumAsync(cb => cb.TotalPrice);
+
+            var result = new
+            {
+                OwnerId = ownerId,
+                UniquePlayerCount = uniquePlayerCount,
+                TotalCourtBookings = totalBookings,
+                TotalRevenue = totalRevenue
+            };
+
+            return new ApiSuccessResult<object>(result);
+        }
+
+
+        public async Task<ApiResult<object>> GetMostBookedCourtByOwnerAsync(int ownerId)
+        {
+            var bookingsQuery = _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Where(cb => !cb.DeletedTime.HasValue)
+                .Include(cb => cb.Court)
+                    .ThenInclude(c => c.SportsComplex)
+                .Where(cb => cb.Court.SportsComplex.OwnerId == ownerId);
+
+            var mostBooked = await bookingsQuery
+                .GroupBy(cb => cb.CourtId)
+                .Select(g => new
+                {
+                    CourtId = g.Key,
+                    BookingCount = g.Count()
+                })
+                .OrderByDescending(g => g.BookingCount)
+                .FirstOrDefaultAsync();
+
+            if (mostBooked == null)
+            {
+                return new ApiErrorResult<object>("Không có sân nào được đặt bởi chủ sân này.");
+            }
+
+            var court = await _unitOfWork.GetRepository<Court>().Entities
+                .Include(c => c.SportsComplex)
+                .FirstOrDefaultAsync(c => c.Id == mostBooked.CourtId);
+
+            var result = new
+            {
+                Court = _mapper.Map<CourtModelView>(court),
+                BookingCount = mostBooked.BookingCount
+            };
+
+            return new ApiSuccessResult<object>(result);
+        }
+
+
+        public async Task<ApiResult<List<object>>> GetBookedSlotsThisWeekByCourtAsync(int courtId)
+        {
+            var now = DateTime.Now;
+            var startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek + (int)DayOfWeek.Monday);
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var bookings = await _unitOfWork.GetRepository<CourtBooking>()
+                .Entities
+                .Where(b => b.CourtId == courtId
+                    && b.StartTime >= startOfWeek
+                    && b.StartTime < endOfWeek
+                    && (
+                        b.Status == BookingStatus.Pending ||
+                        b.Status == BookingStatus.Confirmed ||
+                        b.Status == BookingStatus.InProgress ||
+                        b.Status == BookingStatus.Completed
+                    ))
+                .OrderBy(b => b.StartTime)
+                .ToListAsync();
+
+            var result = new List<object>();
+            var culture = new CultureInfo("vi-VN");
+
+            foreach (var booking in bookings)
+            {
+                var date = booking.StartTime.Date;
+                result.Add(new
+                {
+                    booking.CourtId,
+                    WeekDay = date.ToString("dddd", culture),
+                    Date = date.ToString("yyyy-MM-dd"),
+                    BookedSlot = $"{booking.StartTime:HH\\:mm} - {booking.EndTime:HH\\:mm}"
+                });
+            }
+
+            return new ApiSuccessResult<List<object>>(result);
+        }
 
     }
 }
