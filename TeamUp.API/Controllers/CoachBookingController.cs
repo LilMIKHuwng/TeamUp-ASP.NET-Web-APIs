@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.AspNetCore.Mvc;
 using TeamUp.Contract.Services.Interface;
 using TeamUp.Core.APIResponse;
+using TeamUp.Core.Utils.Enum;
 using TeamUp.ModelViews.CoachBookingModelViews;
 using TeamUp.Services.Service;
 
@@ -157,6 +159,77 @@ namespace TeamUp.API.Controllers
             try
             {
                 var result = await _coachBookingService.GetTotalPriceInMonthForCoachAndAdmin(coachId, paymentMethod, month, year);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+
+
+        // New API Endpoints
+        /// <summary>
+        /// Get list of Coach User and Price
+        /// </summary>
+        [HttpGet("user-coach-totalprice-stats/{coachId}")]
+        public async Task<IActionResult> GetCoachBookingStats(int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetCoachBookingStatsAsync(coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get list User teach by Coach
+        /// </summary>
+        [HttpGet("players/{coachId}")]
+        public async Task<IActionResult> GetPlayersByCoach(int coachId)
+        { 
+            try
+            {
+                var result = await _coachBookingService.GetPlayersByCoachAsync(coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get monthly-total for Coach
+        /// </summary>
+        [HttpGet("monthly-total/{coachId}")]
+        public async Task<IActionResult> GetTotalBookingsThisMonthForCoach(int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetTotalBookingsThisMonthByCoachAsync(coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get weekly-booked-slots for Coach
+        /// </summary>
+        [HttpGet("weekly-booked-slots/{coachId}")]
+        public async Task<IActionResult> GetBookedSlotsThisWeekForCoach(int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetBookedSlotsThisWeekByCoachAsync(coachId);
                 return Ok(result);
             }
             catch (Exception ex)

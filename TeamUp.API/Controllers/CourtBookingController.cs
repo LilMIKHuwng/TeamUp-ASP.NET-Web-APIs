@@ -2,6 +2,7 @@
 using TeamUp.Contract.Services.Interface;
 using TeamUp.Core.APIResponse;
 using TeamUp.ModelViews.CourtBookingModelViews;
+using TeamUp.Services.Service;
 
 namespace TeamUp.API.Controllers
 {
@@ -172,6 +173,58 @@ namespace TeamUp.API.Controllers
             try
             {
                 var result = await _courtBookingService.GetHourFreeInCourt(courtId, startDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get list of Court User and Price
+        /// </summary>
+        [HttpGet("user-court-totalprice-stats/owner")]
+        public async Task<ActionResult<ApiResult<object>>> GetStatsByOwner([FromQuery] int ownerId)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetCourtBookingStatsByOwnerAsync(ownerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Get most-booked-by-owner
+        /// </summary>
+        [HttpGet("stats/most-booked-by-owner")]
+        public async Task<ActionResult<ApiResult<object>>> GetMostBookedCourtByOwner([FromQuery] int ownerId)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetMostBookedCourtByOwnerAsync(ownerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+
+        /// <summary>
+        /// Get weekly-booked-slots for Court
+        /// </summary>
+        [HttpGet("weekly-booked-slots/{courtId}")]
+        public async Task<IActionResult> GetBookedSlotsThisWeekForCourt(int courtId)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetBookedSlotsThisWeekByCourtAsync(courtId);
                 return Ok(result);
             }
             catch (Exception ex)
