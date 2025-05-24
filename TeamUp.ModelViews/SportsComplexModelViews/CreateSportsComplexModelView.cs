@@ -26,5 +26,9 @@ namespace TeamUp.ModelViews.SportsComplexModelViews
         [Required(ErrorMessage = "Id của chủ sân không được để trống.")]
         [Range(1, int.MaxValue, ErrorMessage = "Id của chủ sân phải là số hợp lệ.")]
         public int OwnerId { get; set; }
+
+        // Thêm tọa độ
+        public double? Latitude { get; set; }   // Vĩ độ
+        public double? Longitude { get; set; }  // Kinh độ
     }
 }

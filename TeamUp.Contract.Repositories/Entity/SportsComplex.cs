@@ -21,6 +21,10 @@ namespace TeamUp.Contract.Repositories.Entity
 
         public string Status { get; set; }
 
+        // Thêm tọa độ
+        public double Latitude { get; set; }   // Vĩ độ
+        public double Longitude { get; set; }  // Kinh độ
+
         public virtual ICollection<Court> Courts { get; set; }
     }
 }

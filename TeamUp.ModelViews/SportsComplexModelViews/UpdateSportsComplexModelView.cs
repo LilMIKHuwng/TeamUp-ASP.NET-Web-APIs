@@ -14,5 +14,9 @@ namespace TeamUp.ModelViews.SportsComplexModelViews
         public string? Address { get; set; }
         public List<IFormFile>? ImageUrls { get; set; }
         public int? OwnerId { get; set; }
+
+        // Thêm tọa độ
+        public double? Latitude { get; set; }   // Vĩ độ
+        public double? Longitude { get; set; }  // Kinh độ
     }
 }
