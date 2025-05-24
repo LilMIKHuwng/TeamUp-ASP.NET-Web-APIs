@@ -152,6 +152,12 @@ namespace TeamUp.Services.Service
             if (model.OwnerId.HasValue)
                 complex.OwnerId = model.OwnerId.Value;
 
+            if (model.Latitude.HasValue)
+                complex.Latitude = model.Latitude.Value;
+
+            if (model.Longitude.HasValue)
+                complex.Longitude = model.Longitude.Value;
+
             if (!string.IsNullOrWhiteSpace(model.Type))
             {
                 var validTypes = new[]
