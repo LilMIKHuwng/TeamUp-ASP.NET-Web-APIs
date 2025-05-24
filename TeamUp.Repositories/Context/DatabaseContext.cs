@@ -412,29 +412,43 @@ namespace TeamUp.Repositories.Context
                     Id = 1,
                     Name = "Khu Thể Thao ABC",
                     Type = "Bóng đá",
-                    Address = "123 Đường A, Quận 1, TP.HCM",
-                    OwnerId = 3, // Chủ sân có Id = 3
+                    Address = "Sân bóng đá Tao Đàn, 1 Huyền Trân Công Chúa, Quận 1, TP.HCM",
+                    OwnerId = 3,
                     Status = "Active",
-                    ImageUrls = new List<string> { "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media&token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752", "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media&token=b2b2f296-f847-4c95-96d3-50ae7fc827a0" }
+                    Latitude = 10.773444,
+                    Longitude = 106.690933,
+                    ImageUrls = new List<string>
+                    {
+                        "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest4.png?alt=media&token=1a0da7ef-2eb3-48e9-a9de-1e2866fe8752",
+                        "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest5.png?alt=media&token=b2b2f296-f847-4c95-96d3-50ae7fc827a0"
+                    }
                 },
                 new SportsComplex
                 {
                     Id = 2,
                     Name = "Khu Thể Thao DEF",
                     Type = "Cầu lông",
-                    Address = "456 Đường B, Quận 5, TP.HCM",
-                    OwnerId = 3, // Chủ sân có Id = 3
+                    Address = "Sân cầu lông Hồ Kỳ Hòa, 27 Cao Thắng, Quận 3, TP.HCM",
+                    OwnerId = 3,
                     Status = "Active",
-                    ImageUrls = new List<string> { "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c", "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4" }
+                    Latitude = 10.768493,
+                    Longitude = 106.681771,
+                    ImageUrls = new List<string>
+                    {
+                        "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c",
+                        "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4"
+                    }
                 },
                 new SportsComplex
                 {
                     Id = 3,
                     Name = "Khu Thể Thao GHI",
                     Type = "Pickleball",
-                    Address = "789 Đường C, Quận 3, TP.HCM",
+                    Address = "Sân thể thao Rạch Miễu, 1 Hoa Phượng, Phú Nhuận, TP.HCM",
                     OwnerId = 3,
                     Status = "Active",
+                    Latitude = 10.800005,
+                    Longitude = 106.683813,
                     ImageUrls = firebaseImageUrls
                 },
                 new SportsComplex
@@ -442,9 +456,11 @@ namespace TeamUp.Repositories.Context
                     Id = 4,
                     Name = "Khu Thể Thao JKL",
                     Type = "Pickleball",
-                    Address = "321 Đường D, Quận 4, TP.HCM",
+                    Address = "Sân thể thao Vạn Tường, 59A Nguyễn Du, Quận 1, TP.HCM",
                     OwnerId = 3,
                     Status = "Active",
+                    Latitude = 10.776230,
+                    Longitude = 106.699208,
                     ImageUrls = firebaseImageUrls
                 },
                 new SportsComplex
@@ -452,13 +468,15 @@ namespace TeamUp.Repositories.Context
                     Id = 5,
                     Name = "Khu Thể Thao MNO",
                     Type = "Cầu lông",
-                    Address = "654 Đường E, Quận 6, TP.HCM",
+                    Address = "Sân cầu lông Quận 6, 42 Nguyễn Văn Luông, Quận 6, TP.HCM",
                     OwnerId = 3,
                     Status = "Active",
+                    Latitude = 10.737717,
+                    Longitude = 106.628582,
                     ImageUrls = firebaseImageUrls
                 }
-
             );
+
 
 
             builder.Entity<Court>().HasData(
