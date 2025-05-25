@@ -77,9 +77,14 @@
             }
 
         .code {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
             color: #000000;
+            background-color: #f0f0f0;
+            padding: 15px 25px;
+            border-radius: 6px;
+            display: inline-block;
+            letter-spacing: 4px;
             margin: 20px 0;
         }
 
@@ -89,16 +94,17 @@
 
             .form-group p {
                 margin-top: 20px;
+                font-size: 13px;
             }
 
-            .form-group a {
-                color: #007bff;
-                text-decoration: none;
-            }
-
-                .form-group a:hover {
-                    text-decoration: underline;
-                }
+        .footer {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background-color: #fafafa;
+        }
     </style>
 </head>
 <body>
@@ -111,12 +117,17 @@
                 <img src="https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2FLOGO.PNG?alt=media&token=7252ae0e-4034-4f63-9475-0d355ca5c5f3" alt="Logo">
             </div>
             <div class="email-body">
-                <h1>Quên mật khẩu</h1>
-                <p>Vui lòng sử dụng mã xác thực dưới đây để thay đổi mật khẩu của bạn</p>
-                <div class="code"><a href="{{VerifyCode}}">Ấn vào đây để thay đổi</a></div>
+                <h2>Quên mật khẩu</h2>
+                <p>Vui lòng sử dụng mã xác thực dưới đây để đặt lại mật khẩu của bạn:</p>
+                <div class="code">{{OTP}}</div>
                 <div class="form-group">
-                    <p>Không chia sẻ mã code này với bất kỳ ai.</p>
+                    <p>Lưu ý: Mã có hiệu lực trong 10 phút. Không chia sẻ mã này với bất kỳ ai.</p>
                 </div>
+                <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
+            </div>
+            <div class="footer">
+                © 2025 TeamUp. Mọi quyền được bảo lưu.<br>
+                Email này được gửi tự động, vui lòng không phản hồi.
             </div>
         </div>
     </div>

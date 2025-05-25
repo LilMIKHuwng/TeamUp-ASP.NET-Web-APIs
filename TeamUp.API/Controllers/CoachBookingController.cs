@@ -237,5 +237,23 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
+
+        /// <summary>
+        /// Get latest-coach-booking-id
+        /// </summary>
+        [HttpGet("latest-booking-id")]
+        public async Task<IActionResult> GetLatestBookingIdByPlayer([FromQuery] int playerId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetLatestCoachBookingIdByPlayerAsync(playerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
     }
 }

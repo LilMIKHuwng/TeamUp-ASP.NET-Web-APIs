@@ -33,11 +33,23 @@ namespace TeamUp.Services.Service
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<ApiResult<BasePaginatedList<RoomModelView>>> GetAllRoomAsync(int pageNumber, int pageSize, string? name, int? maxPlayers, string? status)
+        public async Task<ApiResult<BasePaginatedList<RoomModelView>>> GetAllRoomAsync(
+            int pageNumber,
+            int pageSize,
+            string? name,
+            int? maxPlayers,
+            string? status,
+            int? hostId,
+            decimal? maxRoomFee,
+            DateTime? date,
+            TimeSpan? startTime,
+            TimeSpan? endTime,
+            string? type)
         {
             var query = _unitOfWork.GetRepository<Room>().Entities
                 .Include(r => r.Host)
                 .Include(r => r.Court)
+                .ThenInclude(c => c.SportsComplex)
                 .Where(r => !r.DeletedTime.HasValue);
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -48,6 +60,59 @@ namespace TeamUp.Services.Service
 
             if (!string.IsNullOrWhiteSpace(status))
                 query = query.Where(r => r.Status == status);
+
+            if (hostId.HasValue)
+                query = query.Where(r => r.HostId == hostId.Value);
+
+            if (maxRoomFee.HasValue)
+                query = query.Where(r => r.RoomFee <= maxRoomFee.Value);
+
+            if (date.HasValue)
+            {
+                var dateOnly = date.Value.Date;
+
+                if (startTime.HasValue && endTime.HasValue)
+                {
+                    var from = dateOnly + startTime.Value;
+                    var to = dateOnly + endTime.Value;
+                    query = query.Where(r => r.ScheduledTime >= from && r.ScheduledTime <= to);
+                }
+                else if (startTime.HasValue)
+                {
+                    var from = dateOnly + startTime.Value;
+                    query = query.Where(r => r.ScheduledTime >= from);
+                }
+                else if (endTime.HasValue)
+                {
+                    var to = dateOnly + endTime.Value;
+                    query = query.Where(r => r.ScheduledTime <= to);
+                }
+                else
+                {
+                    query = query.Where(r => r.ScheduledTime.Date == dateOnly);
+                }
+            }
+            else if (startTime.HasValue || endTime.HasValue)
+            {
+                if (startTime.HasValue && endTime.HasValue)
+                {
+                    query = query.Where(r =>
+                        r.ScheduledTime.TimeOfDay >= startTime.Value &&
+                        r.ScheduledTime.TimeOfDay <= endTime.Value);
+                }
+                else if (startTime.HasValue)
+                {
+                    query = query.Where(r => r.ScheduledTime.TimeOfDay >= startTime.Value);
+                }
+                else if (endTime.HasValue)
+                {
+                    query = query.Where(r => r.ScheduledTime.TimeOfDay <= endTime.Value);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(type))
+                query = query.Where(r => r.Court.SportsComplex.Type.Contains(type));
+
 
             int totalCount = await query.CountAsync();
 
@@ -61,15 +126,16 @@ namespace TeamUp.Services.Service
 
             for (int i = 0; i < result.Count; i++)
             {
-                result[i].Host  = _mapper.Map<UserResponseModel>(paginatedRooms[i].Host);
-
+                result[i].Host = _mapper.Map<UserResponseModel>(paginatedRooms[i].Host);
                 result[i].Court = _mapper.Map<CourtModelView>(paginatedRooms[i].Court);
-
                 result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(paginatedRooms[i].Court.SportsComplex);
             }
 
-            return new ApiSuccessResult<BasePaginatedList<RoomModelView>>(new BasePaginatedList<RoomModelView>(result, totalCount, pageNumber, pageSize));
+            return new ApiSuccessResult<BasePaginatedList<RoomModelView>>(
+                new BasePaginatedList<RoomModelView>(result, totalCount, pageNumber, pageSize)
+            );
         }
+
 
         public async Task<ApiResult<object>> AddRoomAsync(CreateRoomModelView model)
         {

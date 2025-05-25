@@ -12,7 +12,18 @@ namespace TeamUp.Contract.Services.Interface
 {
     public interface IRoomService
     {
-        Task<ApiResult<BasePaginatedList<RoomModelView>>> GetAllRoomAsync(int pageNumber, int pageSize, string? name, int? maxPlayers, string? status);
+        Task<ApiResult<BasePaginatedList<RoomModelView>>> GetAllRoomAsync(
+            int pageNumber,
+            int pageSize,
+            string? name,
+            int? maxPlayers,
+            string? status,
+            int? hostId,
+            decimal? maxRoomFee,
+            DateTime? date,
+            TimeSpan? startTime,
+            TimeSpan? endTime,
+            string? type);
         Task<ApiResult<object>> AddRoomAsync(CreateRoomModelView model);
         Task<ApiResult<object>> UpdateRoomAsync(int id, UpdateRoomModelView model);
         Task<ApiResult<object>> DeleteRoomAsync(int id);

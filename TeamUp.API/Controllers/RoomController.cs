@@ -24,12 +24,30 @@ namespace TeamUp.API.Controllers
             [FromQuery] string? name,
             [FromQuery] int? maxPlayers,
             [FromQuery] string? status,
+            [FromQuery] int? hostId,
+            [FromQuery] decimal? maxRoomFee,
+            [FromQuery] DateTime? date,
+            [FromQuery] TimeSpan? startTime,
+            [FromQuery] TimeSpan? endTime,
+            [FromQuery] string? type,
             int pageNumber = 1,
             int pageSize = 5)
         {
             try
             {
-                var result = await _roomService.GetAllRoomAsync(pageNumber, pageSize, name, maxPlayers, status);
+                var result = await _roomService.GetAllRoomAsync(
+                    pageNumber,
+                    pageSize,
+                    name,
+                    maxPlayers,
+                    status,
+                    hostId,
+                    maxRoomFee,
+                    date,
+                    startTime,
+                    endTime,
+                    type);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -37,6 +55,7 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
 
         /// <summary>
         /// Get a room by ID
