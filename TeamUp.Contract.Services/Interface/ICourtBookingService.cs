@@ -24,5 +24,6 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<object>> GetCourtBookingStatsByOwnerAsync(int ownerId);
         Task<ApiResult<object>> GetMostBookedCourtByOwnerAsync(int ownerId);
         Task<ApiResult<List<object>>> GetBookedSlotsThisWeekByCourtAsync(int courtId);
+        Task<ApiResult<int>> GetLatestCourtBookingIdByUserAsync(int userId);
     }
 }

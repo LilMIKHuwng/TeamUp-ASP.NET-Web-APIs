@@ -28,6 +28,7 @@ namespace TeamUp.API
             services.AddInfrastructure(configuration);
             services.AddServices();
             services.AddAutoMapperProfiles();
+            services.AddMemoryCache();
             services.AddSingleton(new PayOS(
                 clientId: configuration["PayOS:PAYOS_CLIENT_ID"],
                 apiKey: configuration["PayOS:PAYOS_API_KEY"],

@@ -4,6 +4,7 @@ using BabyCare.Core.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -43,7 +44,16 @@ namespace TeamUp.Services.Service
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        public UserService(IConfiguration configuration, IHttpContextAccessor contextAccessor, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, RoleManager<ApplicationRole> roleManager)
+        private readonly IMemoryCache _memoryCache;
+
+        public UserService(
+            IConfiguration configuration,
+            IHttpContextAccessor contextAccessor,
+            IUnitOfWork unitOfWork,
+            UserManager<ApplicationUser> userManager,
+            IMapper mapper,
+            RoleManager<ApplicationRole> roleManager,
+            IMemoryCache memoryCache) // <- thêm dòng này
         {
             _configuration = configuration;
             _contextAccessor = contextAccessor;
@@ -51,6 +61,7 @@ namespace TeamUp.Services.Service
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _roleManager = roleManager;
+            _memoryCache = memoryCache; // <- gán ở đây
         }
 
         public async Task<ApiResult<UserLoginResponseModel>> ConfirmUserRegister(ConfirmUserRegisterRequest request)
@@ -224,36 +235,41 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>("Delete user successfully.");
         }
 
+        private string GenerateVerificationCode()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString(); // Mã 6 chữ số
+        }
+
         public async Task<ApiResult<object>> EmployeeForgotPassword(ForgotPasswordRequest request)
         {
             var email = request.Email;
             var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
             if (existingUser == null)
             {
-                return new ApiErrorResult<object>("Email is not existed.", System.Net.HttpStatusCode.NotFound);
+                return new ApiErrorResult<object>("Email không tồn tại.", System.Net.HttpStatusCode.NotFound);
             }
-            var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-            var encodedToken = Uri.EscapeDataString(token);
 
-            // Correct relative path from current directory to the HTML file
+            var code = GenerateVerificationCode();
+
+            // Lưu code tạm thời - ví dụ bằng memory cache / redis
+            _memoryCache.Set($"ResetPasswordCode_{email}", code, TimeSpan.FromMinutes(10));
+
+            // Load file HTML và thay {{VerifyCode}} bằng mã code
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "SendCode.html");
-            path = Path.GetFullPath(path);
             if (!File.Exists(path))
-            {
                 return new ApiErrorResult<object>("Không tìm thấy file gửi mail");
-            }
 
-            var frontEndUrl = _configuration["URL:FrontEnd"];
-            var fullForgotPasswordUrl = frontEndUrl + "auth/employee-reset-password?email=" + email + "&token=" + encodedToken;
-            string contentCustomer = System.IO.File.ReadAllText(path);
-            contentCustomer = contentCustomer.Replace("{{VerifyCode}}", fullForgotPasswordUrl);
-            var sendMailResult = DoingMail.SendMail("TeamUp", "Yêu cầu thay đổi mật khẩu", contentCustomer, email);
+            string contentCustomer = File.ReadAllText(path);
+            contentCustomer = contentCustomer.Replace("{{OTP}}", code); // chỉ là mã code, không phải link
+
+            var sendMailResult = DoingMail.SendMail("TeamUp", "Mã xác thực thay đổi mật khẩu", contentCustomer, email);
             if (!sendMailResult)
-            {
-                return new ApiErrorResult<object>("Lỗi hệ thống. Vui lòng thử lại sau", System.Net.HttpStatusCode.NotFound);
-            }
-            return new ApiSuccessResult<object>("Please check your mail to reset password.");
+                return new ApiErrorResult<object>("Gửi email thất bại. Vui lòng thử lại sau");
+
+            return new ApiSuccessResult<object>("Vui lòng kiểm tra email để lấy mã xác thực.");
         }
+
 
         public async Task<ApiResult<EmployeeLoginResponseModel>> EmployeeLogin(EmployeeLoginRequestModel request)
         {
@@ -304,69 +320,69 @@ namespace TeamUp.Services.Service
 
         public async Task<ApiResult<object>> EmployeeResetPassword(ResetPasswordRequestModel request)
         {
-            // Check existed email
             var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
             if (existingUser == null)
             {
-                return new ApiErrorResult<object>("Email is not existed.", System.Net.HttpStatusCode.NotFound);
+                return new ApiErrorResult<object>("Email không tồn tại.", System.Net.HttpStatusCode.NotFound);
             }
-            // Check valid role Doctor or Admin
+
+            // Kiểm tra role hợp lệ
             var userRoles = await _userManager.GetRolesAsync(existingUser);
             if (!userRoles.Contains("Owner") && !userRoles.Contains("Admin") && !userRoles.Contains("Coach"))
             {
-                return new ApiErrorResult<object>("Email is not existed.", System.Net.HttpStatusCode.NotFound);
+                return new ApiErrorResult<object>("Email không tồn tại.", System.Net.HttpStatusCode.NotFound);
             }
 
-            // Valid token
-            var result = await _userManager.ResetPasswordAsync(existingUser, request.Token, request.Password);
+            // Kiểm tra mã xác thực
+            var cacheKey = $"ResetPasswordCode_{request.Email}";
+            if (!_memoryCache.TryGetValue(cacheKey, out string correctCode) || correctCode != request.Code)
+            {
+                return new ApiErrorResult<object>("Mã xác thực không hợp lệ hoặc đã hết hạn", System.Net.HttpStatusCode.BadRequest);
+            }
+
+            // Xóa mã sau khi sử dụng
+            _memoryCache.Remove(cacheKey);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
+            var result = await _userManager.ResetPasswordAsync(existingUser, token, request.Password);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<object>("Reset password unsuccesfully", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                return new ApiErrorResult<object>("Đặt lại mật khẩu thất bại", result.Errors.Select(x => x.Description).ToList());
             }
-            return new ApiSuccessResult<object>("Reset password successfully.");
+
+            return new ApiSuccessResult<object>("Đặt lại mật khẩu thành công.");
         }
+
 
         public async Task<ApiResult<object>> ForgotPassword(ForgotPasswordRequest request)
         {
-            // Check existed email
-            var email = request.Email;
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
-            if (existingUser == null)
-            {
-                return new ApiErrorResult<object>("Email is not existed.", System.Net.HttpStatusCode.NotFound);
-            }
-            var isConfirmed = await _userManager.IsEmailConfirmedAsync(existingUser);
-            if (!isConfirmed)
-            {
-                return new ApiErrorResult<object>("Email is not confirm.", System.Net.HttpStatusCode.NotFound);
+            var email = request.Email.Trim().ToLower();
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
+            if (user == null)
+                return new ApiErrorResult<object>("Email không tồn tại.", HttpStatusCode.NotFound);
 
-            }
-            // Generate token
-            var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-            // Send email
-            // Correct relative path from current directory to the HTML file
-            var encodedToken = Uri.EscapeDataString(token);
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+                return new ApiErrorResult<object>("Email chưa được xác nhận.", HttpStatusCode.BadRequest);
 
+            // Tạo mã 6 số
+            var code = GenerateVerificationCode();
 
+            // Lưu vào cache với key: ResetPassword:{Email}
+            _memoryCache.Set($"ResetPassword:{email}", code, TimeSpan.FromMinutes(10));
+
+            // Gửi email
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "SendCodeCustomer.html");
-            path = Path.GetFullPath(path);
+            if (!File.Exists(path))
+                return new ApiErrorResult<object>("Lỗi hệ thống, thử lại sau.", HttpStatusCode.InternalServerError);
 
+            string emailContent = File.ReadAllText(path).Replace("{{OTP}}", code);
+            var sendResult = DoingMail.SendMail("TeamUp", "Mã xác minh đặt lại mật khẩu", emailContent, email);
+            if (!sendResult)
+                return new ApiErrorResult<object>("Lỗi khi gửi email.", HttpStatusCode.InternalServerError);
 
-            if (!System.IO.File.Exists(path))
-            {
-                return new ApiErrorResult<object>("System error, try later", System.Net.HttpStatusCode.NotFound);
-            }
-            var frontEndUrl = _configuration["URL:FrontEnd"];
-            var fullForgotPasswordUrl = frontEndUrl + "auth/reset-password?email=" + email + "&token=" + encodedToken;
-            string contentCustomer = System.IO.File.ReadAllText(path);
-            contentCustomer = contentCustomer.Replace("{{VerifyCode}}", fullForgotPasswordUrl);
-            var sendMailResult = DoingMail.SendMail("TeamUp", "Yêu cầu thay đổi mật khẩu", contentCustomer, email);
-            if (!sendMailResult)
-            {
-                return new ApiErrorResult<object>("Lỗi hệ thống. Vui lòng thử lại sau", System.Net.HttpStatusCode.NotFound);
-            }
-            return new ApiSuccessResult<object>("Please check your mail to reset password.");
+            return new ApiSuccessResult<object>("Mã xác minh đã được gửi đến email của bạn.");
         }
+
 
 
         public async Task<ApiResult<List<EmployeeResponseModel>>> GetAllEmployee()
@@ -705,24 +721,34 @@ namespace TeamUp.Services.Service
 
         public async Task<ApiResult<object>> ResetPassword(ResetPasswordRequestModel request)
         {
-            // Check existed email
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
-            if (existingUser == null)
-            {
-                return new ApiErrorResult<object>("Email is not existed.", System.Net.HttpStatusCode.NotFound);
-            }
-            if (request.ConfirmPassword != request.Password)
-            {
-                return new ApiErrorResult<object>("Password is not matched.", System.Net.HttpStatusCode.NotFound);
-            }
-            // Valid token
-            var result = await _userManager.ResetPasswordAsync(existingUser, request.Token, request.Password);
+            var email = request.Email.Trim().ToLower();
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
+            if (user == null)
+                return new ApiErrorResult<object>("Email không tồn tại.", HttpStatusCode.NotFound);
+
+            if (!_memoryCache.TryGetValue<string>($"ResetPassword:{email}", out var cachedCode))
+                return new ApiErrorResult<object>("Mã xác minh đã hết hạn hoặc không hợp lệ.", HttpStatusCode.BadRequest);
+
+            if (cachedCode != request.Code)
+                return new ApiErrorResult<object>("Mã xác minh không đúng.", HttpStatusCode.BadRequest);
+
+            if (request.Password != request.ConfirmPassword)
+                return new ApiErrorResult<object>("Mật khẩu xác nhận không khớp.", HttpStatusCode.BadRequest);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, request.Password);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<object>("Reset password unsuccesfully", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                return new ApiErrorResult<object>("Đặt lại mật khẩu thất bại.", errors, HttpStatusCode.BadRequest);
             }
-            return new ApiSuccessResult<object>("Reset password successfully.");
+
+            // Xóa cache sau khi dùng
+            _memoryCache.Remove($"ResetPassword:{email}");
+
+            return new ApiSuccessResult<object>("Mật khẩu đã được thay đổi thành công.");
         }
+
 
         public async Task<ApiResult<object>> UpdateCoachProfile(UpdateEmployeeProfileRequest request)
         {

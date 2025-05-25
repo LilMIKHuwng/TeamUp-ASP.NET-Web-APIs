@@ -521,5 +521,18 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<List<object>>(result);
         }
+
+        public async Task<ApiResult<int>> GetLatestCoachBookingIdByPlayerAsync(int playerId)
+        {
+            var latestBooking = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.PlayerId == playerId)
+                .OrderByDescending(cb => cb.CreatedTime)
+                .FirstOrDefaultAsync();
+
+            if (latestBooking == null)
+                return new ApiErrorResult<int>("Không tìm thấy buổi đặt huấn luyện nào.");
+
+            return new ApiSuccessResult<int>(latestBooking.Id);
+        }
     }
 }

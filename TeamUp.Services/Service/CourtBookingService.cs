@@ -630,5 +630,20 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<List<object>>(result);
         }
 
+        public async Task<ApiResult<int>> GetLatestCourtBookingIdByUserAsync(int userId)
+        {
+            var latestBooking = await _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Where(cb => cb.UserId == userId)
+                .OrderByDescending(cb => cb.CreatedTime) // 👈 Giả sử BaseEntity có CreatedTime
+                .FirstOrDefaultAsync();
+
+            if (latestBooking == null)
+            {
+                return new ApiErrorResult<int>("Không tìm thấy đặt sân nào.");
+            }
+
+            return new ApiSuccessResult<int>(latestBooking.Id);
+        }
+
     }
 }
