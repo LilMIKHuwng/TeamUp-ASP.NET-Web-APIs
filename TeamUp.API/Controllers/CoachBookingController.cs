@@ -27,8 +27,8 @@ namespace TeamUp.API.Controllers
             [FromQuery] int? coachId,
             [FromQuery] int? userId,
             [FromQuery] int? courtId,
-            [FromQuery] TimeSpan? startTime,
-            [FromQuery] TimeSpan? endTime,
+            [FromQuery] DateTime? startTime,
+            [FromQuery] DateTime? endTime,
             [FromQuery] string? status,
             int pageNumber = 1,
             int pageSize = 5)
@@ -65,7 +65,7 @@ namespace TeamUp.API.Controllers
         /// Create a new coach booking
         /// </summary>
         [HttpPost("create")]
-        public async Task<ActionResult<ApiResult<object>>> Create([FromForm] CreateCoachBookingModelView model)
+        public async Task<ActionResult<ApiResult<object>>> Create([FromBody] CreateCoachBookingModelView model)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace TeamUp.API.Controllers
         /// Update a coach booking
         /// </summary>
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<ApiResult<object>>> Update(int id, [FromForm] UpdateCoachBookingModelView model)
+        public async Task<ActionResult<ApiResult<object>>> Update(int id, [FromBody] UpdateCoachBookingModelView model)
         {
             try
             {

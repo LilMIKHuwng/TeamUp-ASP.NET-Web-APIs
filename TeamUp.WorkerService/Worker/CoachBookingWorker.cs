@@ -34,27 +34,29 @@ public class CoachBookingWorker : BackgroundService
                     .Include(cb => cb.Player)
                     .Include(cb => cb.Coach)
                     .Include(cb => cb.Court)
+                    .Include(cb => cb.Slots)
                     .Where(cb => !cb.DeletedTime.HasValue &&
                                  cb.Status == "Confirmed" &&
                                  !cb.IsNotified &&
-                                 cb.SelectedDates.Any())
+                                 cb.Slots.Any())
                     .ToListAsync(stoppingToken);
 
                 foreach (var booking in bookings)
                 {
-                    var firstSession = booking.SelectedDates.Min();
-                    var fullFirstSessionTime = firstSession.Date + booking.StartTime;
-                    var timeUntilFirst = fullFirstSessionTime - now;
+                    var upcomingSlot = booking.Slots
+                        .OrderBy(s => s.StartTime)
+                        .FirstOrDefault(s =>
+                            s.StartTime > now &&
+                            (s.StartTime - now).TotalHours <= 2);
 
-                    if (timeUntilFirst.TotalHours <= 2 && timeUntilFirst.TotalMinutes > 0)
+                    if (upcomingSlot != null)
                     {
-                        // Load template
                         var emailPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "NotifyCoachBooking.html");
                         if (!File.Exists(emailPath)) continue;
 
-                        var sessionsListHtml = string.Join("", booking.SelectedDates
-                            .OrderBy(d => d)
-                            .Select(d => $"<li>{d:dd/MM/yyyy} - {booking.StartTime:hh\\:mm} đến {booking.EndTime:hh\\:mm}</li>"));
+                        var sessionsListHtml = string.Join("", booking.Slots
+                            .OrderBy(s => s.StartTime)
+                            .Select(s => $"<li>{s.StartTime:dd/MM/yyyy HH:mm} đến {s.EndTime:HH:mm}</li>"));
 
                         var content = File.ReadAllText(emailPath)
                             .Replace("{{UserEmail}}", booking.Player.Email)
@@ -85,4 +87,5 @@ public class CoachBookingWorker : BackgroundService
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
+
 }

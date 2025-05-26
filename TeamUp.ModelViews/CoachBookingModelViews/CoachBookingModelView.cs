@@ -17,9 +17,7 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         public EmployeeResponseModel Coach { get; set; }
         public UserResponseModel Player { get; set; }
         public CourtModelView Court { get; set; }
-        public List<DateTime> SelectedDates { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public List<SlotModelView> Slots { get; set; }
         public decimal TotalPrice { get; set; }
         public string Status { get; set; }
         public string PaymentMethod { get; set; }
