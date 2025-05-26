@@ -303,11 +303,22 @@ namespace TeamUp.Services.Service
                 content = content.Replace("{{UserEmail}}", user.Email);
                 content = content.Replace("{{CoachEmail}}", coach.Email);
                 content = content.Replace("{{CourtName}}", court.Name);
-                content = content.Replace("{{Date}}", string.Join(", ", model.Slots.Select(s => s.StartTime.ToString("dd/MM/yyyy")).Distinct()));
-                content = content.Replace("{{StartTime}}", string.Join(", ", model.Slots.Select(s => s.StartTime.ToString("HH:mm"))));
-                content = content.Replace("{{EndTime}}", string.Join(", ", model.Slots.Select(s => s.EndTime.ToString("HH:mm"))));
+                var slotRows = new StringBuilder();
+                for (int i = 0; i < model.Slots.Count; i++)
+                {
+                    var slot = model.Slots[i];
+                    slotRows.AppendLine($@"
+                    <tr>
+                        <td style='padding: 6px 12px; text-align: center;'>{i + 1}</td>
+                        <td style='padding: 6px 12px;'>{slot.StartTime:dd/MM/yyyy}</td>
+                        <td style='padding: 6px 12px;'>{slot.StartTime:HH:mm}</td>
+                        <td style='padding: 6px 12px;'>{slot.EndTime:HH:mm}</td>
+                    </tr>");
+                }
+                content = content.Replace("{{SlotItems}}", slotRows.ToString());
                 content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
                 content = content.Replace("{{Status}}", booking.Status);
+                content = content.Replace("{{PaymentStatus}}", booking.PaymentStatus);
 
                 DoingMail.SendMail("TeamUp", "Xác nhận đặt huấn luyện viên", content, user.Email);
             }
@@ -544,9 +555,26 @@ namespace TeamUp.Services.Service
                     content = content.Replace("{{UserEmail}}", booking.Player?.Email);
                     content = content.Replace("{{CoachEmail}}", booking.Coach?.Email);
                     content = content.Replace("{{CourtName}}", booking.Court?.Name);
-                    content = content.Replace("{{Date}}", string.Join(", ", booking.Slots.Select(s => s.StartTime.ToString("dd/MM/yyyy")).Distinct()));
-                    content = content.Replace("{{StartTime}}", string.Join(", ", booking.Slots.Select(s => s.StartTime.ToString("HH:mm"))));
-                    content = content.Replace("{{EndTime}}", string.Join(", ", booking.Slots.Select(s => s.EndTime.ToString("HH:mm"))));
+                    // ✅ Thêm danh sách slot
+                    var slotRows = new StringBuilder();
+                    var slots = booking.Slots?.OrderBy(s => s.StartTime).ToList(); // đảm bảo có danh sách Slot
+                    if (slots != null)
+                    {
+                        for (int i = 0; i < slots.Count; i++)
+                        {
+                            var slot = slots[i];
+                            slotRows.AppendLine($@"
+                            <tr>
+                                <td style='padding: 6px 12px; text-align: center;'>{i + 1}</td>
+                                <td style='padding: 6px 12px;'>{slot.StartTime:dd/MM/yyyy}</td>
+                                <td style='padding: 6px 12px;'>{slot.StartTime:HH:mm}</td>
+                                <td style='padding: 6px 12px;'>{slot.EndTime:HH:mm}</td>
+                            </tr>");
+                        }
+                    }
+
+                    content = content.Replace("{{SlotItems}}", slotRows.ToString());
+
                     content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
                     content = content.Replace("{{Status}}", booking.Status.ToString());
                     content = content.Replace("{{PaymentStatus}}", booking.PaymentStatus);

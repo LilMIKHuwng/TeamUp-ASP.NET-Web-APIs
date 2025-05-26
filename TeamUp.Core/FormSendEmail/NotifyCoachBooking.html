@@ -55,19 +55,22 @@
                 color: #2563eb;
             }
 
-            .info ul {
-                padding-left: 20px;
-                text-align: left;
-                font-size: 14px;
-            }
             .info .status {
-                color: #16a34a; /* xanh lá đậm */
+                color: #16a34a;
                 font-weight: bold;
             }
 
-                .info ul li {
-                    margin: 5px 0;
-                }
+        table {
+            margin: 0 auto;
+            font-size: 15px;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+        }
 
         .footer {
             margin-top: 30px;
@@ -87,13 +90,23 @@
         <div class="content">
             <h2>Nhắc Nhở Lịch Huấn Luyện Sắp Tới</h2>
             <p>Xin chào <strong>{{UserEmail}}</strong>,</p>
-            <p>Đây là danh sách các buổi huấn luyện với huấn luyện viên <strong>{{CoachEmail}}</strong> tại sân <strong>{{CourtName}}</strong> mà bạn đã đặt:</p>
+            <p>Bạn có lịch huấn luyện với huấn luyện viên <strong>{{CoachEmail}}</strong> tại sân <strong>{{CourtName}}</strong> như sau:</p>
             <div class="info">
                 <p><strong>Lịch huấn luyện:</strong></p>
-                <ul>
-                    {{SessionsList}}
-                </ul>
-                <p><strong>Trạng thái lịch:</strong> <span class="status">{{Status}}</span></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ngày</th>
+                            <th>Bắt đầu</th>
+                            <th>Kết thúc</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{SlotItems}}
+                    </tbody>
+                </table>
+                <p><strong>Trạng thái:</strong> <span class="status">{{Status}}</span></p>
             </div>
             <p>Vui lòng đến đúng giờ. Cảm ơn bạn đã sử dụng TeamUp!</p>
         </div>

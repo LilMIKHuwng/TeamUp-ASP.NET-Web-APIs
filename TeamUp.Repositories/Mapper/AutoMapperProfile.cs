@@ -101,6 +101,10 @@ namespace TeamUp.Repositories.Mapper
             CreateMap<Voucher, VoucherModelView>().ReverseMap();
             CreateMap<Voucher, CreateVoucherModelView>().ReverseMap();
             CreateMap<Voucher, UpdateVoucherModelView>().ReverseMap();
+
+            //Slot
+            CreateMap<Slot, SlotModelView>().ReverseMap();
+            CreateMap<Slot, CreateSlotModelView>().ReverseMap();
         }
     }
 }
