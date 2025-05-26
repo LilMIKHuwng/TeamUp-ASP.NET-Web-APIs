@@ -27,6 +27,11 @@ namespace TeamUp.Contract.Repositories.Entity
 
         public bool IsNotified { get; set; } = false;
 
+        public int? VoucherId { get; set; }
+        public virtual Voucher? Voucher { get; set; }
+
+        public decimal DiscountAmount { get; set; } = 0;
+
         public virtual ICollection<Payment> Payments { get; set; } 
     }
 

@@ -195,6 +195,41 @@ namespace TeamUp.Services.Service
             booking.Status = SystemConstant.BookingStatus.Pending;
             booking.PaymentStatus = SystemConstant.PaymentStatus.Pending;
 
+            // 4. Áp dụng giảm giá nếu có mã voucher
+            if (model.VoucherId != null)
+            {
+                var voucher = await _unitOfWork.GetRepository<Voucher>().Entities
+                    .FirstOrDefaultAsync(v => v.Id == model.VoucherId);
+
+                if (voucher != null)
+                {
+                    if (voucher.Code == "VOUCHER1")
+                    {
+                        // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
+                        bool isFirstBooking = !await _unitOfWork.GetRepository<CourtBooking>().Entities
+                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
+
+                        if (isFirstBooking)
+                        {
+                            booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
+                            booking.TotalPrice -= booking.DiscountAmount;
+                            booking.VoucherId = voucher.Id;
+                        } 
+                        else
+                        {
+                            return new ApiErrorResult<object>("VOUCHER1 chỉ được sử dụng với lần đầu đặt sân.");
+                        }
+                    }
+                    else
+                    {
+                        // Các loại voucher khác nếu muốn mở rộng sau này
+                        booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
+                        booking.TotalPrice -= booking.DiscountAmount;
+                        booking.VoucherId = voucher.Id;
+                    }
+                }
+            }
+
             await _unitOfWork.GetRepository<CourtBooking>().InsertAsync(booking);
             await _unitOfWork.SaveAsync();
 
@@ -310,6 +345,41 @@ namespace TeamUp.Services.Service
 
             if (!string.IsNullOrEmpty(model.PaymentMethod))
                 booking.PaymentMethod = model.PaymentMethod;
+
+            // 4. Áp dụng giảm giá nếu có mã voucher
+            if (model.VoucherId != null)
+            {
+                var voucher = await _unitOfWork.GetRepository<Voucher>().Entities
+                    .FirstOrDefaultAsync(v => v.Id == model.VoucherId);
+
+                if (voucher != null)
+                {
+                    if (voucher.Code == "VOUCHER1")
+                    {
+                        // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
+                        bool isFirstBooking = !await _unitOfWork.GetRepository<CourtBooking>().Entities
+                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
+
+                        if (isFirstBooking)
+                        {
+                            booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
+                            booking.TotalPrice -= booking.DiscountAmount;
+                            booking.VoucherId = voucher.Id;
+                        }
+                        else
+                        {
+                            return new ApiErrorResult<object>("VOUCHER1 chỉ được sử dụng với lần đầu đặt sân.");
+                        }
+                    }
+                    else
+                    {
+                        // Các loại voucher khác nếu muốn mở rộng sau này
+                        booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
+                        booking.TotalPrice -= booking.DiscountAmount;
+                        booking.VoucherId = voucher.Id;
+                    }
+                }
+            }
 
             booking.LastUpdatedTime = DateTime.Now;
             booking.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");

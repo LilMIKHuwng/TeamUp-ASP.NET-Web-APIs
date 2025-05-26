@@ -894,7 +894,26 @@ namespace TeamUp.Repositories.Context
                     ScheduledTime = DateTime.Today.AddDays(4).AddHours(19)
                 }
             );
+
+
+            builder.Entity<Voucher>().HasData(
+                new Voucher
+                {
+                    Id = 1, 
+                    Code = "VOUCHER1",
+                    Description = "Giảm 10% cho booking đầu tiên",
+                    DiscountPercent = 10
+                },
+                new Voucher
+                {
+                    Id = 2,
+                    Code = "VOUCHER2",
+                    Description = "Hỗ trợ website giảm 5%",
+                    DiscountPercent = 5,
+                }
+            );
         }
+
 
     }
 }

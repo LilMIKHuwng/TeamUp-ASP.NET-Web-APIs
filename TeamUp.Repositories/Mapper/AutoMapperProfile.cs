@@ -16,6 +16,7 @@ using TeamUp.ModelViews.RoomPlayerModelViews;
 using TeamUp.ModelViews.RatingModelViews;
 using TeamUp.ModelViews.PaymentModelViews;
 using TeamUp.ModelViews.PackageModelViews;
+using TeamUp.ModelViews.VoucherModelViews;
 
 
 namespace TeamUp.Repositories.Mapper
@@ -95,6 +96,11 @@ namespace TeamUp.Repositories.Mapper
             CreateMap<Package, PackageModelView>().ReverseMap();
             CreateMap<Package, CreatePackageModelView>().ReverseMap();
             CreateMap<Package, UpdatePackageModelView>().ReverseMap();
+
+            //Voucher
+            CreateMap<Voucher, VoucherModelView>().ReverseMap();
+            CreateMap<Voucher, CreateVoucherModelView>().ReverseMap();
+            CreateMap<Voucher, UpdateVoucherModelView>().ReverseMap();
         }
     }
 }

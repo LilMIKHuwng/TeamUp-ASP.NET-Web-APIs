@@ -30,5 +30,7 @@ namespace TeamUp.ModelViews.CourtBookingModelViews
 
         [Required(ErrorMessage = "Phương thức thanh toán không được để trống")]
         public string PaymentMethod { get; set; }
+
+        public int? VoucherId { get; set; }
     }
 }
