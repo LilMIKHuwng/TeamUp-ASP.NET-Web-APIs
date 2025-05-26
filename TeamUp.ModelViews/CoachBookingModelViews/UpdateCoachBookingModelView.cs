@@ -13,9 +13,7 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         public int? CoachId { get; set; }
         public int? PlayerId { get; set; }
         public int? CourtId { get; set; }
-        public List<DateTime>? SelectedDates { get; set; }
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
+        public List<CreateSlotModelView>? Slots { get; set; }
         public string? Status { get; set; }
         public string? PaymentMethod { get; set; }
 

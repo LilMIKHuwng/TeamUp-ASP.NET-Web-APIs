@@ -21,6 +21,7 @@ using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.ModelViews.SportsComplexModelViews;
 using System.Globalization;
 using TeamUp.Core.Utils;
+using TeamUp.ModelViews.VoucherModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -93,6 +94,8 @@ namespace TeamUp.Services.Service
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
 
                 result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
+
+                result[i].Voucher = bookings[i].Voucher != null ? _mapper.Map<VoucherModelView>(bookings[i].Voucher) : null;
             }
 
             return new ApiSuccessResult<BasePaginatedList<CourtBookingModelView>>(
@@ -117,6 +120,7 @@ namespace TeamUp.Services.Service
                 result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
 
                 result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
+                result[i].Voucher = bookings[i].Voucher != null ? _mapper.Map<VoucherModelView>(bookings[i].Voucher) : null;
             }
 
             return new ApiSuccessResult<List<CourtBookingModelView>>(result);
@@ -139,6 +143,8 @@ namespace TeamUp.Services.Service
             result.Court = _mapper.Map<CourtModelView>(booking.Court);
 
             result.Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
+
+            result.Voucher = booking.Voucher != null ? _mapper.Map<VoucherModelView>(booking.Voucher) : null;
 
             return new ApiSuccessResult<CourtBookingModelView>(result);
         }
@@ -166,22 +172,18 @@ namespace TeamUp.Services.Service
             if (isCourtBookingConflict)
                 return new ApiErrorResult<object>("Khung giờ bạn chọn đã có người đặt sân.");
 
-            // 2. Kiểm tra trùng lịch trong CoachBooking (dùng TimeSpan)
-            var bookingDate = model.StartTime.Date;
-            var courtStartTime = model.StartTime.TimeOfDay;
-            var courtEndTime = model.EndTime.TimeOfDay;
-
             bool isCoachBookingConflict = await _unitOfWork.GetRepository<CoachBooking>().Entities
-                .AnyAsync(cb =>
+                .Include(cb => cb.Slots)  // nhớ include Slots để EF có thể truy cập
+                .Where(cb =>
                     cb.CourtId == model.CourtId &&
-                    !cb.DeletedTime.HasValue &&
-                    cb.SelectedDates.Contains(bookingDate) &&
+                    !cb.DeletedTime.HasValue
+                )
+                .AnyAsync(cb => cb.Slots.Any(slot =>
+                    // Kiểm tra slot có bị trùng thời gian với khung giờ đặt sân
                     (
-                        (courtStartTime >= cb.StartTime && courtStartTime < cb.EndTime) ||
-                        (courtEndTime > cb.StartTime && courtEndTime <= cb.EndTime) ||
-                        (courtStartTime <= cb.StartTime && courtEndTime >= cb.EndTime)
+                        (model.StartTime < slot.EndTime) && (model.EndTime > slot.StartTime)
                     )
-                );
+                ));
 
             if (isCoachBookingConflict)
                 return new ApiErrorResult<object>("Khung giờ bạn chọn đã có lịch huấn luyện viên.");
@@ -298,22 +300,19 @@ namespace TeamUp.Services.Service
                 if (isCourtBookingConflict)
                     return new ApiErrorResult<object>("Khung giờ bạn chọn đã có người đặt sân.");
 
-                // 2. Kiểm tra trùng lịch CoachBooking
-                var bookingDate = startTime.Date;
-                var courtStartTime = startTime.TimeOfDay;
-                var courtEndTime = endTime.TimeOfDay;
 
                 bool isCoachBookingConflict = await _unitOfWork.GetRepository<CoachBooking>().Entities
-                    .AnyAsync(cb =>
-                        cb.CourtId == courtId &&
-                        !cb.DeletedTime.HasValue &&
-                        cb.SelectedDates.Contains(bookingDate) &&
+                    .Include(cb => cb.Slots)  // nhớ include Slots để EF có thể truy cập
+                    .Where(cb =>
+                        cb.CourtId == model.CourtId &&
+                        !cb.DeletedTime.HasValue
+                    )
+                    .AnyAsync(cb => cb.Slots.Any(slot =>
+                        // Kiểm tra slot có bị trùng thời gian với khung giờ đặt sân
                         (
-                            (courtStartTime >= cb.StartTime && courtStartTime < cb.EndTime) ||
-                            (courtEndTime > cb.StartTime && courtEndTime <= cb.EndTime) ||
-                            (courtStartTime <= cb.StartTime && courtEndTime >= cb.EndTime)
+                            (model.StartTime < slot.EndTime) && (model.EndTime > slot.StartTime)
                         )
-                    );
+                    ));
 
                 if (isCoachBookingConflict)
                     return new ApiErrorResult<object>("Khung giờ bạn chọn đã có lịch huấn luyện viên.");
@@ -537,7 +536,9 @@ namespace TeamUp.Services.Service
                     b.EndTime > startDate)
                 .ToListAsync();
 
+            // Load CoachBooking cùng Slots luôn
             var coachBookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Include(cb => cb.Slots)
                 .Where(cb =>
                     cb.CourtId == courtId &&
                     !cb.DeletedTime.HasValue &&
@@ -567,8 +568,10 @@ namespace TeamUp.Services.Service
                         slotStart < b.EndTime && slotEnd > b.StartTime);
 
                     bool hasCoachBookingConflict = coachBookings.Any(cb =>
-                        cb.SelectedDates.Contains(date) &&
-                        hour < cb.EndTime && hour.Add(TimeSpan.FromHours(1)) > cb.StartTime);
+                        cb.Slots.Any(slot =>
+                            slot.StartTime.Date == date &&
+                            slotStart < slot.EndTime && slotEnd > slot.StartTime
+                        ));
 
                     if (!hasCourtBookingConflict && !hasCoachBookingConflict)
                     {
@@ -589,8 +592,10 @@ namespace TeamUp.Services.Service
                 });
             }
 
+
             return new ApiSuccessResult<List<object>>(result);
         }
+
 
 
         public async Task<ApiResult<object>> GetCourtBookingStatsByOwnerAsync(int ownerId)

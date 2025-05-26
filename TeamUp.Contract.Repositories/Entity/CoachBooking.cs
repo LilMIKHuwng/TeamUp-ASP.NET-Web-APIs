@@ -19,10 +19,6 @@ namespace TeamUp.Contract.Repositories.Entity
         public int CourtId { get; set; }
         public virtual Court Court { get; set; }
 
-        public List<DateTime> SelectedDates { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-
         public decimal TotalPrice { get; set; }
 
         public string Status { get; set; }
@@ -38,6 +34,8 @@ namespace TeamUp.Contract.Repositories.Entity
         public decimal DiscountAmount { get; set; } = 0;
 
         public virtual ICollection<Payment> Payments { get; set; }
+
+        public virtual ICollection<Slot> Slots { get; set; }
     }
 
 }

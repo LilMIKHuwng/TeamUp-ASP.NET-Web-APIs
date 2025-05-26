@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using TeamUp.API;
+using TeamUp.Core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,12 @@ builder.Services.AddConfig(builder.Configuration);
 builder.Services.AddConfigJWT(builder.Configuration);
 builder.Services.AddCorsPolicyBackend();
 builder.Services.AddHttpClient();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new CustomDateTimeConverter());
+    });
 
 //builder.Services.AddHostedService<RoomPlayerWorker>();
 //builder.Services.AddHostedService<CoachWorker>();

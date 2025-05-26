@@ -25,15 +25,8 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         [Range(1, int.MaxValue, ErrorMessage = "CourtId phải lớn hơn 0")]
         public int CourtId { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn ít nhất một ngày huấn luyện")]
-        [MinLength(1, ErrorMessage = "Cần chọn ít nhất một ngày huấn luyện")]
-        public List<DateTime> SelectedDates { get; set; }
-
-        [Required(ErrorMessage = "Thời gian bắt đầu không được để trống")]
-        public TimeSpan StartTime { get; set; } 
-
-        [Required(ErrorMessage = "Thời gian kết thúc không được để trống")]
-        public TimeSpan EndTime { get; set; }
+        [Required(ErrorMessage = "Slots không được để trống")]
+        public List<CreateSlotModelView> Slots { get; set; }
 
         [Required(ErrorMessage = "Phương thức thanh toán không được để trống")]
         public string PaymentMethod { get; set; }
@@ -42,9 +35,12 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (EndTime <= StartTime)
+            foreach (var item in Slots)
             {
-                yield return new ValidationResult("Thời gian kết thúc phải lớn hơn thời gian bắt đầu", new[] { nameof(EndTime) });
+                if (item.EndTime <= item.StartTime)
+                {
+                    yield return new ValidationResult("Thời gian kết thúc phải lớn hơn thời gian bắt đầu", new[] { nameof(item.EndTime) });
+                }
             }
         }
     }

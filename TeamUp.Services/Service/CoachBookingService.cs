@@ -20,6 +20,7 @@ using TeamUp.ModelViews.SportsComplexModelViews;
 using TeamUp.Core.Utils;
 using System.Globalization;
 using Firebase.Auth;
+using TeamUp.ModelViews.VoucherModelViews;
 
 namespace TeamUp.Services.Service
 {
@@ -36,22 +37,38 @@ namespace TeamUp.Services.Service
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<ApiResult<BasePaginatedList<CoachBookingModelView>>> GetAllCoachBookingAsync(int pageNumber, int pageSize, int? coachId, int? userId, int? courtId, TimeSpan? startTime, TimeSpan? endTime, string? status)
+        public async Task<ApiResult<BasePaginatedList<CoachBookingModelView>>> GetAllCoachBookingAsync(
+            int pageNumber, int pageSize, int? coachId, int? userId, int? courtId,
+            DateTime? startTime, DateTime? endTime, string? status)
         {
             var query = _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Include(cb => cb.Coach)
                 .Include(cb => cb.Player)
-                .Include(cb => cb.Court)
+                .Include(cb => cb.Court).ThenInclude(c => c.SportsComplex)
+                .Include(cb => cb.Voucher)
+                .Include(cb => cb.Slots)
                 .Where(cb => !cb.DeletedTime.HasValue);
 
-            if (coachId.HasValue) query = query.Where(cb => cb.CoachId == coachId.Value);
-            if (userId.HasValue) query = query.Where(cb => cb.PlayerId == userId.Value);
-            if (courtId.HasValue) query = query.Where(cb => cb.CourtId == courtId.Value);
-            if (startTime.HasValue) query = query.Where(cb => cb.StartTime >= startTime.Value);
-            if (endTime.HasValue) query = query.Where(cb => cb.EndTime <= endTime.Value);
-            if (!string.IsNullOrWhiteSpace(status)) query = query.Where(cb => cb.Status == status);
+            if (coachId.HasValue)
+                query = query.Where(cb => cb.CoachId == coachId.Value);
+
+            if (userId.HasValue)
+                query = query.Where(cb => cb.PlayerId == userId.Value);
+
+            if (courtId.HasValue)
+                query = query.Where(cb => cb.CourtId == courtId.Value);
+
+            if (startTime.HasValue)
+                query = query.Where(cb => cb.Slots.Any(s => s.StartTime >= startTime.Value));
+
+            if (endTime.HasValue)
+                query = query.Where(cb => cb.Slots.Any(s => s.EndTime <= endTime.Value));
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query = query.Where(cb => cb.Status == status);
 
             int totalCount = await query.CountAsync();
+
             var bookings = await query.OrderByDescending(cb => cb.CreatedTime)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -61,56 +78,101 @@ namespace TeamUp.Services.Service
 
             for (int i = 0; i < result.Count; i++)
             {
-                result[i].Player = _mapper.Map<UserResponseModel>(bookings[i].Player);
-                result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
-                result[i].Coach = _mapper.Map<EmployeeResponseModel>(bookings[i].Coach);
-                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
+                var booking = bookings[i];
+                result[i].Player = _mapper.Map<UserResponseModel>(booking.Player);
+                result[i].Coach = _mapper.Map<EmployeeResponseModel>(booking.Coach);
+                result[i].Court = _mapper.Map<CourtModelView>(booking.Court);
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
+                result[i].Voucher = booking.Voucher != null ? _mapper.Map<VoucherModelView>(booking.Voucher) : null;
+
+                result[i].Slots = booking.Slots
+                    .Select(slot => new SlotModelView
+                    {
+                        Id = slot.Id,
+                        CoachId = booking.CoachId,
+                        StartTime = slot.StartTime,
+                        EndTime = slot.EndTime
+                    })
+                    .ToList();
             }
 
-            return new ApiSuccessResult<BasePaginatedList<CoachBookingModelView>>(new BasePaginatedList<CoachBookingModelView>(result, totalCount, pageNumber, pageSize));
+            return new ApiSuccessResult<BasePaginatedList<CoachBookingModelView>>(
+                new BasePaginatedList<CoachBookingModelView>(result, totalCount, pageNumber, pageSize));
         }
+
 
         public async Task<ApiResult<List<CoachBookingModelView>>> GetAllCoachBooking()
         {
             var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Include(cb => cb.Coach)
                 .Include(cb => cb.Player)
-                .Include(cb => cb.Court)
-                .OrderByDescending(cb => cb.CreatedTime)
+                .Include(cb => cb.Court).ThenInclude(c => c.SportsComplex)
+                .Include(cb => cb.Voucher)
+                .Include(cb => cb.Slots)
                 .Where(cb => !cb.DeletedTime.HasValue)
+                .OrderByDescending(cb => cb.CreatedTime)
                 .ToListAsync();
 
             var result = _mapper.Map<List<CoachBookingModelView>>(bookings);
 
             for (int i = 0; i < result.Count; i++)
             {
-                result[i].Player = _mapper.Map<UserResponseModel>(bookings[i].Player);
-                result[i].Court = _mapper.Map<CourtModelView>(bookings[i].Court);
-                result[i].Coach = _mapper.Map<EmployeeResponseModel>(bookings[i].Coach);
-                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(bookings[i].Court.SportsComplex);
+                var booking = bookings[i];
+
+                result[i].Player = _mapper.Map<UserResponseModel>(booking.Player);
+                result[i].Coach = _mapper.Map<EmployeeResponseModel>(booking.Coach);
+                result[i].Court = _mapper.Map<CourtModelView>(booking.Court);
+                result[i].Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
+                result[i].Voucher = booking.Voucher != null ? _mapper.Map<VoucherModelView>(booking.Voucher) : null;
+
+                result[i].Slots = booking.Slots
+                    .Select(slot => new SlotModelView
+                    {
+                        Id = slot.Id,
+                        CoachId = booking.CoachId,
+                        StartTime = slot.StartTime,
+                        EndTime = slot.EndTime
+                    })
+                    .ToList();
             }
 
             return new ApiSuccessResult<List<CoachBookingModelView>>(result);
         }
+
 
         public async Task<ApiResult<CoachBookingModelView>> GetCoachBookingByIdAsync(int id)
         {
             var booking = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Include(cb => cb.Coach)
                 .Include(cb => cb.Player)
-                .Include(cb => cb.Court)
+                .Include(cb => cb.Court).ThenInclude(c => c.SportsComplex)
+                .Include(cb => cb.Voucher)
+                .Include(cb => cb.Slots)
                 .FirstOrDefaultAsync(cb => cb.Id == id && !cb.DeletedTime.HasValue);
 
-            if (booking == null) return new ApiErrorResult<CoachBookingModelView>("Không tìm thấy lịch huấn luyện.");
+            if (booking == null)
+                return new ApiErrorResult<CoachBookingModelView>("Không tìm thấy lịch huấn luyện.");
 
             var result = _mapper.Map<CoachBookingModelView>(booking);
             result.Player = _mapper.Map<UserResponseModel>(booking.Player);
-            result.Court = _mapper.Map<CourtModelView>(booking.Court);
             result.Coach = _mapper.Map<EmployeeResponseModel>(booking.Coach);
+            result.Court = _mapper.Map<CourtModelView>(booking.Court);
             result.Court.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(booking.Court.SportsComplex);
+            result.Voucher = booking.Voucher != null ? _mapper.Map<VoucherModelView>(booking.Voucher) : null;
+
+            result.Slots = booking.Slots
+                .Select(slot => new SlotModelView
+                {
+                    Id = slot.Id,
+                    CoachId = booking.CoachId,
+                    StartTime = slot.StartTime,
+                    EndTime = slot.EndTime
+                })
+                .ToList();
 
             return new ApiSuccessResult<CoachBookingModelView>(result);
         }
+
 
         public async Task<ApiResult<object>> AddCoachBookingAsync(CreateCoachBookingModelView model)
         {
@@ -121,59 +183,80 @@ namespace TeamUp.Services.Service
             if (coach == null || user == null || court == null)
                 return new ApiErrorResult<object>("Dữ liệu không hợp lệ.");
 
-            var distinctDates = model.SelectedDates.Select(d => d.Date).Distinct().ToList();
-
-            // ❗ Kiểm tra trùng lịch HLV
-            bool isCoachConflict = await _unitOfWork.GetRepository<CoachBooking>().Entities
-                .AnyAsync(b =>
-                    b.CoachId == model.CoachId &&
-                    !b.DeletedTime.HasValue &&
-                    b.SelectedDates.Any(d => distinctDates.Contains(d.Date)) &&
-                    (
-                        (model.StartTime >= b.StartTime && model.StartTime < b.EndTime) ||
-                        (model.EndTime > b.StartTime && model.EndTime <= b.EndTime) ||
-                        (model.StartTime <= b.StartTime && model.EndTime >= b.EndTime)
-                    )
-                );
-
-            if (isCoachConflict)
-                return new ApiErrorResult<object>("Huấn luyện viên đã có lịch vào khung giờ này.");
-
-            // ❗ Kiểm tra trùng lịch sân theo ngày + giờ
-            foreach (var date in distinctDates)
+            // Kiểm tra trùng lịch huấn luyện viên
+            foreach (var slot in model.Slots)
             {
-                var courtStart = date.Date + model.StartTime;
-                var courtEnd = date.Date + model.EndTime;
+                bool isCoachConflict = await _unitOfWork.GetRepository<Slot>().Entities
+                    .AnyAsync(s =>
+                        s.CoachBooking.CoachId == model.CoachId &&
+                        !s.CoachBooking.DeletedTime.HasValue &&
+                        (
+                            (slot.StartTime >= s.StartTime && slot.StartTime < s.EndTime) ||
+                            (slot.EndTime > s.StartTime && slot.EndTime <= s.EndTime) ||
+                            (slot.StartTime <= s.StartTime && slot.EndTime >= s.EndTime)
+                        )
+                    );
 
+                if (isCoachConflict)
+                    return new ApiErrorResult<object>($"Huấn luyện viên đã có lịch vào khung giờ {slot.StartTime:HH:mm} - {slot.EndTime:HH:mm} ngày {slot.StartTime:dd/MM/yyyy}.");
+            }
+
+            // Kiểm tra trùng lịch sân
+            foreach (var slot in model.Slots)
+            {
                 bool isCourtConflict = await _unitOfWork.GetRepository<CourtBooking>().Entities
                     .AnyAsync(b =>
                         b.CourtId == model.CourtId &&
                         !b.DeletedTime.HasValue &&
                         (
-                            (courtStart >= b.StartTime && courtStart < b.EndTime) ||
-                            (courtEnd > b.StartTime && courtEnd <= b.EndTime) ||
-                            (courtStart <= b.StartTime && courtEnd >= b.EndTime)
+                            (slot.StartTime >= b.StartTime && slot.StartTime < b.EndTime) ||
+                            (slot.EndTime > b.StartTime && slot.EndTime <= b.EndTime) ||
+                            (slot.StartTime <= b.StartTime && slot.EndTime >= b.EndTime)
                         )
                     );
 
                 if (isCourtConflict)
-                    return new ApiErrorResult<object>($"Sân đã được đặt vào khung giờ {model.StartTime:hh\\:mm} - {model.EndTime:hh\\:mm} ngày {date:dd/MM/yyyy}.");
+                    return new ApiErrorResult<object>($"Sân đã được đặt vào khung giờ {slot.StartTime:HH:mm} - {slot.EndTime:HH:mm} ngày {slot.StartTime:dd/MM/yyyy}.");
             }
 
-            var booking = _mapper.Map<CoachBooking>(model);
-            booking.CreatedTime = DateTime.Now;
-            booking.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
+            // Tạo booking
+            var booking = new CoachBooking
+            {
+                CoachId = model.CoachId,
+                PlayerId = model.PlayerId,
+                CourtId = model.CourtId,
+                PaymentMethod = model.PaymentMethod,
+                Status = BookingStatus.Pending,
+                PaymentStatus = PaymentStatus.Pending,
+                CreatedTime = DateTime.Now,
+                CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0"),
+                Slots = new List<Slot>()
+            };
 
-            // ❗ Tính tổng tiền
-            decimal durationHours = (decimal)(model.EndTime - model.StartTime).TotalHours;
-            decimal courtFee = durationHours * court.PricePerHour * distinctDates.Count;
-            decimal coachFee = distinctDates.Count * (coach.PricePerSession ?? 0);
+            // Tính tổng tiền
+            decimal totalHours = 0;
+            foreach (var slot in model.Slots)
+            {
+                totalHours += (decimal)(slot.EndTime - slot.StartTime).TotalHours;
+
+                var newSlot = new Slot
+                {
+                    CoachBookingId = booking.Id,
+                    StartTime = slot.StartTime,
+                    EndTime = slot.EndTime
+                };
+
+                booking.Slots.Add(newSlot);
+
+                await _unitOfWork.GetRepository<Slot>().InsertAsync(newSlot);
+
+            }
+
+            decimal courtFee = totalHours * court.PricePerHour;
+            decimal coachFee = model.Slots.Count * (coach.PricePerSession ?? 0);
             booking.TotalPrice = courtFee + coachFee;
 
-            booking.Status = BookingStatus.Pending;
-            booking.PaymentStatus = PaymentStatus.Pending;
-
-            // 4. Áp dụng giảm giá nếu có mã voucher
+            // Áp dụng Voucher
             if (model.VoucherId != null)
             {
                 var voucher = await _unitOfWork.GetRepository<Voucher>().Entities
@@ -183,7 +266,6 @@ namespace TeamUp.Services.Service
                 {
                     if (voucher.Code == "VOUCHER1")
                     {
-                        // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CoachBooking>().Entities
                             .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
 
@@ -195,12 +277,11 @@ namespace TeamUp.Services.Service
                         }
                         else
                         {
-                            return new ApiErrorResult<object>("VOUCHER1 chỉ được sử dụng với lần đầu đặt sân.");
+                            return new ApiErrorResult<object>("VOUCHER1 chỉ được sử dụng với lần đầu đặt huấn luyện viên.");
                         }
                     }
                     else
                     {
-                        // Các loại voucher khác nếu muốn mở rộng sau này
                         booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
                         booking.TotalPrice -= booking.DiscountAmount;
                         booking.VoucherId = voucher.Id;
@@ -211,7 +292,7 @@ namespace TeamUp.Services.Service
             await _unitOfWork.GetRepository<CoachBooking>().InsertAsync(booking);
             await _unitOfWork.SaveAsync();
 
-            // ✅ Gửi email xác nhận sử dụng DoingMail
+            // Gửi email xác nhận
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "CoachBookingSuccess.html");
             path = Path.GetFullPath(path);
 
@@ -222,11 +303,11 @@ namespace TeamUp.Services.Service
                 content = content.Replace("{{UserEmail}}", user.Email);
                 content = content.Replace("{{CoachEmail}}", coach.Email);
                 content = content.Replace("{{CourtName}}", court.Name);
-                content = content.Replace("{{Date}}", string.Join(", ", distinctDates.Select(d => d.ToString("dd/MM/yyyy"))));
-                content = content.Replace("{{StartTime}}", model.StartTime.ToString(@"hh\:mm"));
-                content = content.Replace("{{EndTime}}", model.EndTime.ToString(@"hh\:mm"));
+                content = content.Replace("{{Date}}", string.Join(", ", model.Slots.Select(s => s.StartTime.ToString("dd/MM/yyyy")).Distinct()));
+                content = content.Replace("{{StartTime}}", string.Join(", ", model.Slots.Select(s => s.StartTime.ToString("HH:mm"))));
+                content = content.Replace("{{EndTime}}", string.Join(", ", model.Slots.Select(s => s.EndTime.ToString("HH:mm"))));
                 content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
-                content = content.Replace("{{Status}}", booking.Status.ToString());
+                content = content.Replace("{{Status}}", booking.Status);
 
                 DoingMail.SendMail("TeamUp", "Xác nhận đặt huấn luyện viên", content, user.Email);
             }
@@ -235,75 +316,90 @@ namespace TeamUp.Services.Service
         }
 
 
+
         public async Task<ApiResult<object>> UpdateCoachBookingAsync(int id, UpdateCoachBookingModelView model)
         {
             var repo = _unitOfWork.GetRepository<CoachBooking>();
-            var booking = await repo.Entities.FirstOrDefaultAsync(b => b.Id == id && !b.DeletedTime.HasValue);
+            var booking = await repo.Entities
+                .Include(b => b.Slots)
+                .FirstOrDefaultAsync(b => b.Id == id && !b.DeletedTime.HasValue);
+
             if (booking == null)
                 return new ApiErrorResult<object>("Không tìm thấy lịch huấn luyện.");
 
-            var updatedStart = model.StartTime ?? booking.StartTime;
-            var updatedEnd = model.EndTime ?? booking.EndTime;
             var updatedCourtId = model.CourtId ?? booking.CourtId;
+            var updatedCoachId = model.CoachId ?? booking.CoachId;
+            var updatedPlayerId = model.PlayerId ?? booking.PlayerId;
 
-            // ❗ Kiểm tra trùng lịch HLV
-            bool isCoachConflict = await _unitOfWork.GetRepository<CoachBooking>().Entities
-                .AnyAsync(b =>
-                    b.Id != id &&
-                    b.CoachId == booking.CoachId &&
-                    !b.DeletedTime.HasValue &&
-                    b.SelectedDates.Any(d => booking.SelectedDates.Contains(d.Date)) &&
-                    (
-                        (updatedStart >= b.StartTime && updatedStart < b.EndTime) ||
-                        (updatedEnd > b.StartTime && updatedEnd <= b.EndTime) ||
-                        (updatedStart <= b.StartTime && updatedEnd >= b.EndTime)
-                    )
-                );
-
-            if (isCoachConflict)
-                return new ApiErrorResult<object>("Lịch huấn luyện viên bị trùng.");
-
-            // ❗ Kiểm tra trùng lịch sân
-            foreach (var date in booking.SelectedDates)
+            // ❗ Kiểm tra trùng lịch HLV và sân theo từng Slot
+            if (model.Slots != null)
             {
-                DateTime dateStart = date.Date + updatedStart;
-                DateTime dateEnd = date.Date + updatedEnd;
+                foreach (var slot in model.Slots)
+                {
+                    // Trùng lịch huấn luyện viên
+                    bool isCoachConflict = await _unitOfWork.GetRepository<Slot>().Entities
+                        .Include(s => s.CoachBooking)
+                        .AnyAsync(s =>
+                            s.CoachBookingId != id &&
+                            s.CoachBooking.CoachId == updatedCoachId &&
+                            !s.CoachBooking.DeletedTime.HasValue &&
+                            (
+                                (slot.StartTime >= s.StartTime && slot.StartTime < s.EndTime) ||
+                                (slot.EndTime > s.StartTime && slot.EndTime <= s.EndTime) ||
+                                (slot.StartTime <= s.StartTime && slot.EndTime >= s.EndTime)
+                            )
+                        );
 
-                bool isCourtConflict = await _unitOfWork.GetRepository<CourtBooking>().Entities
-                    .AnyAsync(b =>
-                        b.Id != id &&
-                        b.CourtId == updatedCourtId &&
-                        !b.DeletedTime.HasValue &&
-                        (
-                            (dateStart >= b.StartTime && dateStart < b.EndTime) ||
-                            (dateEnd > b.StartTime && dateEnd <= b.EndTime) ||
-                            (dateStart <= b.StartTime && dateEnd >= b.EndTime)
-                        )
-                    );
+                    if (isCoachConflict)
+                        return new ApiErrorResult<object>($"Lịch huấn luyện viên bị trùng vào {slot.StartTime:dd/MM/yyyy HH:mm} - {slot.EndTime:HH:mm}");
 
-                if (isCourtConflict)
-                    return new ApiErrorResult<object>($"Sân đã được đặt vào khung giờ {updatedStart:hh\\:mm} - {updatedEnd:hh\\:mm} ngày {date:dd/MM/yyyy}.");
+                    // Trùng lịch sân
+                    bool isCourtConflict = await _unitOfWork.GetRepository<CourtBooking>().Entities
+                        .AnyAsync(cb =>
+                            cb.CourtId == updatedCourtId &&
+                            !cb.DeletedTime.HasValue &&
+                            (
+                                (slot.StartTime >= cb.StartTime && slot.StartTime < cb.EndTime) ||
+                                (slot.EndTime > cb.StartTime && slot.EndTime <= cb.EndTime) ||
+                                (slot.StartTime <= cb.StartTime && slot.EndTime >= cb.EndTime)
+                            )
+                        );
+
+                    if (isCourtConflict)
+                        return new ApiErrorResult<object>($"Sân đã được đặt vào {slot.StartTime:dd/MM/yyyy HH:mm} - {slot.EndTime:HH:mm}");
+                }
+
+                // Xóa slot cũ
+                var slotRepo = _unitOfWork.GetRepository<Slot>();
+                var oldSlots = await slotRepo.Entities.Where(s => s.CoachBookingId == id).ToListAsync();
+                foreach (var s in oldSlots)
+                    await slotRepo.DeleteAsync(s);
+
+                // Thêm slot mới
+                foreach (var s in model.Slots)
+                {
+                    await slotRepo.InsertAsync(new Slot
+                    {
+                        CoachBookingId = booking.Id,
+                        StartTime = s.StartTime,
+                        EndTime = s.EndTime
+                    });
+                }
             }
 
-            // ✅ Cập nhật dữ liệu
-            booking.StartTime = updatedStart;
-            booking.EndTime = updatedEnd;
+            // ✅ Cập nhật thông tin
+            booking.CoachId = updatedCoachId;
+            booking.PlayerId = updatedPlayerId;
             booking.CourtId = updatedCourtId;
-
-            if (model.PlayerId.HasValue)
-                booking.PlayerId = model.PlayerId.Value;
-
-            if (model.CoachId.HasValue)
-                booking.CoachId = model.CoachId.Value;
 
             if (!string.IsNullOrEmpty(model.Status))
             {
                 var validStatuses = new[]
                 {
-                    BookingStatus.Pending, BookingStatus.Confirmed, BookingStatus.InProgress,
-                    BookingStatus.Completed, BookingStatus.CancelledByUser, BookingStatus.CancelledByOwner,
-                    BookingStatus.NoShow, BookingStatus.Failed, BookingStatus.CancelledByCoach
-                };
+            BookingStatus.Pending, BookingStatus.Confirmed, BookingStatus.InProgress,
+            BookingStatus.Completed, BookingStatus.CancelledByUser, BookingStatus.CancelledByOwner,
+            BookingStatus.NoShow, BookingStatus.Failed, BookingStatus.CancelledByCoach
+        };
 
                 if (!validStatuses.Contains(model.Status))
                     return new ApiErrorResult<object>("Trạng thái không hợp lệ.");
@@ -314,17 +410,33 @@ namespace TeamUp.Services.Service
             if (!string.IsNullOrEmpty(model.PaymentMethod))
                 booking.PaymentMethod = model.PaymentMethod;
 
-            // 4. Áp dụng giảm giá nếu có mã voucher
+            // ✅ Tính lại tổng giá
+            var court = await _unitOfWork.GetRepository<Court>().GetByIdAsync(booking.CourtId);
+            var coach = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(booking.CoachId);
+            var allNewSlots = await _unitOfWork.GetRepository<Slot>().Entities
+                .Where(s => s.CoachBookingId == booking.Id).ToListAsync();
+
+            decimal totalCourtFee = 0;
+            decimal totalCoachFee = 0;
+
+            foreach (var slot in allNewSlots)
+            {
+                var durationHours = (decimal)(slot.EndTime - slot.StartTime).TotalHours;
+                totalCourtFee += durationHours * court.PricePerHour;
+                totalCoachFee += coach.PricePerSession ?? 0;
+            }
+
+            booking.TotalPrice = totalCourtFee + totalCoachFee;
+
+            // ✅ Áp dụng voucher nếu có
             if (model.VoucherId != null)
             {
-                var voucher = await _unitOfWork.GetRepository<Voucher>().Entities
-                    .FirstOrDefaultAsync(v => v.Id == model.VoucherId);
+                var voucher = await _unitOfWork.GetRepository<Voucher>().GetByIdAsync(model.VoucherId.Value);
 
                 if (voucher != null)
                 {
                     if (voucher.Code == "VOUCHER1")
                     {
-                        // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CoachBooking>().Entities
                             .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
 
@@ -341,7 +453,6 @@ namespace TeamUp.Services.Service
                     }
                     else
                     {
-                        // Các loại voucher khác nếu muốn mở rộng sau này
                         booking.DiscountAmount = booking.TotalPrice * voucher.DiscountPercent / 100;
                         booking.TotalPrice -= booking.DiscountAmount;
                         booking.VoucherId = voucher.Id;
@@ -352,23 +463,12 @@ namespace TeamUp.Services.Service
             booking.LastUpdatedTime = DateTime.Now;
             booking.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
 
-            // ✅ Tính lại TotalPrice
-            var court = await _unitOfWork.GetRepository<Court>().GetByIdAsync(booking.CourtId);
-            var coach = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(booking.CoachId);
-
-            if (court != null && coach != null)
-            {
-                decimal courtFee = (decimal)(booking.EndTime - booking.StartTime).TotalHours * court.PricePerHour * booking.SelectedDates.Count;
-                decimal coachFee = booking.SelectedDates.Count * (coach.PricePerSession ?? 0);
-                booking.TotalPrice = courtFee + coachFee;
-
-            }
-
             await repo.UpdateAsync(booking);
             await _unitOfWork.SaveAsync();
 
             return new ApiSuccessResult<object>("Cập nhật thành công.");
         }
+
 
 
 
@@ -444,9 +544,9 @@ namespace TeamUp.Services.Service
                     content = content.Replace("{{UserEmail}}", booking.Player?.Email);
                     content = content.Replace("{{CoachEmail}}", booking.Coach?.Email);
                     content = content.Replace("{{CourtName}}", booking.Court?.Name);
-                    content = content.Replace("{{Date}}", string.Join(", ", booking.SelectedDates.Select(d => d.ToString("dd/MM/yyyy"))));
-                    content = content.Replace("{{StartTime}}", booking.StartTime.ToString(@"hh\:mm"));
-                    content = content.Replace("{{EndTime}}", booking.EndTime.ToString(@"hh\:mm"));
+                    content = content.Replace("{{Date}}", string.Join(", ", booking.Slots.Select(s => s.StartTime.ToString("dd/MM/yyyy")).Distinct()));
+                    content = content.Replace("{{StartTime}}", string.Join(", ", booking.Slots.Select(s => s.StartTime.ToString("HH:mm"))));
+                    content = content.Replace("{{EndTime}}", string.Join(", ", booking.Slots.Select(s => s.EndTime.ToString("HH:mm"))));
                     content = content.Replace("{{TotalPrice}}", booking.TotalPrice.ToString("N0", new CultureInfo("vi-VN")));
                     content = content.Replace("{{Status}}", booking.Status.ToString());
                     content = content.Replace("{{PaymentStatus}}", booking.PaymentStatus);
@@ -462,12 +562,14 @@ namespace TeamUp.Services.Service
         {
             var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Include(b => b.Coach)
+                .Include(b => b.Slots)  // Load Slots
                 .Where(b =>
                     b.CoachId == coachId &&
                     !b.DeletedTime.HasValue &&
                     b.Status == BookingStatus.Completed &&
                     b.PaymentMethod == paymentMethod &&
-                    b.SelectedDates.Any(date => date.Month == month && date.Year == year))
+                    b.Slots.Any(slot => slot.StartTime.Month == month && slot.StartTime.Year == year)
+                )
                 .ToListAsync();
 
             var totalPrice = bookings.Sum(b => b.TotalPrice);
@@ -477,6 +579,7 @@ namespace TeamUp.Services.Service
                 TotalPrice = totalPrice
             });
         }
+
 
 
 
@@ -561,36 +664,35 @@ namespace TeamUp.Services.Service
             DateTime startOfWeek = now.Date.AddDays(-1 * diff);
             DateTime endOfWeek = startOfWeek.AddDays(7).AddSeconds(-1);
 
+            var validStatuses = new[] { BookingStatus.Pending, BookingStatus.Confirmed, BookingStatus.InProgress, BookingStatus.Completed };
+
             var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Include(cb => cb.Slots)
                 .Where(cb => cb.CoachId == coachId &&
                              !cb.DeletedTime.HasValue &&
-                             cb.SelectedDates.Any(d => d >= startOfWeek && d < endOfWeek)
-                             && (
-                                cb.Status == BookingStatus.Pending ||
-                                cb.Status == BookingStatus.Confirmed ||
-                                cb.Status == BookingStatus.InProgress ||
-                                cb.Status == BookingStatus.Completed
-                             ))
+                             validStatuses.Contains(cb.Status) &&
+                             cb.Slots.Any(slot => slot.StartTime >= startOfWeek && slot.EndTime <= endOfWeek))
                 .ToListAsync();
 
             var result = new List<object>();
 
             foreach (var booking in bookings)
             {
-                foreach (var date in booking.SelectedDates.Where(d => d >= startOfWeek && d < endOfWeek))
+                foreach (var slot in booking.Slots.Where(slot => slot.StartTime >= startOfWeek && slot.EndTime <= endOfWeek))
                 {
                     result.Add(new
                     {
                         booking.CourtId,
-                        WeekDay = date.ToString("dddd", new CultureInfo("vi-VN")),
-                        Date = date.ToString("yyyy-MM-dd"),
-                        BookedSlot = $"{booking.StartTime:hh\\:mm} - {booking.EndTime:hh\\:mm}"
+                        WeekDay = slot.StartTime.ToString("dddd", new CultureInfo("vi-VN")),
+                        Date = slot.StartTime.ToString("yyyy-MM-dd"),
+                        BookedSlot = $"{slot.StartTime:HH\\:mm} - {slot.EndTime:HH\\:mm}"
                     });
                 }
             }
 
             return new ApiSuccessResult<List<object>>(result);
         }
+
 
         public async Task<ApiResult<int>> GetLatestCoachBookingIdByPlayerAsync(int playerId)
         {
