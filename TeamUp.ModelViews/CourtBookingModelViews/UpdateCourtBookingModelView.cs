@@ -18,5 +18,6 @@ namespace TeamUp.ModelViews.CourtBookingModelViews
 
         public string? Status { get; set; }
         public string? PaymentMethod { get; set; }
+        public int? VoucherId { get; set; }
     }
 }

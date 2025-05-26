@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeamUp.Contract.Repositories.Entity;
 using TeamUp.ModelViews.CourtModelViews;
 using TeamUp.ModelViews.UserModelViews.Response;
+using TeamUp.ModelViews.VoucherModelViews;
 using TeamUp.Repositories.Entity;
 
 namespace TeamUp.ModelViews.CoachBookingModelViews
@@ -23,5 +24,10 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         public string Status { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
+
+        public decimal DiscountAmount { get; set; }
+
+        public VoucherModelView? Voucher { get; set; }
+
     }
 }

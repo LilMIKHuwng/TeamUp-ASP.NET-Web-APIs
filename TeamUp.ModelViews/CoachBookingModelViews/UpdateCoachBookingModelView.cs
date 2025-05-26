@@ -18,5 +18,7 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         public TimeSpan? EndTime { get; set; }
         public string? Status { get; set; }
         public string? PaymentMethod { get; set; }
+
+        public int? VoucherId { get; set; }
     }
 }
