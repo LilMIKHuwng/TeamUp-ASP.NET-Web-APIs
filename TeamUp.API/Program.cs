@@ -28,7 +28,7 @@ builder.Services.AddControllers()
 
 //builder.Services.AddHostedService<RoomPlayerWorker>();
 //builder.Services.AddHostedService<CoachWorker>();
-builder.Services.AddHostedService<CoachBookingWorker>();
+//builder.Services.AddHostedService<CoachBookingWorker>();
 //builder.Services.AddHostedService<OwnerWorker>();
 //builder.Services.AddHostedService<CourtBookingWorker>();
 
