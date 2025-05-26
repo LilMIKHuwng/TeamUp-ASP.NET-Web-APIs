@@ -78,6 +78,11 @@
             color: #888;
             background-color: #f9f9f9;
         }
+        table {
+            margin: 0 auto;
+            font-size: 15px;
+            border-collapse: collapse;
+        }
     </style>
 </head>
 <body>
@@ -92,8 +97,20 @@
             <p>Bạn vui lòng đến sân đúng giờ như đã đặt để tham gia buổi huấn luyện.</p>
             <div class="info">
                 <p><strong>Tên sân:</strong> <span>{{CourtName}}</span></p>
-                <p><strong>Ngày:</strong> <span>{{Date}}</span></p>
-                <p><strong>Giờ:</strong> <span>{{StartTime}} - {{EndTime}}</span></p>
+                <p><strong>Khung giờ:</strong></p>
+                <table style="margin: 0 auto; font-size: 15px; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 6px 12px;">#</th>
+                            <th style="padding: 6px 12px;">Ngày</th>
+                            <th style="padding: 6px 12px;">Bắt đầu</th>
+                            <th style="padding: 6px 12px;">Kết thúc</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{SlotItems}}
+                    </tbody>
+                </table>
                 <p><strong>Tổng tiền:</strong> <span class="total">{{TotalPrice}} VNĐ</span></p>
                 <p><strong>Trạng thái lịch:</strong> <span class="status">{{Status}}</span></p>
                 <p><strong>Trạng thái thanh toán:</strong> <span class="payment">{{PaymentStatus}}</span></p>

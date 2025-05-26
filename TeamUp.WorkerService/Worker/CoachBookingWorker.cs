@@ -54,20 +54,27 @@ public class CoachBookingWorker : BackgroundService
                         var emailPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "NotifyCoachBooking.html");
                         if (!File.Exists(emailPath)) continue;
 
-                        var sessionsListHtml = string.Join("", booking.Slots
+                        // Tạo bảng các buổi huấn luyện
+                        var slotRows = string.Join("", booking.Slots
                             .OrderBy(s => s.StartTime)
-                            .Select(s => $"<li>{s.StartTime:dd/MM/yyyy HH:mm} đến {s.EndTime:HH:mm}</li>"));
+                            .Select((s, index) => $@"
+                            <tr>
+                                <td style='padding: 6px 12px;'>{index + 1}</td>
+                                <td style='padding: 6px 12px;'>{s.StartTime:dd/MM/yyyy}</td>
+                                <td style='padding: 6px 12px;'>{s.StartTime:HH:mm}</td>
+                                <td style='padding: 6px 12px;'>{s.EndTime:HH:mm}</td>
+                            </tr>"));
 
                         var content = File.ReadAllText(emailPath)
                             .Replace("{{UserEmail}}", booking.Player.Email)
                             .Replace("{{CoachEmail}}", booking.Coach.Email)
                             .Replace("{{CourtName}}", booking.Court.Name)
-                            .Replace("{{Status}}", booking.Status)
-                            .Replace("{{SessionsList}}", sessionsListHtml);
+                            .Replace("{{SlotItems}}", slotRows)
+                            .Replace("{{Status}}", booking.Status);
 
                         var sent = DoingMail.SendMail(
                             "TeamUp",
-                            "Lịch học huấn luyện sắp tới",
+                            "Nhắc nhở buổi huấn luyện sắp tới",
                             content,
                             booking.Player.Email);
 
@@ -87,5 +94,6 @@ public class CoachBookingWorker : BackgroundService
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
+
 
 }
