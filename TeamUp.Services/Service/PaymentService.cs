@@ -357,32 +357,27 @@ namespace TeamUp.Services.Service
             }
         }
 
-        public async Task<ApiResult<object>> HandlePayOSReturnAsync(IQueryCollection payosParams)
+        public async Task<string> HandlePayOSReturnAsync(IQueryCollection payosParams)
         {
             string status = payosParams["status"];
             string orderCodeStr = payosParams["orderCode"];
 
             if (!long.TryParse(orderCodeStr, out var orderCode))
-                return new ApiErrorResult<object>("Phản hồi thanh toán không hợp lệ.");
+                return "https://www.facebook.com/profile.php?id=61576557693699";
 
             var temp = await _unitOfWork.GetRepository<PaymentTemp>()
                            .Entities.FirstOrDefaultAsync(x => x.OrderCode == orderCode);
 
             if (temp == null)
-                return new ApiErrorResult<object>("Không tìm thấy thông tin thanh toán tạm thời.");
+                return "https://www.facebook.com/profile.php?id=61576557693699";
 
             int userId = temp.UserId;
             string type = temp.Type;
             int bookingId = temp.BookingId;
 
-            // ❗ Nếu không phải PAID, ngắt xử lý tại đây
+            // ❗ Nếu không phải PAID, chuyển hướng đến trang lỗi
             if (status != "PAID")
-            {
-                string message = status == "CANCELLED" ? "Giao dịch đã bị hủy." :
-                                 status == "EXPIRED" ? "Liên kết thanh toán đã hết hạn." :
-                                 "Giao dịch chưa hoàn tất.";
-                return new ApiErrorResult<object>($"Thanh toán PayOS thất bại: {message}");
-            }
+                return "https://www.facebook.com/profile.php?id=61576557693699";
 
             _unitOfWork.BeginTransaction();
 
@@ -395,17 +390,16 @@ namespace TeamUp.Services.Service
                     Method = "PayOS",
                     UserId = userId,
                     PaymentDate = DateTime.Now,
-                    Status = status == "PAID" ? "Success" : "Failed"
+                    Status = "Success"
                 };
 
                 if (type == "Court")
                 {
                     var booking = await _unitOfWork.GetRepository<CourtBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt sân.");
+                        return "https://www.facebook.com/profile.php?id=61576557693699";
 
-                    booking.PaymentStatus = status == "PAID" ? SystemConstant.PaymentStatus.Paid : SystemConstant.PaymentStatus.Failed;
-
+                    booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CourtBooking>().Update(booking);
                     payment.Amount = booking.TotalPrice;
                     payment.CourtBookingId = bookingId;
@@ -414,32 +408,26 @@ namespace TeamUp.Services.Service
                 {
                     var booking = await _unitOfWork.GetRepository<CoachBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt HLV.");
+                        return "https://www.facebook.com/profile.php?id=61576557693699";
 
-                    booking.PaymentStatus = status == "PAID" ? SystemConstant.PaymentStatus.Paid : SystemConstant.PaymentStatus.Failed;
-
+                    booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CoachBooking>().Update(booking);
                     payment.Amount = booking.TotalPrice;
                     payment.CoachBookingId = bookingId;
                 }
                 else
                 {
-                    var user = await _unitOfWork.GetRepository<ApplicationUser>()
-                        .GetByIdAsync(userId);
+                    var user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(userId);
                     if (user == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin người chơi.");
+                        return "https://www.facebook.com/profile.php?id=61576557693699";
 
-                    var package = await _unitOfWork.GetRepository<Package>()
-                        .GetByIdAsync(bookingId);
+                    var package = await _unitOfWork.GetRepository<Package>().GetByIdAsync(bookingId);
                     if (package == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin gói.");
+                        return "https://www.facebook.com/profile.php?id=61576557693699";
 
                     user.StartDate = DateTime.Now;
-
                     user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
-
                     user.PackageId = package.Id;
-
                     _unitOfWork.GetRepository<ApplicationUser>().Update(user);
 
                     var userRoleRepo = _unitOfWork.GetRepository<ApplicationUserRole>();
@@ -456,14 +444,13 @@ namespace TeamUp.Services.Service
                         .FirstOrDefaultAsync();
 
                     if (string.IsNullOrEmpty(role))
-                        return new ApiErrorResult<object>("Không xác định được vai trò của người dùng.");
+                        return "https://www.facebook.com/profile.php?id=61576557693699";
 
                     if (role == "Owner")
                     {
                         var sportsComplexRepo = _unitOfWork.GetRepository<SportsComplex>();
                         var courtRepo = _unitOfWork.GetRepository<Court>();
 
-                        // Lấy danh sách khu thể thao của user
                         var complexes = await sportsComplexRepo.Entities
                             .Where(x => x.OwnerId == user.Id && !x.DeletedTime.HasValue)
                             .ToListAsync();
@@ -473,7 +460,6 @@ namespace TeamUp.Services.Service
                             complex.Status = PackageStatus.Active;
                             sportsComplexRepo.Update(complex);
 
-                            // Lấy và cập nhật sân trong khu thể thao
                             var courts = await courtRepo.Entities
                                 .Where(c => c.SportsComplexId == complex.Id && !c.DeletedTime.HasValue)
                                 .ToListAsync();
@@ -488,7 +474,6 @@ namespace TeamUp.Services.Service
                     else if (role == "Coach")
                     {
                         user.StatusForCoach = PackageStatus.Active;
-
                         _unitOfWork.GetRepository<ApplicationUser>().Update(user);
                     }
 
@@ -500,14 +485,15 @@ namespace TeamUp.Services.Service
                 await _unitOfWork.SaveAsync();
                 _unitOfWork.CommitTransaction();
 
-                return new ApiSuccessResult<object>("Xử lý thanh toán PayOS thành công.");
+                return "https://www.facebook.com/lam.quanghung.102"; // ✅ URL thành công
             }
-            catch (Exception ex)
+            catch
             {
                 _unitOfWork.RollBack();
-                return new ApiErrorResult<object>($"Lỗi xử lý thanh toán PayOS: {ex.Message}");
+                return "https://www.facebook.com/profile.php?id=61576557693699"; // ❌ URL lỗi
             }
         }
+
 
 
         public async Task<ApiResult<PaymentModelView>> GetPaymentByIdAsync(int id)
