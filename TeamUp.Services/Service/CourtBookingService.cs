@@ -485,12 +485,12 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>("Cập nhật trạng thái thành công.");
         }
 
-        public async Task<ApiResult<object>> GetTotalPriceInMonthForOwnerAndAdmin(int courtId, string paymentMethod, int month, int year)
+        public async Task<ApiResult<object>> GetTotalPriceInMonthForOwnerAndAdmin(int ownerId, string paymentMethod, int month, int year)
         {
             var bookings = await _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Include(b => b.Court)
                 .Where(b =>
-                    b.CourtId == courtId &&
+                    b.Court.SportsComplex.OwnerId == ownerId &&
                     !b.DeletedTime.HasValue &&
                     b.Status == BookingStatus.Completed &&
                     b.StartTime.Month == month &&
