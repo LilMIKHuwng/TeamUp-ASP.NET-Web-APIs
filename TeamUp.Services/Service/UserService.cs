@@ -1004,6 +1004,13 @@ namespace TeamUp.Services.Service
                 response.AccessTokenExpiredTime = accessTokenData.Item2;
                 response.RefreshToken = refreshTokenData.Item1;
                 response.RefreshTokenExpiryTime = refreshTokenData.Item2;
+                var roleIds = userCheckExisted.UserRoles.Select(ur => ur.RoleId).ToList();
+                var roleNames = _roleManager.Roles
+                    .Where(r => roleIds.Contains(r.Id))
+                    .Select(r => r.Name)
+                    .ToList();
+
+                response.Role = roleNames.FirstOrDefault();
 
                 return new ApiSuccessResult<UserLoginResponseModel>(response);
             }
@@ -1058,6 +1065,7 @@ namespace TeamUp.Services.Service
             responseModel.AccessTokenExpiredTime = accessTokenDataNew.Item2;
             responseModel.RefreshToken = refreshTokenDataNew.Item1;
             responseModel.RefreshTokenExpiryTime = refreshTokenDataNew.Item2;
+            responseModel.Role = role.Name;
 
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormSendEmail", "WelcomeGG.html");
             if (!File.Exists(path))
