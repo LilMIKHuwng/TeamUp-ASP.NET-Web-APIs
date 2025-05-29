@@ -758,16 +758,49 @@ namespace TeamUp.Services.Service
             {
                 return new ApiErrorResult<object>("User is not existed.", System.Net.HttpStatusCode.NotFound);
             }
-            if (_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value == null)
-            {
-                return new ApiErrorResult<object>("Plase login to use this function.", System.Net.HttpStatusCode.BadRequest);
-            }
+
             var existingImage = existingUser.AvatarUrl;
 
-            // Update user profile by mapper
-            _mapper.Map(request, existingUser);
-            existingUser.LastUpdatedTime = DateTime.Now;
-            existingUser.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value);
+            // Manually update only non-null fields
+            if (!string.IsNullOrWhiteSpace(request.FullName))
+                existingUser.FullName = request.FullName;
+
+            if (request.Age.HasValue)
+                existingUser.Age = request.Age.Value;
+
+            if (request.Height.HasValue)
+                existingUser.Height = request.Height.Value;
+
+            if (request.Weight.HasValue)
+                existingUser.Weight = request.Weight.Value;
+
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+                existingUser.PhoneNumber = request.PhoneNumber;
+
+            if (!string.IsNullOrWhiteSpace(request.Type))
+                existingUser.Type = request.Type;
+
+            if (!string.IsNullOrWhiteSpace(request.Specialty))
+                existingUser.Specialty = request.Specialty;
+
+            if (!string.IsNullOrWhiteSpace(request.Certificate))
+                existingUser.Certificate = request.Certificate;
+
+            if (!string.IsNullOrWhiteSpace(request.WorkingAddress))
+                existingUser.WorkingAddress = request.WorkingAddress;
+
+            if (!string.IsNullOrWhiteSpace(request.WorkingDate))
+                existingUser.WorkingDate = request.WorkingDate;
+
+            if (!string.IsNullOrWhiteSpace(request.Experience))
+                existingUser.Experience = request.Experience;
+
+            if (!string.IsNullOrWhiteSpace(request.TargetObject))
+                existingUser.TargetObject = request.TargetObject;
+
+            if (request.PricePerSession.HasValue)
+                existingUser.PricePerSession = request.PricePerSession.Value;
+
             if (request.AvatarUrl != null)
             {
                 existingUser.AvatarUrl = await ImageHelper.Upload(request.AvatarUrl);
@@ -776,13 +809,23 @@ namespace TeamUp.Services.Service
             {
                 existingUser.AvatarUrl = existingImage;
             }
+
+            existingUser.LastUpdatedTime = DateTime.Now;
+            existingUser.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
+
             var result = await _userManager.UpdateAsync(existingUser);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<object>("Update profile unsuccesfully", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                return new ApiErrorResult<object>(
+                    "Update profile unsuccessfully",
+                    result.Errors.Select(x => x.Description).ToList(),
+                    System.Net.HttpStatusCode.BadRequest
+                );
             }
+
             return new ApiSuccessResult<object>("Update profile successfully.");
         }
+
 
         public async Task<ApiResult<object>> UpdateEmployeeStatus(UpdateUserStatusRequest request)
         {
@@ -791,10 +834,6 @@ namespace TeamUp.Services.Service
             if (existingUser == null)
             {
                 return new ApiErrorResult<object>("User is not existed.", System.Net.HttpStatusCode.NotFound);
-            }
-            if (_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value == null)
-            {
-                return new ApiErrorResult<object>("Plase login to use this function.", System.Net.HttpStatusCode.BadRequest);
             }
             // Check status included on enum
             if (!Enum.IsDefined(typeof(SystemConstant.EmployeeStatus), request.Status))
@@ -813,22 +852,30 @@ namespace TeamUp.Services.Service
 
         public async Task<ApiResult<object>> UpdateUserAndOwnerProfile(UpdateUserProfileRequest request)
         {
-            // check existed user
+            // Check existed user
             var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
             if (existingUser == null)
             {
                 return new ApiErrorResult<object>("User is not existed.", System.Net.HttpStatusCode.NotFound);
             }
-            if (_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value == null)
-            {
-                return new ApiErrorResult<object>("Plase login to use this function.", System.Net.HttpStatusCode.BadRequest);
-            }
+
             var existingImage = existingUser.AvatarUrl;
 
-            // Update user profile by mapper
-            _mapper.Map(request, existingUser);
-            existingUser.LastUpdatedTime = DateTime.Now;
-            existingUser.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value);
+            // Update only non-null fields
+            if (!string.IsNullOrWhiteSpace(request.FullName))
+                existingUser.FullName = request.FullName;
+
+            if (request.Age.HasValue)
+                existingUser.Age = request.Age.Value;
+
+            if (request.Height.HasValue)
+                existingUser.Height = request.Height.Value;
+
+            if (request.Weight.HasValue)
+                existingUser.Weight = request.Weight.Value;
+
+            if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+                existingUser.PhoneNumber = request.PhoneNumber;
 
             if (request.AvatarUrl != null)
             {
@@ -838,13 +885,19 @@ namespace TeamUp.Services.Service
             {
                 existingUser.AvatarUrl = existingImage;
             }
+
+            existingUser.LastUpdatedTime = DateTime.Now;
+            existingUser.LastUpdatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
+
             var result = await _userManager.UpdateAsync(existingUser);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<object>("Update profile unsuccesfully", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
+                return new ApiErrorResult<object>("Update profile unsuccessfully", result.Errors.Select(x => x.Description).ToList(), System.Net.HttpStatusCode.BadRequest);
             }
+
             return new ApiSuccessResult<object>("Update profile successfully.");
         }
+
 
         public async Task<ApiResult<object>> UpdateUserStatus(UpdateUserStatusRequest request)
         {
@@ -854,10 +907,6 @@ namespace TeamUp.Services.Service
             if (existingUser == null)
             {
                 return new ApiErrorResult<object>("User is not existed.", System.Net.HttpStatusCode.NotFound);
-            }
-            if (_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value == null)
-            {
-                return new ApiErrorResult<object>("Plase login to use this function.", System.Net.HttpStatusCode.BadRequest);
             }
             // Check status included on enum
             if (!Enum.IsDefined(typeof(SystemConstant.UserStatus), request.Status))
