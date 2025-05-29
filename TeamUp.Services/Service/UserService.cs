@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using BabyCare.Core.Utils;
+using Firebase.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -1027,16 +1028,13 @@ namespace TeamUp.Services.Service
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
             {
-                await _userManager.DeleteAsync(newUser);
                 return new ApiErrorResult<UserLoginResponseModel>("Role not found.");
             }
 
-            var addToRoleResult = await _userManager.AddToRoleAsync(newUser, role.Name);
-            if (!addToRoleResult.Succeeded)
+            var addRoleResult = await _userManager.AddToRoleAsync(newUser, role.Name);
+            if (!addRoleResult.Succeeded)
             {
-                await _userManager.DeleteAsync(newUser);
-                var errors = addToRoleResult.Errors.Select(e => e.Description).ToList();
-                return new ApiErrorResult<UserLoginResponseModel>("Add to role failed.", errors);
+                return new ApiErrorResult<UserLoginResponseModel>("Không thể gán vai trò.", addRoleResult.Errors.Select(x => x.Description).ToList());
             }
 
             var loginInfo = new UserLoginInfo(Provider.GOOGLE, request.Sub, Provider.GOOGLE);
