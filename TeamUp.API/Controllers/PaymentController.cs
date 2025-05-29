@@ -80,16 +80,17 @@ namespace TeamUp.API.Controllers
         /// Xử lý callback từ PayOS
         /// </summary>
         [HttpGet("payos-return")]
-        public async Task<ActionResult<ApiResult<object>>> PayOSReturn()
+        public async Task<IActionResult> PayOSReturn()
         {
             try
             {
-                var result = await _paymentService.HandlePayOSReturnAsync(Request.Query);
-                return Ok(result);
+                var redirectUrl = await _paymentService.HandlePayOSReturnAsync(Request.Query);
+                return Redirect(redirectUrl);
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new ApiErrorResult<object>(ex.Message));
+                // Nếu có lỗi không mong muốn thì chuyển hướng đến trang lỗi
+                return Redirect("https://www.facebook.com/profile.php?id=61576557693699");
             }
         }
 
