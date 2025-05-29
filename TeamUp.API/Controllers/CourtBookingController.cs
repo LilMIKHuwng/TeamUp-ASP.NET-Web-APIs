@@ -148,14 +148,14 @@ namespace TeamUp.API.Controllers
         /// </summary>
         [HttpGet("total-price/owner")]
         public async Task<ActionResult<ApiResult<object>>> GetTotalPriceInMonth(
-            [FromQuery] int courtId,
+            [FromQuery] int ownerId,
             [FromQuery] string paymentMethod,
             [FromQuery] int month,
             [FromQuery] int year)
         {
             try
             {
-                var result = await _courtBookingService.GetTotalPriceInMonthForOwnerAndAdmin(courtId, paymentMethod, month, year);
+                var result = await _courtBookingService.GetTotalPriceInMonthForOwnerAndAdmin(ownerId, paymentMethod, month, year);
                 return Ok(result);
             }
             catch (Exception ex)
