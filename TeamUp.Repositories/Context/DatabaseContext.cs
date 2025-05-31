@@ -375,7 +375,7 @@ namespace TeamUp.Repositories.Context
                     Id = 1,
                     Name = "Basic",
                     Price = 10000,
-                    Description = "Gói dịch vụ 365 ngày",
+                    Description = "Gói dịch vụ 30 ngày",
                     DurationDays = 30,
                     Type = "PackageHLV"
                 },
@@ -383,8 +383,8 @@ namespace TeamUp.Repositories.Context
                 {
                     Id = 2,
                     Name = "Premium",
-                    Price = 599000,
-                    Description = "Gói cao cấp 1095 ngày",
+                    Price = 10000,
+                    Description = "Gói cao cấp 90 ngày",
                     DurationDays = 90,
                     Type = "PackageHLV"
                 },
@@ -392,8 +392,8 @@ namespace TeamUp.Repositories.Context
                 {
                     Id = 3,
                     Name = "Basic",
-                    Price = 199000,
-                    Description = "Gói cao cấp 1095 ngày",
+                    Price = 10000,
+                    Description = "Gói dịch vụ 30 ngày",
                     DurationDays = 30,
                     Type = "PackageHLV"
                 }

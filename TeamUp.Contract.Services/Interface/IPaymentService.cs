@@ -13,7 +13,7 @@ namespace TeamUp.Contract.Services.Interface
     public interface IPaymentService
     {
         Task<ApiResult<string>> CreateVNPayPaymentUrlAsync(CreatePaymentModelView model, string ipAddress);
-        Task<ApiResult<object>> HandleVNPayReturnAsync(IQueryCollection vnpParams);
+        Task<string> HandleVNPayReturnAsync(IQueryCollection vnpParams);
 
         Task<ApiResult<string>> CreatePayOSPaymentUrlAsync(CreatePaymentModelView model);
         Task<string> HandlePayOSReturnAsync(IQueryCollection payosParams);

@@ -49,11 +49,12 @@ namespace TeamUp.API.Controllers
             try
             {
                 var result = await _paymentService.HandleVNPayReturnAsync(Request.Query);
-                return Ok(result);
+                return Redirect(result);
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new ApiErrorResult<object>(ex.Message));
+                // Nếu có lỗi không mong muốn thì chuyển hướng đến trang lỗi
+                return Redirect("http://localhost:3000/payment-fail");
             }
         }
 
@@ -90,7 +91,7 @@ namespace TeamUp.API.Controllers
             catch
             {
                 // Nếu có lỗi không mong muốn thì chuyển hướng đến trang lỗi
-                return Redirect("https://www.facebook.com/profile.php?id=61576557693699");
+                return Redirect("http://localhost:3000/payment-fail");
             }
         }
 

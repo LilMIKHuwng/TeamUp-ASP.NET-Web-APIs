@@ -27,6 +27,7 @@ using TeamUp.Repositories.Entity;
 using static BabyCare.Core.Utils.SystemConstant;
 using Net.payOS.Types;
 using Net.payOS;
+using static System.Net.WebRequestMethods;
 
 namespace TeamUp.Services.Service
 {
@@ -125,15 +126,15 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<string>(paymentUrl);
         }
 
-        public async Task<ApiResult<object>> HandleVNPayReturnAsync(IQueryCollection vnpParams)
+        public async Task<string> HandleVNPayReturnAsync(IQueryCollection vnpParams)
         {
             var result = _vnpay.GetPaymentResult(vnpParams);
             if (result == null || string.IsNullOrEmpty(result.Description))
-                return new ApiErrorResult<object>("Phản hồi thanh toán không hợp lệ.");
+                return "http://localhost:3000/payment-fail";
 
             var parts = result.Description.Split('|');
             if (parts.Length != 3)
-                return new ApiErrorResult<object>("Định dạng mô tả thanh toán không hợp lệ.");
+                return "http://localhost:3000/payment-fail";
 
             int userId = int.Parse(parts[0]);
             string type = parts[1];
@@ -158,7 +159,7 @@ namespace TeamUp.Services.Service
                     var booking = await _unitOfWork.GetRepository<CourtBooking>()
                         .GetByIdAsync(bookingId);
                     if (booking == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt sân.");
+                        return "http://localhost:3000/payment-fail";
 
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
@@ -175,7 +176,7 @@ namespace TeamUp.Services.Service
                     var booking = await _unitOfWork.GetRepository<CoachBooking>()
                         .GetByIdAsync(bookingId);
                     if (booking == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin đặt huấn luyện viên.");
+                        return "http://localhost:3000/payment-fail";
 
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
@@ -192,12 +193,12 @@ namespace TeamUp.Services.Service
                     var user = await _unitOfWork.GetRepository<ApplicationUser>()
                         .GetByIdAsync(userId);
                     if (user == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin người chơi.");
+                        return "http://localhost:3000/payment-fail";
 
                     var package = await _unitOfWork.GetRepository<Package>()
                         .GetByIdAsync(bookingId);
                     if (package == null)
-                        return new ApiErrorResult<object>("Không tìm thấy thông tin gói.");
+                        return "http://localhost:3000/payment-fail";
 
                     user.StartDate = DateTime.Now;
 
@@ -221,7 +222,7 @@ namespace TeamUp.Services.Service
                         .FirstOrDefaultAsync();
 
                     if (string.IsNullOrEmpty(role))
-                        return new ApiErrorResult<object>("Không xác định được vai trò của người dùng.");
+                        return "http://localhost:3000/payment-fail";
 
                     if (role == "Owner")
                     {
@@ -265,12 +266,12 @@ namespace TeamUp.Services.Service
                 await _unitOfWork.SaveAsync();
                 _unitOfWork.CommitTransaction();
 
-                return new ApiSuccessResult<object>("Xử lý thanh toán thành công.");
+                return "http://localhost:3000/payment-success";
             }
             catch (Exception ex)
             {
                 _unitOfWork.RollBack();
-                return new ApiErrorResult<object>($"Lỗi xử lý thanh toán: {ex.Message}");
+                return "http://localhost:3000/payment-fail";
             }
         }
 
@@ -363,13 +364,13 @@ namespace TeamUp.Services.Service
             string orderCodeStr = payosParams["orderCode"];
 
             if (!long.TryParse(orderCodeStr, out var orderCode))
-                return "https://www.facebook.com/profile.php?id=61576557693699";
+                return "http://localhost:3000/payment-fail";
 
             var temp = await _unitOfWork.GetRepository<PaymentTemp>()
                            .Entities.FirstOrDefaultAsync(x => x.OrderCode == orderCode);
 
             if (temp == null)
-                return "https://www.facebook.com/profile.php?id=61576557693699";
+                return "http://localhost:3000/payment-fail";
 
             int userId = temp.UserId;
             string type = temp.Type;
@@ -377,7 +378,7 @@ namespace TeamUp.Services.Service
 
             // ❗ Nếu không phải PAID, chuyển hướng đến trang lỗi
             if (status != "PAID")
-                return "https://www.facebook.com/profile.php?id=61576557693699";
+                return "http://localhost:3000/payment-fail";
 
             _unitOfWork.BeginTransaction();
 
@@ -397,7 +398,7 @@ namespace TeamUp.Services.Service
                 {
                     var booking = await _unitOfWork.GetRepository<CourtBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "https://www.facebook.com/profile.php?id=61576557693699";
+                        return "http://localhost:3000/payment-fail";
 
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CourtBooking>().Update(booking);
@@ -408,7 +409,7 @@ namespace TeamUp.Services.Service
                 {
                     var booking = await _unitOfWork.GetRepository<CoachBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "https://www.facebook.com/profile.php?id=61576557693699";
+                        return "http://localhost:3000/payment-fail";
 
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CoachBooking>().Update(booking);
@@ -419,11 +420,11 @@ namespace TeamUp.Services.Service
                 {
                     var user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(userId);
                     if (user == null)
-                        return "https://www.facebook.com/profile.php?id=61576557693699";
+                        return "http://localhost:3000/payment-fail";
 
                     var package = await _unitOfWork.GetRepository<Package>().GetByIdAsync(bookingId);
                     if (package == null)
-                        return "https://www.facebook.com/profile.php?id=61576557693699";
+                        return "http://localhost:3000/payment-fail";
 
                     user.StartDate = DateTime.Now;
                     user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
@@ -444,7 +445,7 @@ namespace TeamUp.Services.Service
                         .FirstOrDefaultAsync();
 
                     if (string.IsNullOrEmpty(role))
-                        return "https://www.facebook.com/profile.php?id=61576557693699";
+                        return "http://localhost:3000/payment-fail";
 
                     if (role == "Owner")
                     {
@@ -485,12 +486,12 @@ namespace TeamUp.Services.Service
                 await _unitOfWork.SaveAsync();
                 _unitOfWork.CommitTransaction();
 
-                return "https://www.facebook.com/lam.quanghung.102"; // ✅ URL thành công
+                return "http://localhost:3000/payment-success"; // ✅ URL thành công
             }
             catch
             {
                 _unitOfWork.RollBack();
-                return "https://www.facebook.com/profile.php?id=61576557693699"; // ❌ URL lỗi
+                return "http://localhost:3000/payment-fail"; // ❌ URL lỗi
             }
         }
 
