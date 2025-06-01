@@ -59,6 +59,20 @@ public class ChatController : ControllerBase
         }
     }
 
+    [HttpGet("chat-partners")]
+    public async Task<IActionResult> GetChatPartners([FromQuery] int senderId)
+    {
+        try
+        {
+            var partners = await _realTimeService.GetChatPartnersAsync(senderId);
+            return Ok(partners);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiErrorResult<UserResponseModel>(ex.Message));
+        }
+    }
+
 }
 
 public class SendMessageRequest

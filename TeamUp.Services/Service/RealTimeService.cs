@@ -90,4 +90,26 @@ public class RealTimeService : IRealTimeService
         return mappedMessages;
     }
 
+
+    public async Task<List<UserResponseModel>> GetChatPartnersAsync(int senderId)
+    {
+        var messageRepo = _unitOfWork.GetRepository<UserMessage>();
+
+        var messages = await messageRepo.Entities
+            .Where(m => m.SenderId == senderId || m.RecipientId == senderId)
+            .Include(m => m.Sender)
+            .Include(m => m.Recipient)
+            .ToListAsync();
+
+        // Lấy các đối tác trò chuyện (người còn lại trong cuộc trò chuyện)
+        var partnerUsers = messages
+            .Select(m =>
+                m.SenderId == senderId ? m.Recipient : m.Sender
+            )
+            .DistinctBy(u => u.Id) // đảm bảo không trùng lặp
+            .ToList();
+
+        return _mapper.Map<List<UserResponseModel>>(partnerUsers);
+    }
+
 }
