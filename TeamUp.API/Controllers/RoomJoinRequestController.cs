@@ -29,7 +29,7 @@ namespace TeamUp.API.Controllers
         {
             try
             {
-                var result = await _roomJoinRequestService.GetAllRoomJoinRequestAsync(pageNumber, pageSize, roomId, requesterId, status);
+                var result = await _roomJoinRequestService.GetAllRoomJoinRequestAsync(pageNumber, pageSize, requesterId, roomId, status);
                 return Ok(result);
             }
             catch (Exception ex)
