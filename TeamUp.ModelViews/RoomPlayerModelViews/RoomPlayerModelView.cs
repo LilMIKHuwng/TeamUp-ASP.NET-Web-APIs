@@ -12,7 +12,7 @@ namespace TeamUp.ModelViews.RoomPlayerModelViews
 {
     public class RoomPlayerModelView
     {
-        int Id { get; set; }
+        public int Id { get; set; }
         public RoomModelView Room { get; set; }
 
         public UserResponseModel Player { get; set; }
