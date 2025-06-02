@@ -45,7 +45,8 @@ namespace TeamUp.Services.Service
             int? courtId,
             DateTime? startTime,
             DateTime? endTime,
-            string? status)
+            string? status,
+            int? ownerId)
         {
             var query = _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Include(cb => cb.Court)
@@ -60,6 +61,11 @@ namespace TeamUp.Services.Service
             if (courtId.HasValue)
             {
                 query = query.Where(cb => cb.CourtId == courtId.Value);
+            }
+
+            if (ownerId.HasValue)
+            {
+                query = query.Where(cb => cb.Court.SportsComplex.OwnerId == ownerId.Value);
             }
 
             if (startTime.HasValue)
