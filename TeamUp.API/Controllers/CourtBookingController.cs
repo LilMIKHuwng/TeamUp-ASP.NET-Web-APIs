@@ -27,12 +27,13 @@ namespace TeamUp.API.Controllers
             [FromQuery] DateTime? startTime,
             [FromQuery] DateTime? endTime,
             [FromQuery] string? status,
+            [FromQuery] int? ownerId,
             int pageNumber = 1,
             int pageSize = 5)
         {
             try
             {
-                var result = await _courtBookingService.GetAllCourtBookingAsync(pageNumber, pageSize, userId, courtId, startTime, endTime, status);
+                var result = await _courtBookingService.GetAllCourtBookingAsync(pageNumber, pageSize, userId, courtId, startTime, endTime, status, ownerId);
                 return Ok(result);
             }
             catch (Exception ex)

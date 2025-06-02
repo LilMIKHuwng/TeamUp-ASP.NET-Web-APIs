@@ -12,7 +12,7 @@ namespace TeamUp.Contract.Services.Interface
 {
     public interface ICourtBookingService
     {
-        Task<ApiResult<BasePaginatedList<CourtBookingModelView>>> GetAllCourtBookingAsync(int pageNumber, int pageSize, int? userId, int? courtId, DateTime? startTime, DateTime? endTime, string? status);
+        Task<ApiResult<BasePaginatedList<CourtBookingModelView>>> GetAllCourtBookingAsync(int pageNumber, int pageSize, int? userId, int? courtId, DateTime? startTime, DateTime? endTime, string? status, int? ownerId);
         Task<ApiResult<object>> AddCourtBookingAsync(CreateCourtBookingModelView model);
         Task<ApiResult<object>> UpdateCourtBookingAsync(int id, UpdateCourtBookingModelView model);
         Task<ApiResult<object>> DeleteCourtBookingAsync(int id);
