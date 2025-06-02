@@ -1019,7 +1019,7 @@ namespace TeamUp.Services.Service
             {
                 Email = request.Email,
                 EmailConfirmed = request.Email_verified,
-                FullName = $"{request.Family_name} {request.Given_name} {request.Name}",
+                FullName = $"{request.Name}",
                 AvatarUrl = request.Picture,
                 UserName = await _generateGGUsernameAsync(),
                 Status = (int)UserStatus.Active
