@@ -129,6 +129,11 @@ namespace TeamUp.Services.Service
         public async Task<string> HandleVNPayReturnAsync(IQueryCollection vnpParams)
         {
             var result = _vnpay.GetPaymentResult(vnpParams);
+            if (!result.IsSuccess)
+            {
+                return "http://localhost:3000/payment-fail";
+            }
+
             if (result == null || string.IsNullOrEmpty(result.Description))
                 return "http://localhost:3000/payment-fail";
 

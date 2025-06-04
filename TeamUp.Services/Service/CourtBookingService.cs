@@ -166,7 +166,7 @@ namespace TeamUp.Services.Service
             // 1. Kiểm tra trùng lịch trong CourtBooking
             bool isCourtBookingConflict = await _unitOfWork.GetRepository<CourtBooking>().Entities
                 .AnyAsync(b =>
-                    b.CourtId == model.CourtId &&
+                    b.CourtId == model.CourtId && b.PaymentStatus == "Paid" &&
                     !b.DeletedTime.HasValue &&
                     (
                         (model.StartTime >= b.StartTime && model.StartTime < b.EndTime) ||
@@ -181,7 +181,7 @@ namespace TeamUp.Services.Service
             bool isCoachBookingConflict = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Include(cb => cb.Slots)  // nhớ include Slots để EF có thể truy cập
                 .Where(cb =>
-                    cb.CourtId == model.CourtId &&
+                    cb.CourtId == model.CourtId && cb.PaymentStatus == "Paid" &&
                     !cb.DeletedTime.HasValue
                 )
                 .AnyAsync(cb => cb.Slots.Any(slot =>
@@ -215,7 +215,7 @@ namespace TeamUp.Services.Service
                     {
                         // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CourtBooking>().Entities
-                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
+                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId == 1);
 
                         if (isFirstBooking)
                         {
@@ -537,7 +537,7 @@ namespace TeamUp.Services.Service
                 .Where(b =>
                     b.CourtId == courtId &&
                     !b.DeletedTime.HasValue &&
-                    !cancelledStatuses.Contains(b.Status) &&
+                    !cancelledStatuses.Contains(b.Status) && b.PaymentStatus == "Paid" &&
                     b.StartTime < endDate &&
                     b.EndTime > startDate)
                 .ToListAsync();
@@ -547,7 +547,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Slots)
                 .Where(cb =>
                     cb.CourtId == courtId &&
-                    !cb.DeletedTime.HasValue &&
+                    !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid" &&
                     !cancelledStatuses.Contains(cb.Status))
                 .ToListAsync();
 
