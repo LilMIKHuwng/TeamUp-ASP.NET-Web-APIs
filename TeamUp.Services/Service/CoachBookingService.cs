@@ -183,12 +183,13 @@ namespace TeamUp.Services.Service
             if (coach == null || user == null || court == null)
                 return new ApiErrorResult<object>("Dữ liệu không hợp lệ.");
 
+
             // Kiểm tra trùng lịch huấn luyện viên
             foreach (var slot in model.Slots)
             {
                 bool isCoachConflict = await _unitOfWork.GetRepository<Slot>().Entities
-                    .AnyAsync(s =>
-                        s.CoachBooking.CoachId == model.CoachId &&
+                    .AnyAsync(s => 
+                        s.CoachBooking.CoachId == model.CoachId && s.CoachBooking.PaymentStatus == "Paid" &&
                         !s.CoachBooking.DeletedTime.HasValue &&
                         (
                             (slot.StartTime >= s.StartTime && slot.StartTime < s.EndTime) ||
@@ -206,7 +207,7 @@ namespace TeamUp.Services.Service
             {
                 bool isCourtConflict = await _unitOfWork.GetRepository<CourtBooking>().Entities
                     .AnyAsync(b =>
-                        b.CourtId == model.CourtId &&
+                        b.CourtId == model.CourtId && b.PaymentStatus == "Paid" &&
                         !b.DeletedTime.HasValue &&
                         (
                             (slot.StartTime >= b.StartTime && slot.StartTime < b.EndTime) ||
@@ -267,7 +268,7 @@ namespace TeamUp.Services.Service
                     if (voucher.Code == "VOUCHER1")
                     {
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CoachBooking>().Entities
-                            .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId.HasValue);
+                            .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId == 1);
 
                         if (isFirstBooking)
                         {
