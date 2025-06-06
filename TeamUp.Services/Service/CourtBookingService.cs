@@ -215,7 +215,7 @@ namespace TeamUp.Services.Service
                     {
                         // Kiểm tra xem đây có phải lần đặt đầu tiên của user không
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CourtBooking>().Entities
-                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId == 1);
+                            .AnyAsync(b => b.UserId == model.UserId && !b.DeletedTime.HasValue && b.VoucherId == 1 && b.PaymentStatus == "Paid");
 
                         if (isFirstBooking)
                         {

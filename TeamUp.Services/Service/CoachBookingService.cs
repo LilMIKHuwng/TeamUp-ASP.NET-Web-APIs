@@ -268,7 +268,7 @@ namespace TeamUp.Services.Service
                     if (voucher.Code == "VOUCHER1")
                     {
                         bool isFirstBooking = !await _unitOfWork.GetRepository<CoachBooking>().Entities
-                            .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId == 1);
+                            .AnyAsync(b => b.PlayerId == model.PlayerId && !b.DeletedTime.HasValue && b.VoucherId == 1 && b.PaymentStatus == "Paid");
 
                         if (isFirstBooking)
                         {
