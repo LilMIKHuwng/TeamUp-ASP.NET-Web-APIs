@@ -51,7 +51,7 @@ namespace TeamUp.Services.Service
             var query = _unitOfWork.GetRepository<CourtBooking>().Entities
                 .Include(cb => cb.Court)
                 .Include(cb => cb.User)
-                .Where(cb => !cb.DeletedTime.HasValue);
+                .Where(cb => !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid");
 
             if (userId.HasValue)
             {
@@ -114,7 +114,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Court)
                 .Include(cb => cb.User)
                 .OrderByDescending(cb => cb.CreatedTime)
-                .Where(cb => !cb.DeletedTime.HasValue)
+                .Where(cb => !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid")
                 .ToListAsync();
 
             var result = _mapper.Map<List<CourtBookingModelView>>(bookings);
@@ -501,7 +501,7 @@ namespace TeamUp.Services.Service
                     b.Status == BookingStatus.Completed &&
                     b.StartTime.Month == month &&
                     b.StartTime.Year == year && 
-                    b.PaymentMethod == paymentMethod)
+                    b.PaymentMethod == paymentMethod && b.PaymentStatus == "Paid")
                 .ToListAsync();
 
             var totalPrice = bookings.Sum(b => b.TotalPrice);
@@ -611,7 +611,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Court)
                     .ThenInclude(c => c.SportsComplex);
 
-            var ownerBookings = query.Where(cb => cb.Court.SportsComplex.OwnerId == ownerId);
+            var ownerBookings = query.Where(cb => cb.Court.SportsComplex.OwnerId == ownerId && cb.PaymentStatus == "Paid");
 
             var uniquePlayerCount = await ownerBookings
                 .Select(cb => cb.UserId)
@@ -642,7 +642,7 @@ namespace TeamUp.Services.Service
                 .Where(cb => !cb.DeletedTime.HasValue)
                 .Include(cb => cb.Court)
                     .ThenInclude(c => c.SportsComplex)
-                .Where(cb => cb.Court.SportsComplex.OwnerId == ownerId);
+                .Where(cb => cb.Court.SportsComplex.OwnerId == ownerId && cb.PaymentStatus == "Paid");
 
             var mostBooked = await bookingsQuery
                 .GroupBy(cb => cb.CourtId)
@@ -689,7 +689,7 @@ namespace TeamUp.Services.Service
                         b.Status == BookingStatus.Confirmed ||
                         b.Status == BookingStatus.InProgress ||
                         b.Status == BookingStatus.Completed
-                    ))
+                    ) && b.PaymentStatus == "Paid")
                 .OrderBy(b => b.StartTime)
                 .ToListAsync();
 
