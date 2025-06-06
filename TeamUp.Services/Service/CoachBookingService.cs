@@ -47,7 +47,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Court).ThenInclude(c => c.SportsComplex)
                 .Include(cb => cb.Voucher)
                 .Include(cb => cb.Slots)
-                .Where(cb => !cb.DeletedTime.HasValue);
+                .Where(cb => !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid");
 
             if (coachId.HasValue)
                 query = query.Where(cb => cb.CoachId == coachId.Value);
@@ -109,7 +109,7 @@ namespace TeamUp.Services.Service
                 .Include(cb => cb.Court).ThenInclude(c => c.SportsComplex)
                 .Include(cb => cb.Voucher)
                 .Include(cb => cb.Slots)
-                .Where(cb => !cb.DeletedTime.HasValue)
+                .Where(cb => !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid")
                 .OrderByDescending(cb => cb.CreatedTime)
                 .ToListAsync();
 
@@ -598,6 +598,7 @@ namespace TeamUp.Services.Service
                     b.Status == BookingStatus.Completed &&
                     b.PaymentMethod == paymentMethod &&
                     b.Slots.Any(slot => slot.StartTime.Month == month && slot.StartTime.Year == year)
+                    && b.PaymentStatus == "Paid"
                 )
                 .ToListAsync();
 
@@ -674,7 +675,7 @@ namespace TeamUp.Services.Service
 
             var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
                 .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue &&
-                             cb.CreatedTime >= startMonth && cb.CreatedTime < endMonth)
+                             cb.CreatedTime >= startMonth && cb.CreatedTime < endMonth && cb.PaymentStatus == "Paid")
                 .CountAsync();
 
             return new ApiSuccessResult<object>(new
@@ -700,7 +701,7 @@ namespace TeamUp.Services.Service
                 .Where(cb => cb.CoachId == coachId &&
                              !cb.DeletedTime.HasValue &&
                              validStatuses.Contains(cb.Status) &&
-                             cb.Slots.Any(slot => slot.StartTime >= startOfWeek && slot.EndTime <= endOfWeek))
+                             cb.Slots.Any(slot => slot.StartTime >= startOfWeek && slot.EndTime <= endOfWeek) && cb.PaymentStatus == "Paid")
                 .ToListAsync();
 
             var result = new List<object>();
