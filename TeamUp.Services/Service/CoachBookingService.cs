@@ -617,7 +617,7 @@ namespace TeamUp.Services.Service
         public async Task<ApiResult<object>> GetCoachBookingStatsAsync(int coachId)
         {
             var query = _unitOfWork.GetRepository<CoachBooking>().Entities
-                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue);
+                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid");
 
             var totalBookings = await query.CountAsync();
 
@@ -644,7 +644,7 @@ namespace TeamUp.Services.Service
         public async Task<ApiResult<List<object>>> GetPlayersByCoachAsync(int coachId)
         {
             var bookings = await _unitOfWork.GetRepository<CoachBooking>().Entities
-                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue)
+                .Where(cb => cb.CoachId == coachId && !cb.DeletedTime.HasValue && cb.PaymentStatus == "Paid")
                 .Include(cb => cb.Player)
                 .GroupBy(cb => cb.PlayerId)
                 .Select(g => new
