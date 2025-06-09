@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using TeamUp.Repositories.Entity;
 using static BabyCare.Core.Utils.SystemConstant;
 using TeamUp.ModelViews.RatingModelViews;
+using System.Net; // For WebUtility.UrlDecode
 
 namespace TeamUp.Services.Service
 {
@@ -33,6 +34,14 @@ namespace TeamUp.Services.Service
             _mapper = mapper;
             _contextAccessor = contextAccessor;
             _ratingService = ratingService;
+        }
+
+        // Helper method to fix Firebase URL path encoding
+        private static string FixFirebaseUrl(string url)
+        {
+            // Decode u0026 to &
+            url = url.Replace("u0026", "&");
+            return url;
         }
 
         public async Task<ApiResult<BasePaginatedList<CourtModelView>>> GetAllCourtxAsync(int pageNumber, int pageSize, string? name, decimal? pricePerHour, string? address, int? sportId, string? type)
@@ -87,6 +96,9 @@ namespace TeamUp.Services.Service
             for (int i = 0; i < result.Count; i++)
             {
                 result[i].SportsComplexModelView = _mapper.Map<SportsComplexModelView>(paginatedCourts[i].SportsComplex);
+                // Decode ImageUrls for Court and SportsComplex
+                result[i].ImageUrls = result[i].ImageUrls.Select(FixFirebaseUrl).ToList();
+                result[i].SportsComplexModelView.ImageUrls = result[i].SportsComplexModelView.ImageUrls.Select(FixFirebaseUrl).ToList();
 
                 var ownerId = paginatedCourts[i].SportsComplex.OwnerId;
                 if (ratingSummaries.TryGetValue(ownerId, out var summary))
@@ -99,7 +111,6 @@ namespace TeamUp.Services.Service
                 new BasePaginatedList<CourtModelView>(result, totalCount, pageNumber, pageSize));
         }
 
-
         public async Task<ApiResult<object>> AddCourtAsync(CreateCourtModelView model)
         {
             var sportsComplex = await _unitOfWork.GetRepository<SportsComplex>().GetByIdAsync(model.SportsComplexId);
@@ -110,18 +121,20 @@ namespace TeamUp.Services.Service
             newCourt.CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0");
             newCourt.CreatedTime = DateTime.Now;
 
-            newCourt.ImageUrls = new List<string>();
+            // Collect URLs in a temporary list
+            var fixedImageUrls = new List<string>();
             foreach (var img in model.ImageUrls)
             {
                 string imgUrl = await ImageHelper.Upload(img);
-                newCourt.ImageUrls.Add(imgUrl);
+                fixedImageUrls.Add(imgUrl);
             }
+            newCourt.ImageUrls = fixedImageUrls;
 
             var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(sportsComplex.OwnerId);
             if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
             {
                 newCourt.Status = PackageStatus.InActive;
-            } 
+            }
             else
             {
                 newCourt.Status = PackageStatus.Active;
@@ -161,11 +174,14 @@ namespace TeamUp.Services.Service
             if (model.ImageUrls != null && model.ImageUrls.Any())
             {
                 court.ImageUrls.Clear();
+                // Collect URLs in a temporary list
+                var fixedImageUrls = new List<string>();
                 foreach (var img in model.ImageUrls)
                 {
-                    var url = await ImageHelper.Upload(img);
-                    court.ImageUrls.Add(url);
+                    string imgUrl = await ImageHelper.Upload(img);
+                    fixedImageUrls.Add(imgUrl);
                 }
+                court.ImageUrls = fixedImageUrls;
             }
 
             var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(court.SportsComplex.OwnerId);
@@ -216,6 +232,10 @@ namespace TeamUp.Services.Service
             var result = _mapper.Map<CourtModelView>(court);
             result.SportsComplexModelView = _mapper.Map<SportsComplexModelView>(court.SportsComplex);
 
+            // Decode ImageUrls for Court and SportsComplex
+            result.ImageUrls = result.ImageUrls.Select(FixFirebaseUrl).ToList();
+            result.SportsComplexModelView.ImageUrls = result.SportsComplexModelView.ImageUrls.Select(FixFirebaseUrl).ToList();
+
             // Thêm RatingSummaryModelView
             var ratingSummaryResult = await _ratingService.GetRatingSummaryForUserAsync(court.SportsComplex.OwnerId);
             if (ratingSummaryResult.IsSuccessed && ratingSummaryResult.ResultObj != null)
@@ -225,7 +245,6 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<CourtModelView>(result);
         }
-
 
         public async Task<ApiResult<List<CourtModelView>>> GetAllCourt()
         {
@@ -258,6 +277,9 @@ namespace TeamUp.Services.Service
             for (int i = 0; i < result.Count; i++)
             {
                 result[i].SportsComplexModelView = _mapper.Map<SportsComplexModelView>(courts[i].SportsComplex);
+                // Decode ImageUrls for Court and SportsComplex
+                result[i].ImageUrls = result[i].ImageUrls.Select(FixFirebaseUrl).ToList();
+                result[i].SportsComplexModelView.ImageUrls = result[i].SportsComplexModelView.ImageUrls.Select(FixFirebaseUrl).ToList();
 
                 var ownerId = courts[i].SportsComplex.OwnerId;
                 if (ratingSummaries.TryGetValue(ownerId, out var summary))
@@ -269,5 +291,4 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<List<CourtModelView>>(result);
         }
     }
-
 }

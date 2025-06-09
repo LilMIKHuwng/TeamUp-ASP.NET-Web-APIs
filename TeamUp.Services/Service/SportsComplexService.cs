@@ -37,6 +37,14 @@ namespace TeamUp.Services.Service
             _ratingService = ratingService;
         }
 
+        // Helper method to fix Firebase URL path encoding
+        private static string FixFirebaseUrl(string url)
+        {
+            // Decode u0026 to &
+            url = url.Replace("u0026", "&");
+            return url;
+        }
+
         public async Task<ApiResult<BasePaginatedList<SportsComplexModelView>>> GetAllSportsComplexAsync(int pageNumber, int pageSize, string? name, string? address)
         {
             IQueryable<SportsComplex> query = _unitOfWork.GetRepository<SportsComplex>().Entities
@@ -86,12 +94,19 @@ namespace TeamUp.Services.Service
                 complexModelViews[i].RatingSummaryModelView = ratingDict.ContainsKey(ownerId)
                     ? ratingDict[ownerId]
                     : new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
+
+                // Apply FixFirebaseUrl to ImageUrls
+                if (complexModelViews[i].ImageUrls != null)
+                {
+                    complexModelViews[i].ImageUrls = complexModelViews[i].ImageUrls
+                        .Select(FixFirebaseUrl)
+                        .ToList();
+                }
             }
 
             var result = new BasePaginatedList<SportsComplexModelView>(complexModelViews, totalCount, pageNumber, pageSize);
             return new ApiSuccessResult<BasePaginatedList<SportsComplexModelView>>(result);
         }
-
 
         public async Task<ApiResult<object>> AddSportsComplexAsync(CreateSportsComplexModelView model)
         {
@@ -111,12 +126,14 @@ namespace TeamUp.Services.Service
             if (!validTypes.Contains(model.Type))
                 return new ApiErrorResult<object>("Loại thể thao không hợp lệ.");
 
-            newComplex.ImageUrls = new List<string>();
+            // Collect URLs in a temporary list
+            var fixedImageUrls = new List<string>();
             foreach (var img in model.ImageUrls)
             {
                 string imgUrl = await ImageHelper.Upload(img);
-                newComplex.ImageUrls.Add(imgUrl);
+                fixedImageUrls.Add(imgUrl);
             }
+            newComplex.ImageUrls = fixedImageUrls;
 
             var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(model.OwnerId);
             if (owner.ExpireDate < DateTime.Now || owner.ExpireDate == null)
@@ -175,12 +192,15 @@ namespace TeamUp.Services.Service
 
             if (model.ImageUrls != null && model.ImageUrls.Any())
             {
-                complex.ImageUrls.Clear(); 
+                complex.ImageUrls.Clear();
+                // Collect URLs in a temporary list
+                var fixedImageUrls = new List<string>();
                 foreach (var img in model.ImageUrls)
                 {
-                    var url = await ImageHelper.Upload(img);
-                    complex.ImageUrls.Add(url);
+                    string imgUrl = await ImageHelper.Upload(img);
+                    fixedImageUrls.Add(imgUrl);
                 }
+                complex.ImageUrls = fixedImageUrls;
             }
 
             var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(complex.OwnerId);
@@ -247,9 +267,16 @@ namespace TeamUp.Services.Service
                 result.RatingSummaryModelView = new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
             }
 
+            // Apply FixFirebaseUrl to ImageUrls
+            if (result.ImageUrls != null)
+            {
+                result.ImageUrls = result.ImageUrls
+                    .Select(FixFirebaseUrl)
+                    .ToList();
+            }
+
             return new ApiSuccessResult<SportsComplexModelView>(result);
         }
-
 
         public async Task<ApiResult<List<SportsComplexModelView>>> GetAllSportsComplex()
         {
@@ -287,6 +314,14 @@ namespace TeamUp.Services.Service
                 result[i].RatingSummaryModelView = ratingDict.ContainsKey(ownerId)
                     ? ratingDict[ownerId]
                     : new RatingSummaryModelView { AverageRating = 0, TotalReviewerCount = 0 };
+
+                // Apply FixFirebaseUrl to ImageUrls
+                if (result[i].ImageUrls != null)
+                {
+                    result[i].ImageUrls = result[i].ImageUrls
+                        .Select(FixFirebaseUrl)
+                        .ToList();
+                }
             }
 
             return new ApiSuccessResult<List<SportsComplexModelView>>(result);
