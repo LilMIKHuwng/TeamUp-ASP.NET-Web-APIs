@@ -46,7 +46,7 @@ namespace TeamUp.API
         {
             services.AddDbContext<DatabaseContext>(options =>
             {
-                options.UseLazyLoadingProxies().UseSqlServer(configuration.GetConnectionString("TeamUpDB"));
+                options.UseLazyLoadingProxies().UseMySQL(configuration.GetConnectionString("TeamUpDB"));
             });
         }
 
