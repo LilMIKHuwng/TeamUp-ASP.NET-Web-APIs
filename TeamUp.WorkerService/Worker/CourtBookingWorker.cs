@@ -82,7 +82,7 @@ public class CourtBookingWorker : BackgroundService
                 _logger.LogError(ex, "Lỗi trong CourtBookingWorker.");
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(2), stoppingToken);
         }
     }
 }

@@ -91,7 +91,7 @@ public class CoachBookingWorker : BackgroundService
                 _logger.LogError(ex, "Lỗi CoachBookingWorker");
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(2), stoppingToken);
         }
     }
 
