@@ -96,7 +96,7 @@ namespace TeamUp.API
                         .WithOrigins(
                             "http://localhost:5173",
                             "http://localhost:3000",
-                            "https://baby-care-theta.vercel.app"
+                            "https://www.team-up-booking.com"
                         )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
