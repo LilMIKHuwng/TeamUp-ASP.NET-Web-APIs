@@ -131,15 +131,15 @@ namespace TeamUp.Services.Service
             var result = _vnpay.GetPaymentResult(vnpParams);
             if (!result.IsSuccess)
             {
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
             }
 
             if (result == null || string.IsNullOrEmpty(result.Description))
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
 
             var parts = result.Description.Split('|');
             if (parts.Length != 3)
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
 
             int userId = int.Parse(parts[0]);
             string type = parts[1];
@@ -164,7 +164,7 @@ namespace TeamUp.Services.Service
                     var booking = await _unitOfWork.GetRepository<CourtBooking>()
                         .GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
@@ -181,7 +181,7 @@ namespace TeamUp.Services.Service
                     var booking = await _unitOfWork.GetRepository<CoachBooking>()
                         .GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     booking.PaymentStatus = result.IsSuccess
                         ? SystemConstant.PaymentStatus.Paid
@@ -198,12 +198,12 @@ namespace TeamUp.Services.Service
                     var user = await _unitOfWork.GetRepository<ApplicationUser>()
                         .GetByIdAsync(userId);
                     if (user == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     var package = await _unitOfWork.GetRepository<Package>()
                         .GetByIdAsync(bookingId);
                     if (package == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     user.StartDate = DateTime.Now;
 
@@ -227,7 +227,7 @@ namespace TeamUp.Services.Service
                         .FirstOrDefaultAsync();
 
                     if (string.IsNullOrEmpty(role))
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     if (role == "Owner")
                     {
@@ -271,12 +271,12 @@ namespace TeamUp.Services.Service
                 await _unitOfWork.SaveAsync();
                 _unitOfWork.CommitTransaction();
 
-                return "http://localhost:3000/payment-success";
+                return "https://www.team-up-booking.com/payment-success";
             }
             catch (Exception ex)
             {
                 _unitOfWork.RollBack();
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
             }
         }
 
@@ -369,13 +369,13 @@ namespace TeamUp.Services.Service
             string orderCodeStr = payosParams["orderCode"];
 
             if (!long.TryParse(orderCodeStr, out var orderCode))
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
 
             var temp = await _unitOfWork.GetRepository<PaymentTemp>()
                            .Entities.FirstOrDefaultAsync(x => x.OrderCode == orderCode);
 
             if (temp == null)
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
 
             int userId = temp.UserId;
             string type = temp.Type;
@@ -383,7 +383,7 @@ namespace TeamUp.Services.Service
 
             // ❗ Nếu không phải PAID, chuyển hướng đến trang lỗi
             if (status != "PAID")
-                return "http://localhost:3000/payment-fail";
+                return "https://www.team-up-booking.com/payment-fail";
 
             _unitOfWork.BeginTransaction();
 
@@ -403,7 +403,7 @@ namespace TeamUp.Services.Service
                 {
                     var booking = await _unitOfWork.GetRepository<CourtBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CourtBooking>().Update(booking);
@@ -414,7 +414,7 @@ namespace TeamUp.Services.Service
                 {
                     var booking = await _unitOfWork.GetRepository<CoachBooking>().GetByIdAsync(bookingId);
                     if (booking == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CoachBooking>().Update(booking);
@@ -425,11 +425,11 @@ namespace TeamUp.Services.Service
                 {
                     var user = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(userId);
                     if (user == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     var package = await _unitOfWork.GetRepository<Package>().GetByIdAsync(bookingId);
                     if (package == null)
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     user.StartDate = DateTime.Now;
                     user.ExpireDate = DateTime.Now.AddDays(package.DurationDays);
@@ -450,7 +450,7 @@ namespace TeamUp.Services.Service
                         .FirstOrDefaultAsync();
 
                     if (string.IsNullOrEmpty(role))
-                        return "http://localhost:3000/payment-fail";
+                        return "https://www.team-up-booking.com/payment-fail";
 
                     if (role == "Owner")
                     {
@@ -491,12 +491,12 @@ namespace TeamUp.Services.Service
                 await _unitOfWork.SaveAsync();
                 _unitOfWork.CommitTransaction();
 
-                return "http://localhost:3000/payment-success"; // ✅ URL thành công
+                return "https://www.team-up-booking.com/payment-success"; // ✅ URL thành công
             }
             catch
             {
                 _unitOfWork.RollBack();
-                return "http://localhost:3000/payment-fail"; // ❌ URL lỗi
+                return "https://www.team-up-booking.com/payment-fail"; // ❌ URL lỗi
             }
         }
 
