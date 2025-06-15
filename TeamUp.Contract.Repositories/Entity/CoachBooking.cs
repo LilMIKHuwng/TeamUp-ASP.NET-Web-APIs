@@ -23,6 +23,8 @@ namespace TeamUp.Contract.Repositories.Entity
 
         public string Status { get; set; }
 
+        public string? Note { get; set; }
+
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
 

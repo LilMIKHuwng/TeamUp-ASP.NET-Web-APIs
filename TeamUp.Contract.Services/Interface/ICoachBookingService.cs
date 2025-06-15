@@ -27,5 +27,9 @@ namespace TeamUp.Contract.Services.Interface
         Task<ApiResult<object>> GetTotalBookingsThisMonthByCoachAsync(int coachId);
         Task<ApiResult<List<object>>> GetBookedSlotsThisWeekByCoachAsync(int coachId);
         Task<ApiResult<int>> GetLatestCoachBookingIdByPlayerAsync(int playerId);
+
+        Task<ApiResult<object>> IncreaseCoachBookingStatsViewAsync(int coachId);
+
+        Task<ApiResult<object>> GetTopCoachBookingUserAsync(int coachId);
     }
 }

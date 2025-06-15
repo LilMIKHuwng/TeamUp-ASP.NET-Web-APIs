@@ -25,6 +25,8 @@ namespace TeamUp.Repositories.Entity
         public decimal? PricePerSession { get; set; }
         public string? StatusForCoach { get; set; }
 
+        public int CountForView { get; set; } = 0;
+
         public int? Status { get; set; }
 
         public int? CreatedBy { get; set; }

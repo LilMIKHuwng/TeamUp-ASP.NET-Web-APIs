@@ -621,25 +621,31 @@ namespace TeamUp.Services.Service
 
             var totalBookings = await query.CountAsync();
 
-            var totalRevenue = await query
-                .Where(cb => cb.PaymentStatus == "Paid")
-                .SumAsync(cb => cb.TotalPrice);
+            var totalRevenue = await query.SumAsync(cb => cb.TotalPrice);
 
             var uniqueStudents = await query
                 .Select(cb => cb.PlayerId)
                 .Distinct()
                 .CountAsync();
 
+            var coach = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(coachId);
+            if (coach == null)
+            {
+                return new ApiErrorResult<object>("Coach not found");
+            }
+
             var result = new
             {
                 CoachId = coachId,
                 TotalBookings = totalBookings,
                 TotalRevenue = totalRevenue,
-                UniqueStudents = uniqueStudents
+                UniqueStudents = uniqueStudents,
+                CountForView = coach.CountForView
             };
 
             return new ApiSuccessResult<object>(result);
         }
+
 
         public async Task<ApiResult<List<object>>> GetPlayersByCoachAsync(int coachId)
         {
@@ -736,5 +742,57 @@ namespace TeamUp.Services.Service
 
             return new ApiSuccessResult<int>(latestBooking.Id);
         }
+
+        public async Task<ApiResult<object>> IncreaseCoachBookingStatsViewAsync(int coachId)
+        {
+            var coach = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(coachId);
+            if (coach == null)
+            {
+                return new ApiErrorResult<object>("Coach not found");
+            }
+
+            coach.CountForView += 1;
+            coach.LastUpdatedTime = DateTime.Now;
+
+            await _unitOfWork.GetRepository<ApplicationUser>().UpdateAsync(coach);
+            await _unitOfWork.SaveAsync();
+
+            return new ApiSuccessResult<object>("Coach CountForView incremented successfully");
+        }
+
+        public async Task<ApiResult<object>> GetTopCoachBookingUserAsync(int coachId)
+        {
+            var query = _unitOfWork.GetRepository<CoachBooking>().Entities
+                .Where(cb => cb.CoachId == coachId
+                             && !cb.DeletedTime.HasValue
+                             && cb.PaymentStatus == "Paid")
+                .Include(cb => cb.Player);
+
+            var topPlayerGroup = await query
+                .GroupBy(cb => cb.Player)
+                .Select(g => new
+                {
+                    g.Key.Id,
+                    g.Key.FullName,
+                    g.Key.Email,
+                    g.Key.PhoneNumber,
+                    g.Key.AvatarUrl,
+                    g.Key.Age,
+                    g.Key.Height,
+                    g.Key.Weight,
+                    BookingCount = g.Count()
+                })
+                .OrderByDescending(g => g.BookingCount)
+                .FirstOrDefaultAsync();
+
+            if (topPlayerGroup == null)
+            {
+                return new ApiSuccessResult<object>(new { Message = "No bookings found." });
+            }
+
+            return new ApiSuccessResult<object>(topPlayerGroup);
+        }
+
+
     }
 }
