@@ -25,6 +25,8 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
 
         public decimal DiscountAmount { get; set; }
 
+        public string? Note { get; set; }
+
         public VoucherModelView? Voucher { get; set; }
 
     }

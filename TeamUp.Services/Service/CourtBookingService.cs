@@ -624,16 +624,25 @@ namespace TeamUp.Services.Service
                 .Where(cb => cb.PaymentStatus == "Paid")
                 .SumAsync(cb => cb.TotalPrice);
 
+            // Lấy CountForView của Owner
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(ownerId);
+            if (owner == null)
+            {
+                return new ApiErrorResult<object>("Owner not found");
+            }
+
             var result = new
             {
                 OwnerId = ownerId,
                 UniquePlayerCount = uniquePlayerCount,
                 TotalCourtBookings = totalBookings,
-                TotalRevenue = totalRevenue
+                TotalRevenue = totalRevenue,
+                CountForView = owner.CountForView
             };
 
             return new ApiSuccessResult<object>(result);
         }
+
 
 
         public async Task<ApiResult<object>> GetMostBookedCourtByOwnerAsync(int ownerId)
@@ -724,6 +733,56 @@ namespace TeamUp.Services.Service
             }
 
             return new ApiSuccessResult<int>(latestBooking.Id);
+        }
+
+        public async Task<ApiResult<object>> IncreaseCourtBookingStatsViewAsync(int ownerId)
+        {
+            var owner = await _unitOfWork.GetRepository<ApplicationUser>().GetByIdAsync(ownerId);
+            if (owner == null)
+            {
+                return new ApiErrorResult<object>("Owner not found");
+            }
+
+            owner.CountForView += 1;
+            owner.LastUpdatedTime = DateTime.Now;
+
+            await _unitOfWork.GetRepository<ApplicationUser>().UpdateAsync(owner);
+            await _unitOfWork.SaveAsync();
+
+            return new ApiSuccessResult<object>("CountForView incremented successfully");
+        }
+
+        public async Task<ApiResult<object>> GetTopCourtBookingUserAsync(int ownerId)
+        {
+            var query = _unitOfWork.GetRepository<CourtBooking>().Entities
+                .Where(cb => !cb.DeletedTime.HasValue
+                             && cb.PaymentStatus == "Paid"
+                             && cb.Court.SportsComplex.OwnerId == ownerId)
+                .Include(cb => cb.User);
+
+            var topUserGroup = await query
+                .GroupBy(cb => cb.User)
+                .Select(g => new
+                {
+                    g.Key.Id,
+                    g.Key.FullName,
+                    g.Key.Email,
+                    g.Key.PhoneNumber,
+                    g.Key.AvatarUrl,
+                    g.Key.Age,
+                    g.Key.Height,
+                    g.Key.Weight,
+                    BookingCount = g.Count()
+                })
+                .OrderByDescending(g => g.BookingCount)
+                .FirstOrDefaultAsync();
+
+            if (topUserGroup == null)
+            {
+                return new ApiSuccessResult<object>(new { Message = "No bookings found." });
+            }
+
+            return new ApiSuccessResult<object>(topUserGroup);
         }
 
     }

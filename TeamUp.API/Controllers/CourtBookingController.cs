@@ -250,5 +250,40 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Count View Court
+        /// </summary>
+        [HttpPost("view/{ownerId}")]
+        public async Task<IActionResult> IncreaseCourtBookingStatsView(int ownerId)
+        {
+            try
+            {
+                var result = await _courtBookingService.IncreaseCourtBookingStatsViewAsync(ownerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Top User
+        /// </summary>
+        [HttpGet("top-user/{ownerId}")]
+        public async Task<IActionResult> GetTopUserForCourtBooking(int ownerId)
+        {
+            try
+            {
+                var result = await _courtBookingService.GetTopCourtBookingUserAsync(ownerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+
+        }
     }
 }

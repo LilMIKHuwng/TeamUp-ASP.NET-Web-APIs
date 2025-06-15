@@ -255,5 +255,39 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Count View Coach
+        /// </summary>
+        [HttpPost("view/{coachId}")]
+        public async Task<IActionResult> IncreaseCoachBookingStatsView(int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.IncreaseCoachBookingStatsViewAsync(coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Top User
+        /// </summary>
+        [HttpGet("top-user/{coachId}")]
+        public async Task<IActionResult> GetTopUserForCoachBooking(int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetTopCoachBookingUserAsync(coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
     }
 }
