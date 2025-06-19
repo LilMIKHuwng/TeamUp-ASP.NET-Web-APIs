@@ -231,7 +231,8 @@ namespace TeamUp.Services.Service
                 PaymentStatus = PaymentStatus.Pending,
                 CreatedTime = DateTime.Now,
                 CreatedBy = int.Parse(_contextAccessor.HttpContext?.User?.FindFirst("userId")?.Value ?? "0"),
-                Slots = new List<Slot>()
+                Slots = new List<Slot>(),
+                Note = model.Note,
             };
 
             // Tính tổng tiền
