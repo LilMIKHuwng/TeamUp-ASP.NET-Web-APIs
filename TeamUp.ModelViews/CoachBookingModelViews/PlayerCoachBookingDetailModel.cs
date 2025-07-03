@@ -11,8 +11,10 @@ namespace TeamUp.ModelViews.CoachBookingModelViews
         public int BookingId { get; set; }
         public string CourtName { get; set; }
         public string SportsComplexName { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
+        // Danh sách các slot chi tiết
+        public List<string> SlotTimes { get; set; }
+
         public decimal TotalPrice { get; set; }
         public string Status { get; set; }
         public string PaymentMethod { get; set; }
