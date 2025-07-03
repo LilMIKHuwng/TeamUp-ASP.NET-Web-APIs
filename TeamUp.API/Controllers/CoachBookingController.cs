@@ -289,5 +289,22 @@ namespace TeamUp.API.Controllers
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
         }
+
+        /// <summary>
+        /// Thống kê lịch sử học với HLV của 1 người chơi (player) tại các buổi huấn luyện của 1 HLV cụ thể
+        /// </summary>
+        [HttpGet("coach-player-booking-CRM")]
+        public async Task<IActionResult> GetPlayerCoachBookingStatsByCoach([FromQuery] int playerId, [FromQuery] int coachId)
+        {
+            try
+            {
+                var result = await _coachBookingService.GetPlayerCoachBookingStatsByCoachAsync(playerId, coachId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiErrorResult<object>(ex.Message));
+            }
+        }
     }
 }
