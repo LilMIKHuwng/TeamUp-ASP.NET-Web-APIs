@@ -798,7 +798,7 @@ namespace TeamUp.Services.Service
             var bookingRepo = _unitOfWork.GetRepository<CourtBooking>();
             var bookings = await bookingRepo
                 .Entities
-                .Where(cb => cb.UserId == userId && cb.Court.SportsComplex.OwnerId == ownerId)
+                .Where(cb => cb.UserId == userId && cb.Court.SportsComplex.OwnerId == ownerId && cb.PaymentStatus == "Paid")
                 .Include(cb => cb.Court)
                     .ThenInclude(c => c.SportsComplex)
                 .Include(cb => cb.Voucher)
