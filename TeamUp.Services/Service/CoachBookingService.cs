@@ -794,6 +794,125 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>(topPlayerGroup);
         }
 
+        public async Task<ApiResult<PlayerCoachBookingCRMReport>> GetPlayerCoachBookingStatsByCoachAsync(int playerId, int coachId)
+        {
+            // 1. Lấy thông tin người chơi
+            var userRepo = _unitOfWork.GetRepository<ApplicationUser>();
+            var player = await userRepo.GetByIdAsync(playerId);
+            if (player == null)
+                return new ApiErrorResult<PlayerCoachBookingCRMReport>("Người chơi không tồn tại");
+
+            // 2. Lấy danh sách buổi học của người chơi với HLV cụ thể
+            var bookings = await _unitOfWork.GetRepository<CoachBooking>()
+                .Entities
+                .Where(cb => cb.CoachId == coachId && cb.PlayerId == playerId && cb.PaymentStatus == "Paid")
+                .Include(cb => cb.Court)
+                    .ThenInclude(c => c.SportsComplex)
+                .Include(cb => cb.Slots)
+                .Include(cb => cb.Voucher)
+                .ToListAsync();
+
+            // ⚠️ 3. Trường hợp không có booking nào
+            if (bookings == null || bookings.Count == 0)
+            {
+                var emptyResult = new PlayerCoachBookingCRMReport
+                {
+                    PlayerId = player.Id,
+                    PlayerName = player.FullName,
+                    Email = player.Email,
+                    PhoneNumber = player.PhoneNumber,
+                    TotalBookings = 0,
+                    TotalSpent = 0,
+                    BookingTimeDistribution = new List<TimeRangeFrequency>(),
+                    CustomerCategory = "Chưa có lịch sử huấn luyện",
+                    BookingHistory = new List<PlayerCoachBookingDetailModel>()
+                };
+
+                return new ApiSuccessResult<PlayerCoachBookingCRMReport>(emptyResult, "Người chơi chưa từng đặt huấn luyện với HLV này.");
+            }
+
+            // 4. Tổng số và tổng tiền
+            int totalBookings = bookings.Count;
+            decimal totalSpent = bookings.Sum(b => b.TotalPrice);
+
+            // 5. Phân bố giờ học
+            var timeRanges = new Dictionary<string, (TimeSpan Start, TimeSpan End)>
+            {
+                { "Sáng (6h–11h)", (new TimeSpan(6, 0, 0), new TimeSpan(11, 59, 59)) },
+                { "Trưa (12h–17h)", (new TimeSpan(12, 0, 0), new TimeSpan(17, 59, 59)) },
+                { "Tối (18h–22h)", (new TimeSpan(18, 0, 0), new TimeSpan(22, 59, 59)) },
+                { "Đêm (23h–5h)", (new TimeSpan(23, 0, 0), new TimeSpan(5, 59, 59)) }
+            };
+
+            var timeDistribution = new List<TimeRangeFrequency>();
+            foreach (var range in timeRanges)
+            {
+                int count = bookings.Count(b =>
+                    b.Slots.Any(slot =>
+                    {
+                        var time = slot.StartTime.TimeOfDay;
+                        return range.Value.Start <= range.Value.End
+                            ? time >= range.Value.Start && time <= range.Value.End
+                            : time >= range.Value.Start || time <= range.Value.End;
+                    }));
+
+                if (count > 0)
+                {
+                    timeDistribution.Add(new TimeRangeFrequency
+                    {
+                        TimeRangeLabel = range.Key,
+                        Count = count
+                    });
+                }
+            }
+
+            // 6. Phân loại người chơi
+            string category;
+            if (totalBookings >= 20 || totalSpent >= 10_000_000)
+                category = "Khách VIP";
+            else if (totalBookings >= 5)
+                category = "Khách tiềm năng";
+            else
+                category = "Khách hoạt động bình thường";
+
+            // 7. Lịch sử chi tiết
+            var bookingHistory = bookings.Select(b =>
+            {
+                var slot = b.Slots.OrderBy(s => s.StartTime).FirstOrDefault();
+                return new PlayerCoachBookingDetailModel
+                {
+                    BookingId = b.Id,
+                    CourtName = b.Court.Name,
+                    SportsComplexName = b.Court.SportsComplex.Name,
+                    StartTime = slot?.StartTime ?? DateTime.MinValue,
+                    EndTime = slot?.EndTime ?? DateTime.MinValue,
+                    TotalPrice = b.TotalPrice,
+                    Status = b.Status,
+                    PaymentMethod = b.PaymentMethod,
+                    PaymentStatus = b.PaymentStatus,
+                    Note = b.Note,
+                    DiscountInfo = b.Voucher != null
+                        ? $"Voucher: {b.Voucher.Code} - Giảm {b.DiscountAmount:N0}đ"
+                        : null
+                };
+            }).OrderByDescending(b => b.StartTime).ToList();
+
+            // 8. Trả kết quả đầy đủ
+            var result = new PlayerCoachBookingCRMReport
+            {
+                PlayerId = player.Id,
+                PlayerName = player.FullName,
+                Email = player.Email,
+                PhoneNumber = player.PhoneNumber,
+                TotalBookings = totalBookings,
+                TotalSpent = totalSpent,
+                BookingTimeDistribution = timeDistribution,
+                CustomerCategory = category,
+                BookingHistory = bookingHistory
+            };
+
+            return new ApiSuccessResult<PlayerCoachBookingCRMReport>(result);
+        }
 
     }
 }

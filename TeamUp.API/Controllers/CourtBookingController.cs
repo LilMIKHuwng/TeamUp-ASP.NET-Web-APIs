@@ -269,21 +269,20 @@ namespace TeamUp.API.Controllers
         }
 
         /// <summary>
-        /// Top User
+        /// Thống kê lịch sử đặt sân của 1 user tại các sân thuộc owner
         /// </summary>
-        [HttpGet("top-user/{ownerId}")]
-        public async Task<IActionResult> GetTopUserForCourtBooking(int ownerId)
+        [HttpGet("owner-user-booking-CRM")]
+        public async Task<IActionResult> GetUserCourtBookingStatsByOwner([FromQuery] int userId, [FromQuery] int ownerId)
         {
             try
             {
-                var result = await _courtBookingService.GetTopCourtBookingUserAsync(ownerId);
+                var result = await _courtBookingService.GetUserCourtBookingStatsByOwnerAsync(userId, ownerId);
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(new ApiErrorResult<object>(ex.Message));
             }
-
         }
     }
 }

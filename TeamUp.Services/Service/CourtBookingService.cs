@@ -785,5 +785,123 @@ namespace TeamUp.Services.Service
             return new ApiSuccessResult<object>(topUserGroup);
         }
 
+
+        public async Task<ApiResult<UserCourtBookingCRMReport>> GetUserCourtBookingStatsByOwnerAsync(int userId, int ownerId)
+        {
+            // 1. Lấy thông tin người dùng
+            var userRepo = _unitOfWork.GetRepository<ApplicationUser>();
+            var user = await userRepo.GetByIdAsync(userId);
+            if (user == null)
+                return new ApiErrorResult<UserCourtBookingCRMReport>("Người dùng không tồn tại.");
+
+            // 2. Lấy tất cả booking của user tại các sân thuộc owner
+            var bookingRepo = _unitOfWork.GetRepository<CourtBooking>();
+            var bookings = await bookingRepo
+                .Entities
+                .Where(cb => cb.UserId == userId && cb.Court.SportsComplex.OwnerId == ownerId)
+                .Include(cb => cb.Court)
+                    .ThenInclude(c => c.SportsComplex)
+                .Include(cb => cb.Voucher)
+                .ToListAsync();
+
+            // ⚠️ 3. Trường hợp không có booking
+            if (bookings == null || bookings.Count == 0)
+            {
+                var emptyResult = new UserCourtBookingCRMReport
+                {
+                    UserId = user.Id,
+                    UserFullName = user.FullName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    TotalBookings = 0,
+                    TotalSpent = 0,
+                    BookingTimeDistribution = new List<TimeRangeFrequency>(),
+                    CustomerCategory = "Chưa từng đặt sân",
+                    BookingHistory = new List<UserCourtBookingDetailModel>()
+                };
+
+                return new ApiSuccessResult<UserCourtBookingCRMReport>(emptyResult, "Người dùng này chưa từng đặt sân tại hệ thống của bạn.");
+            }
+
+            // 4. Tính tổng
+            var totalBookings = bookings.Count;
+            var totalSpent = bookings.Sum(cb => cb.TotalPrice);
+
+            // 5. Phân bố thời gian đặt sân
+            var timeRanges = new Dictionary<string, (TimeSpan Start, TimeSpan End)>
+            {
+                { "Sáng (6h–11h)", (new TimeSpan(6, 0, 0), new TimeSpan(11, 59, 59)) },
+                { "Trưa (12h–17h)", (new TimeSpan(12, 0, 0), new TimeSpan(17, 59, 59)) },
+                { "Tối (18h–22h)", (new TimeSpan(18, 0, 0), new TimeSpan(22, 59, 59)) },
+                { "Đêm (23h–5h)", (new TimeSpan(23, 0, 0), new TimeSpan(5, 59, 59)) }
+            };
+
+            var timeDistribution = new List<TimeRangeFrequency>();
+            foreach (var range in timeRanges)
+            {
+                int count = bookings.Count(b =>
+                {
+                    var time = b.StartTime.TimeOfDay;
+                    return range.Value.Start <= range.Value.End
+                        ? time >= range.Value.Start && time <= range.Value.End
+                        : time >= range.Value.Start || time <= range.Value.End;
+                });
+
+                if (count > 0)
+                {
+                    timeDistribution.Add(new TimeRangeFrequency
+                    {
+                        TimeRangeLabel = range.Key,
+                        Count = count
+                    });
+                }
+            }
+
+            // 6. Phân loại khách hàng
+            string category;
+            if (totalBookings >= 20 || totalSpent >= 10_000_000)
+                category = "Khách VIP";
+            else if (totalBookings >= 5)
+                category = "Khách tiềm năng";
+            else
+                category = "Khách hoạt động bình thường";
+
+            // 7. Lịch sử đặt sân chi tiết
+            var bookingHistory = bookings.Select(cb => new UserCourtBookingDetailModel
+            {
+                BookingId = cb.Id,
+                CourtName = cb.Court.Name,
+                SportsComplexName = cb.Court.SportsComplex.Name,
+                StartTime = cb.StartTime,
+                EndTime = cb.EndTime,
+                TotalPrice = cb.TotalPrice,
+                Status = cb.Status,
+                PaymentMethod = cb.PaymentMethod,
+                PaymentStatus = cb.PaymentStatus,
+                Note = cb.Note,
+                DiscountInfo = cb.Voucher != null
+                    ? $"Voucher: {cb.Voucher.Code} - Giảm {cb.DiscountAmount:N0}đ"
+                    : null
+            }).OrderByDescending(b => b.StartTime).ToList();
+
+            // 8. Trả kết quả
+            var result = new UserCourtBookingCRMReport
+            {
+                UserId = user.Id,
+                UserFullName = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                TotalBookings = totalBookings,
+                TotalSpent = totalSpent,
+                BookingTimeDistribution = timeDistribution,
+                CustomerCategory = category,
+                BookingHistory = bookingHistory
+            };
+
+            return new ApiSuccessResult<UserCourtBookingCRMReport>(result);
+        }
+
+
+
     }
 }
