@@ -405,6 +405,7 @@ namespace TeamUp.Services.Service
                     if (booking == null)
                         return "https://www.team-up-booking.com/payment-fail";
 
+                    booking.PaymentMethod = "PayOS";
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CourtBooking>().Update(booking);
                     payment.Amount = booking.TotalPrice;
@@ -416,6 +417,7 @@ namespace TeamUp.Services.Service
                     if (booking == null)
                         return "https://www.team-up-booking.com/payment-fail";
 
+                    booking.PaymentMethod = "PayOS";
                     booking.PaymentStatus = SystemConstant.PaymentStatus.Paid;
                     _unitOfWork.GetRepository<CoachBooking>().Update(booking);
                     payment.Amount = booking.TotalPrice;
