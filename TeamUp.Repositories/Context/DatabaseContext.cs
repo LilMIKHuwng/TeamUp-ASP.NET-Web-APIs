@@ -142,7 +142,7 @@ namespace TeamUp.Repositories.Context
             };
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
 
-            /*var playerUser = new ApplicationUser
+            var playerUser = new ApplicationUser
             {
                 Id = 2,
                 UserName = "player",
@@ -191,19 +191,19 @@ namespace TeamUp.Repositories.Context
                 StatusForCoach = "Active",
                 Type = "Bóng đá",
             };
-            coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");*/
+            coachUser.PasswordHash = hasher.HashPassword(coachUser, "Coach@123");
 
 
-            builder.Entity<ApplicationUser>().HasData(adminUser);
+            builder.Entity<ApplicationUser>().HasData(adminUser, playerUser, coachUser, courtOwnerUser);
 
             builder.Entity<ApplicationUserRole>().HasData(
-                new ApplicationUserRole { UserId = 1, RoleId = 1 } // Admin
-                //new ApplicationUserRole { UserId = 2, RoleId = 2 }, // Người Chơi
-                //new ApplicationUserRole { UserId = 3, RoleId = 3 }, // Chủ Sân
-                //new ApplicationUserRole { UserId = 4, RoleId = 4 }  // Huấn Luyện Viên
+                new ApplicationUserRole { UserId = 1, RoleId = 1 }, // Admin
+                new ApplicationUserRole { UserId = 2, RoleId = 2 }, // Người Chơi
+                new ApplicationUserRole { UserId = 3, RoleId = 3 }, // Chủ Sân
+                new ApplicationUserRole { UserId = 4, RoleId = 4 }  // Huấn Luyện Viên
             );
 
-            /*var coachUsers = new List<ApplicationUser>();
+            var coachUsers = new List<ApplicationUser>();
             var coachRoles = new List<ApplicationUserRole>();
 
             coachUsers.AddRange(new[]
@@ -367,7 +367,7 @@ namespace TeamUp.Repositories.Context
 
             // Add to modelBuilder
             builder.Entity<ApplicationUser>().HasData(coachUsers);
-            builder.Entity<ApplicationUserRole>().HasData(coachRoles);*/
+            builder.Entity<ApplicationUserRole>().HasData(coachRoles);
 
             builder.Entity<Package>().HasData(
                 new Package
@@ -399,7 +399,7 @@ namespace TeamUp.Repositories.Context
                 }
             );
 
-            /*var firebaseImageUrls = new List<string>
+            var firebaseImageUrls = new List<string>
             {
                 "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest1.png?alt=media&token=0c05a2e7-869d-4e0c-98b2-41dd842fe90c",
                 "https://firebasestorage.googleapis.com/v0/b/hairsalonamazing-14369.appspot.com/o/images%2Ftest2.png?alt=media&token=cc65bd49-e3df-4a51-b513-c7bb534b63d4",
@@ -895,7 +895,7 @@ namespace TeamUp.Repositories.Context
                     Status = "Waiting",
                     ScheduledTime = DateTime.Today.AddDays(4).AddHours(19)
                 }
-            );*/
+            );
 
 
             builder.Entity<Voucher>().HasData(

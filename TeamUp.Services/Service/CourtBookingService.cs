@@ -514,7 +514,9 @@ namespace TeamUp.Services.Service
 
         public async Task<ApiResult<List<object>>> GetHourFreeInCourt(int courtId, DateTime startDate)
         {
-            var now = DateTime.Now;
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+
             if (startDate.Date < now.Date)
             {
                 return new ApiErrorResult<List<object>>("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
